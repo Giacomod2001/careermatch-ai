@@ -44,7 +44,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import urllib.parse
-import importlib
+
 
 # Force reload modules (disabled for performance, enable only in dev)
 import knowledge_base
@@ -52,13 +52,7 @@ import ml_utils
 import styles
 import constants
 import gdpr_compliance
-import requests
-import os
 
-# =============================================================================
-# BACKEND CONFIGURATION
-# =============================================================================
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 # Puliamo la cache all'avvio solo se necessario
 # st.cache_data.clear()
@@ -109,17 +103,54 @@ if "page" not in st.session_state:
 # CV Builder session state
 if "cv_builder" not in st.session_state:
     st.session_state["cv_builder"] = {
-        "name": "",
-        "location": "",
-        "email": "",
-        "phone": "",
-        "summary": "",
+        "name": "Marco Rossi",
+        "location": "Milano, Italia",
+        "email": "marco.rossi@email.it",
+        "phone": "+39 333 456 7890",
+        "summary": "Data Analyst con 3 anni di esperienza nel marketing digitale. Specializzato in analisi delle performance delle campagne pubblicitarie, segmentazione del pubblico e ottimizzazione del budget marketing. Competenze avanzate in Python, SQL e strumenti di Business Intelligence.",
         "competencies": [],
         "tech_skills": {},
-        "experiences": [],
-        "education": [],
+        "tech_skills_text": "Languages: Python, SQL, R\nTools: Tableau, Power BI, Google Analytics 4, Excel avanzato\nMarketing: Google Ads, Meta Ads Manager, SEO/SEM, A/B Testing\nData: Pandas, NumPy, Scikit-learn, Statistical Analysis",
+        "experiences": [
+            {
+                "title": "Digital Data Analyst",
+                "company": "Randstad Group Italia",
+                "dates": "Gen 2024 - Presente",
+                "location": "Milano",
+                "bullets": "• Analisi delle performance delle campagne di digital marketing su Google Ads e Meta\n• Creazione di dashboard in Tableau per il monitoraggio KPI\n• Ottimizzazione del budget pubblicitario tramite analisi ROI e ROAS\n• Segmentazione audience con tecniche di clustering",
+                "tech": "Python, SQL, Tableau, Google Ads, Meta Business Suite"
+            },
+            {
+                "title": "Marketing Analyst Junior",
+                "company": "Startup XYZ",
+                "dates": "Set 2022 - Dic 2023",
+                "location": "Milano",
+                "bullets": "• Gestione e analisi dei dati di traffico web con Google Analytics\n• Reportistica settimanale sulle performance dei canali social\n• Supporto nella pianificazione delle campagne email marketing",
+                "tech": "Google Analytics, Excel, Mailchimp"
+            }
+        ],
+        "education": [
+            {
+                "degree": "Laurea Magistrale in AI, Impresa e Società",
+                "institution": "Università IULM",
+                "location": "Milano",
+                "dates": "2024 - 2026",
+                "details": "Focus su Data Analytics, Machine Learning e Marketing Intelligence"
+            },
+            {
+                "degree": "Laurea Triennale in Comunicazione Digitale",
+                "institution": "Università degli Studi di Milano",
+                "location": "Milano",
+                "dates": "2020 - 2023",
+                "details": "Tesi: Analisi dei dati nel digital marketing"
+            }
+        ],
         "projects": [],
-        "languages": []
+        "languages": [
+            {"language": "Italiano", "level": "Native"},
+            {"language": "Inglese", "level": "Professional (C1-C2)"},
+            {"language": "Spagnolo", "level": "Intermediate (B1-B2)"}
+        ]
     }
 
 # =============================================================================
@@ -2128,10 +2159,16 @@ def render_evaluation_page():
         if input_type_jd == "Text":
             jd = st.text_area("JD Content", height=250, key="jd_text", placeholder="Paste job description here...", label_visibility="collapsed")
         else:
-            uploaded_jd = st.file_uploader("Upload PDF", type=["pdf"], key="jd_pdf", label_visibility="collapsed")
+            uploaded_jd = st.file_uploader("Upload PDF (max 5MB)", type=["pdf"], key="jd_pdf", label_visibility="collapsed")
             if uploaded_jd:
-                try: jd = ml_utils.extract_text_from_pdf(uploaded_jd)
-                except Exception as e: st.error(f"PDF Error: {e}")
+                if uploaded_jd.size > 5 * 1024 * 1024:
+                    st.error("❌ Il file supera 5MB. Carica un PDF più leggero.")
+                else:
+                    try:
+                        jd = ml_utils.extract_text_from_pdf(uploaded_jd)
+                        st.success(f"✅ {uploaded_jd.name} caricato")
+                    except Exception as e:
+                        st.error(f"❌ Errore PDF: {e}")
     
     # Column 2: CV (always second)
     cv = ""
@@ -2141,10 +2178,16 @@ def render_evaluation_page():
         if input_type_cv == "Text":
             cv = st.text_area("CV Content", height=250, key="cv_text", placeholder="Paste your CV here...", label_visibility="collapsed")
         else:
-            uploaded_cv = st.file_uploader("Upload PDF", type=["pdf"], key="cv_pdf", label_visibility="collapsed")
+            uploaded_cv = st.file_uploader("Upload PDF (max 5MB)", type=["pdf"], key="cv_pdf", label_visibility="collapsed")
             if uploaded_cv:
-                try: cv = ml_utils.extract_text_from_pdf(uploaded_cv)
-                except Exception as e: st.error(f"PDF Error: {e}")
+                if uploaded_cv.size > 5 * 1024 * 1024:
+                    st.error("❌ Il file supera 5MB. Carica un PDF più leggero.")
+                else:
+                    try:
+                        cv = ml_utils.extract_text_from_pdf(uploaded_cv)
+                        st.success(f"✅ {uploaded_cv.name} caricato correttamente")
+                    except Exception as e:
+                        st.error(f"❌ Errore PDF: {e}")
     
     # Column 3: Project Context (if enabled)
     project_text = ""
@@ -2571,7 +2614,8 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
 
 def render_chatbot():
     """
-    Renders Ruben AI Assistant at the bottom of the sidebar.
+    Renders Ruben AI Assistant in the sidebar — enhanced with full
+    conversation history and CV context awareness.
     """
     # 1. Initialize State
     if "chat_history" not in st.session_state:
@@ -2581,7 +2625,7 @@ def render_chatbot():
     
     # Bot state management
     if "chat_lang" not in st.session_state:
-        st.session_state["chat_lang"] = "en"  # Always default to English
+        st.session_state["chat_lang"] = "en"
         
     if "last_chat_page" not in st.session_state:
         st.session_state["last_chat_page"] = current_page
@@ -2589,47 +2633,84 @@ def render_chatbot():
         st.session_state["chat_history"] = []
         st.session_state["last_chat_page"] = current_page
 
+    # Build CV context string from cv_builder session state
+    cv_context = ""
+    cv_data = st.session_state.get("cv_builder", {})
+    if cv_data.get("name"):
+        ctx_parts = [f"Nome: {cv_data['name']}"]
+        if cv_data.get("summary"): ctx_parts.append(f"Summary: {cv_data['summary']}")
+        if cv_data.get("tech_skills_text"): ctx_parts.append(f"Skills: {cv_data['tech_skills_text']}")
+        for exp in cv_data.get("experiences", []):
+            if exp.get("title"): ctx_parts.append(f"Exp: {exp['title']} @ {exp.get('company', '')}")
+        cv_context = " | ".join(ctx_parts)
+
     # Define Callback to process chat
     def process_chat():
         user_msg = st.session_state.get("chat_input_widget", "")
         if user_msg:
-            # Append User Message
             st.session_state["chat_history"].append({"role": "user", "content": user_msg})
-            # Get response and update persisted language
             detected_lang = ml_utils._detect_chat_language(user_msg)
             st.session_state["chat_lang"] = detected_lang
-            response = ml_utils.get_chatbot_response(user_msg, current_page, lang=detected_lang)
+            # Enrich message with CV context for better responses
+            enriched_msg = user_msg
+            if cv_context:
+                enriched_msg = f"[CV Context: {cv_context[:500]}] {user_msg}"
+            response = ml_utils.get_chatbot_response(enriched_msg, current_page, lang=detected_lang)
             st.session_state["chat_history"].append({"role": "assistant", "content": response})
-            # Clear Input safely
             st.session_state["chat_input_widget"] = ""
             st.rerun()
 
-    # Get response or welcome
-    display_msg = ""
-    assistant_messages = [m for m in st.session_state["chat_history"] if m["role"] == "assistant"]
-    if not assistant_messages:
-        display_msg = ml_utils.get_chatbot_response("", current_page, lang="en")
-    else:
-        display_msg = assistant_messages[-1]["content"]
-
-    # === RUBEN AI CONSULTANT - PREMIUM UI ===
-    st.markdown(f"""
-    <div class="sidebar-chat-container">
-        <div class="sidebar-chat-header">
-            Ruben AI Consultant
+    # === RUBEN AI CONSULTANT - ENHANCED UI ===
+    st.markdown("""
+    <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, rgba(0,119,181,0.15), rgba(0,200,83,0.1)); border: 1px solid rgba(0,119,181,0.4); border-radius: 12px;">
+        <div style="font-size: 1rem; font-weight: 700; color: #00C9A7; margin-bottom: 0.5rem;">
+            🤖 Ruben AI Coach
         </div>
-        <div class="sidebar-chat-message">
-            {display_msg}
-        </div>
+        <div style="font-size: 0.75rem; color: #8b949e;">Il tuo assistente di carriera personale</div>
     </div>
     """, unsafe_allow_html=True)
+
+    # Show conversation history (scrollable)
+    history = st.session_state["chat_history"]
+    if not history:
+        # Welcome message
+        welcome = ml_utils.get_chatbot_response("", current_page, lang="en")
+        st.markdown(f"""
+        <div style="margin: 0.5rem 0; padding: 0.6rem; background: rgba(0,119,181,0.08); border-left: 3px solid #0077B5; border-radius: 0 8px 8px 0; font-size: 0.82rem; color: #c9d1d9;">
+            {welcome}
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # Show last N messages to keep sidebar manageable
+        display_history = history[-8:]
+        for msg in display_history:
+            if msg["role"] == "user":
+                st.markdown(f"""
+                <div style="margin: 0.3rem 0; padding: 0.5rem 0.7rem; background: rgba(255,255,255,0.06); border-radius: 10px 10px 2px 10px; font-size: 0.8rem; color: #e2e8f0; text-align: right;">
+                    {msg['content']}
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div style="margin: 0.3rem 0; padding: 0.5rem 0.7rem; background: rgba(0,119,181,0.08); border-left: 3px solid #0077B5; border-radius: 0 8px 8px 0; font-size: 0.8rem; color: #c9d1d9;">
+                    {msg['content']}
+                </div>
+                """, unsafe_allow_html=True)
+
+    # CV context badge
+    if cv_context:
+        st.markdown("""
+        <div style="margin: 0.3rem 0; padding: 0.3rem 0.6rem; background: rgba(0,200,83,0.1); border-radius: 6px; font-size: 0.7rem; color: #00C853;">
+            ✅ CV caricato — le risposte sono personalizzate
+        </div>
+        """, unsafe_allow_html=True)
     
     # Input Area
     st.text_input(
         "Ask Ruben...", 
         key="chat_input_widget", 
         label_visibility="collapsed", 
-        placeholder="Type a message...",
+        placeholder="Scrivi un messaggio...",
         on_change=process_chat
     )
 
