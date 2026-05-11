@@ -167,13 +167,13 @@ Creare AI non basta — bisogna farlo in modo responsabile e su un'infrastruttur
 
 ## Cap. 5 — Il Prototipo: CareerMatch AI
 
-Il primo MVP nasce come progetto di gruppo per l'esame di Data Mining. Funziona, ma è un monolith — una singola app Python che fa tutto. Il capitolo documenta cos'è stato costruito dal team, come, e per chi.
+Il primo MVP nasce come progetto di gruppo universitario. Funziona, ma è un monolith — una singola app Python che fa tutto. Il capitolo documenta cos'è stato costruito dal team, come, e per chi.
 
 Ogni scelta tecnica nel prototipo è motivata sulla base dello studio della letteratura (Cap. 3): la scelta degli algoritmi, la configurazione dei parametri, le decisioni architetturali.
 
 ### Contenuti
 
-- Origine: MVP collaborativo del team per l'esame di Data Mining
+- Origine: MVP collaborativo del team universitario
 - **Il percorso dell'utente nell'app:**
   - 🧭 **Career Discovery** — per chi non sa ancora cosa cercare
   - 📝 **CV Builder** — per chi deve creare un CV da zero

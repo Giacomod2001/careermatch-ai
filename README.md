@@ -13,7 +13,7 @@
 
 ## Live Demo
 
-**[Access CareerMatch AI Dashboard](https://dataminingiulm.streamlit.app/)**
+**[Access CareerMatch AI Dashboard](https://careermatch-ai.streamlit.app/)**
 
 **Version 3.2 Highlights**:
 
@@ -47,8 +47,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Giacomod2001/datamining.git
-cd datamining
+git clone https://github.com/Giacomod2001/careermatch-ai.git
+cd careermatch-ai
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -88,7 +88,7 @@ Our **Unified Multi-Factor Scoring (v3.2)** calculates compatibility based on a 
 ## Project Structure
 
 ```text
-datamining/
+careermatch-ai/
 ├── app.py              # Main Streamlit application
 ├── ml_utils.py         # Core ML functions (scoring, gap analysis, Ruben AI)
 ├── knowledge_base.py   # Job archetypes, skill clusters, inference rules
@@ -126,4 +126,4 @@ This project is the result of a collaborative effort at **IULM University (A.Y. 
 
 Subject to the **PolyForm Noncommercial License 1.0.0**. Professional and commercial usage requires explicit authorization.
 
-[Live Demo](https://dataminingiulm.streamlit.app/) | [GitHub](https://github.com/Giacomod2001/datamining)
+[Live Demo](https://careermatch-ai.streamlit.app/) | [GitHub](https://github.com/Giacomod2001/careermatch-ai)

@@ -3,9 +3,8 @@
 CareerMatch AI - Applicazione Principale
 ================================================================================
 
-Progetto per l'esame di Data Mining & Text Analytics
+CareerMatch AI - Professional Career Analytics Toolkit
 IULM University - A.A. 2025-2026
-Prof. Alessandro Bruno
 
 ================================================================================
 STRUTTURA DELL'APPLICAZIONE:

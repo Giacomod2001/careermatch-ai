@@ -4,8 +4,7 @@ CareerMatch AI - Machine Learning Utilities
 ================================================================================
 
 Questo modulo implementa le tecniche di Data Mining e Text Analytics utilizzate
-per l'analisi CV-Job Description. Le tecniche sono allineate al corso di
-"Data Mining & Text Analytics".
+per l'analisi CV-Job Description nel progetto CareerMatch AI.
 
 ================================================================================
 TECNICHE IMPLEMENTATE (Riferimenti al corso):

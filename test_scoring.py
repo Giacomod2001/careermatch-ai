@@ -1,6 +1,6 @@
 """
 ================================================================================
-Test Suite for DataMining Scoring Functions
+Test Suite for CareerMatch AI Scoring Functions
 ================================================================================
 Comprehensive tests for skill matching, percentages, and scoring logic.
 """
@@ -392,7 +392,7 @@ def test_portfolio_analysis():
 # =============================================================================
 def run_all_tests():
     print("\n" + "=" * 70)
-    print("       DATAMINING SCORING SYSTEM - COMPREHENSIVE TESTS")
+    print("       CAREERMATCH AI SCORING SYSTEM - COMPREHENSIVE TESTS")
     print("=" * 70)
     
     all_passed = True

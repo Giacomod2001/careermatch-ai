@@ -52,7 +52,7 @@ TRANSLATIONS = {
         "controller_body": (
             "This project is developed in the academic context of "
             "<strong>IULM University</strong> (Milan) - A.Y. 2025-2026, "
-            "Data Mining & Text Analytics course.<br><br>"
+            "CareerMatch AI project.<br><br>"
             "<strong>Development team:</strong> Giacomo DellAcqua, Luca Tallarico, Ruben Scoletta<br>"
             "<strong>Contact:</strong> Use the contact form at the bottom of this page."
         ),
@@ -174,7 +174,7 @@ TRANSLATIONS = {
         "controller_body": (
             "Progetto sviluppato nel contesto accademico dell'"
             "<strong>Universita' IULM</strong> (Milano) - A.A. 2025-2026, "
-            "corso di Data Mining & Text Analytics.<br><br>"
+            "progetto CareerMatch AI.<br><br>"
             "<strong>Team di sviluppo:</strong> Giacomo DellAcqua, Luca Tallarico, Ruben Scoletta<br>"
             "<strong>Contatto:</strong> Utilizza il modulo di contatto in fondo a questa pagina."
         ),

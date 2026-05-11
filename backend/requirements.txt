@@ -55,5 +55,5 @@ wordcloud
 requests
 
 # CareerMatch AI v2.0
-# Data Mining & Text Analytics Project
+# CareerMatch AI Project
 # IULM University - A.Y. 2025-2026
