@@ -1,0 +1,36 @@
+# =============================================================================
+# .dockerignore — File da NON copiare nel container Docker
+# =============================================================================
+# Funziona come .gitignore: tutto quello che sta qui non entra nella "scatola"
+# Così il container è più leggero e il build più veloce
+# =============================================================================
+
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+
+# Test files (non servono in produzione)
+test_*.py
+verify_mining.py
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Docker stesso
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Docs
+README.md
+Acknowledgment
+LICENSE
