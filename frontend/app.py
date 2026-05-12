@@ -2926,152 +2926,130 @@ def render_interview_prep():
                 st.rerun()
 
     else:
-        # Practice Mode - Split Screen Layout
+        # Practice Mode - Minimalist Single Column Flow
         q_idx = st.session_state.get("current_q_index", 0)
         current_q = questions[q_idx]
         
-        # Progress Bar with step indicators (Top)
+        # 1. Clean Progress Indicator
         progress = (q_idx + 1) / len(questions)
         st.markdown(f"""
-        <div style="margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                <span style="font-weight: 600; color: var(--text-primary);">Question {q_idx + 1} of {len(questions)}</span>
+        <div style="max-width: 800px; margin: 0 auto 2rem auto;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                <span style="color: var(--text-secondary);">Question {q_idx + 1} of {len(questions)}</span>
                 <span style="color: var(--text-secondary);">{int(progress * 100)}% Complete</span>
             </div>
-            <div style="background: var(--bg-elevated); border-radius: 10px; height: 6px; width: 100%;">
-                <div style="background: linear-gradient(90deg, var(--primary-blue), var(--accent-green)); 
-                            width: {progress * 100}%; height: 6px; border-radius: 10px; transition: width 0.3s ease;"></div>
+            <div style="background: var(--bg-elevated); border-radius: 4px; height: 4px; width: 100%;">
+                <div style="background: var(--primary-blue); width: {progress * 100}%; height: 4px; border-radius: 4px; transition: width 0.3s ease;"></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        col_left, col_right = st.columns([1.2, 1], gap="large")
-
-        with col_left:
-            # Question Card
-            category = current_q.get('category', 'general').replace('_', ' ').title()
-            est_time = "3-4 mins" if current_q.get('star_focus') else "1-2 mins"
+        # Center Container for focus
+        with st.container():
+            # Apply max-width via columns trick
+            _, center_col, _ = st.columns([1, 6, 1])
             
-            st.markdown(f"""
-            <div class="glass-card" style="border-left: 4px solid var(--primary-blue); margin-bottom: 1rem; padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                    <span class="skill-tag-project" style="font-size: 0.8rem; margin:0;">{category}</span>
-                    <span style="color: var(--text-secondary); font-size: 0.9rem; white-space: nowrap;">⏱️ {est_time}</span>
+            with center_col:
+                # 2. The Question
+                category = current_q.get('category', 'general').replace('_', ' ').title()
+                est_time = "3-4 mins" if current_q.get('star_focus') else "1-2 mins"
+                
+                st.markdown(f"""
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <span style="display: inline-block; background: rgba(0, 160, 220, 0.1); color: #00A0DC; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 1rem; font-weight: 600;">{category} • ⏱️ {est_time}</span>
+                    <h2 style="margin: 0; line-height: 1.5; color: var(--text-primary); font-weight: 600;">{current_q.get('question', 'No question')}</h2>
                 </div>
-                <h2 style="margin: 0; line-height: 1.4; color: var(--text-primary); font-weight: 600;">{current_q.get('question', 'No question')}</h2>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            with st.expander("💡 Need a hint? (Suggested framework)", expanded=False):
-                if current_q.get('star_focus'):
-                    st.markdown("**Use the STAR Method:**")
-                    st.markdown("- **S**ituation: Set the scene and give necessary context.")
-                    st.markdown("- **T**ask: Describe your responsibility in that situation.")
-                    st.markdown("- **A**ction: Explain exactly what steps *you* took to address it.")
-                    st.markdown("- **R**esult: Share the outcomes (quantify if possible).")
-                elif current_q.get('expected_keywords'):
-                    st.markdown("**Concepts to cover:**")
-                    keywords = current_q.get('expected_keywords', [])
-                    st.markdown(", ".join([f"`{k}`" for k in keywords]))
+                """, unsafe_allow_html=True)
+                
+                # 3. Answer Area
+                saved_answer = st.session_state.get("interview_answers", {}).get(q_idx, "")
+                
+                # Pre-fill demo data for the first question
+                if not saved_answer and q_idx == 0:
+                    if current_q.get("star_focus"):
+                        saved_answer = "In my previous role as a Data Analyst, we faced a situation where our weekly reporting took 5 hours. My task was to automate the process. I wrote a Python script using Pandas and scheduled it with cron. As a result, we reduced reporting time by 90% and eliminated manual errors."
+                    elif current_q.get("expected_keywords"):
+                        saved_answer = f"To approach this, I would focus on core principles like {', '.join(current_q.get('expected_keywords', [])[:3])}. This ensures the system is scalable, robust, and easy to maintain."
+                    else:
+                        saved_answer = "I have extensive experience dealing with this type of situation and I always prioritize clear communication and data-driven problem solving."
+                
+                answer = st.text_area(
+                    "Your Answer",
+                    value=saved_answer,
+                    height=200,
+                    placeholder="Type your response here... (Be concise and specific)",
+                    label_visibility="collapsed"
+                )
+                
+                ev = st.session_state.get("interview_evaluations", {}).get(q_idx)
+                
+                # 4. Action Button (Evaluate)
+                st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+                
+                # Show Evaluate button ONLY if not evaluated yet
+                if not ev:
+                    if st.button("Evaluate My Answer ✨", type="primary", use_container_width=True):
+                        if answer.strip():
+                            st.session_state["interview_answers"][q_idx] = answer
+                            result = ml_utils.evaluate_interview_answer(current_q, answer)
+                            st.session_state["interview_evaluations"][q_idx] = result
+                            st.rerun()
+                        else:
+                            st.warning("Please write your answer before evaluating.")
                 else:
-                    st.markdown("Be concise, honest, and link your answer back to the role requirements.")
+                    # 5. Evaluation Feedback (Inline)
+                    score = ev['score']
+                    color = "#00C853" if score >= 60 else "#FFB300" if score >= 40 else "#E53935"
+                    icon = "✅" if score >= 60 else "⚠️" if score >= 40 else "🚨"
                     
-            # Navigation Buttons moved to bottom left for context flow
-            st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
-            st.markdown("### Navigation")
-            nav1, nav2, nav3 = st.columns(3)
-            with nav1:
-                if q_idx > 0:
-                    if st.button("← Previous", use_container_width=True):
-                        st.session_state["current_q_index"] = q_idx - 1
-                        st.rerun()
-            with nav2:
-                if st.button("Reset Session", use_container_width=True):
+                    st.markdown(f"""
+                    <div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; margin-top: 1rem; border-top: 4px solid {color};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 1.1rem; font-weight: 600;">{icon} {ev['rating']}</span>
+                            <span style="font-size: 1.4rem; font-weight: 700; color: {color};">{score}%</span>
+                        </div>
+                        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">{ev['feedback']}</p>
+                    """, unsafe_allow_html=True)
+                    
+                    if ev.get('tips'):
+                        for tip in ev.get('tips'):
+                            st.markdown(f"""
+                            <div style="display: flex; margin-bottom: 0.5rem;">
+                                <span style="color: {color}; margin-right: 8px;">•</span>
+                                <span style="font-size: 0.9rem; color: var(--text-secondary);">{tip}</span>
+                            </div>
+                            """, unsafe_allow_html=True)
+                    
+                    st.markdown("</div>", unsafe_allow_html=True)
+                    
+                    # 6. Navigation (Next Question / Finish) - Only visible after evaluation
+                    st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
+                    
+                    col_nav1, col_nav2 = st.columns(2)
+                    with col_nav1:
+                        if st.button("Try Again", use_container_width=True):
+                            del st.session_state["interview_evaluations"][q_idx]
+                            st.rerun()
+                    with col_nav2:
+                        if q_idx < len(questions) - 1:
+                            if st.button("Next Question →", type="primary", use_container_width=True):
+                                st.session_state["current_q_index"] = q_idx + 1
+                                st.rerun()
+                        else:
+                            if st.button("Finish Session", type="primary", use_container_width=True):
+                                st.session_state["show_interview_summary"] = True
+                                st.rerun()
+
+                # Optional: Subtle reset link at the bottom
+                st.markdown("<div style='text-align: center; margin-top: 3rem;'>", unsafe_allow_html=True)
+                if st.button("Quit Session", key="quit_btn"):
                     st.session_state["interview_questions"] = []
                     st.session_state["current_q_index"] = 0
                     st.session_state["interview_answers"] = {}
                     st.session_state["interview_evaluations"] = {}
+                    st.session_state["show_interview_summary"] = False
                     st.rerun()
-            with nav3:
-                if q_idx < len(questions) - 1:
-                    if st.button("Next Question →", type="primary", use_container_width=True):
-                        st.session_state["current_q_index"] = q_idx + 1
-                        st.rerun()
-                else:
-                    if st.button("Finish Session", type="primary", use_container_width=True):
-                        st.session_state["show_interview_summary"] = True
-                        st.rerun()
-
-        with col_right:
-            # Answer Area
-            saved_answer = st.session_state.get("interview_answers", {}).get(q_idx, "")
-            
-            # Pre-fill demo data for the first question
-            if not saved_answer and q_idx == 0:
-                if current_q.get("star_focus"):
-                    saved_answer = "In my previous role as a Data Analyst, we faced a situation where our weekly reporting took 5 hours. My task was to automate the process. I wrote a Python script using Pandas and scheduled it with cron. As a result, we reduced reporting time by 90% and eliminated manual errors."
-                elif current_q.get("expected_keywords"):
-                    saved_answer = f"To approach this, I would focus on core principles like {', '.join(current_q.get('expected_keywords', [])[:3])}. This ensures the system is scalable, robust, and easy to maintain."
-                else:
-                    saved_answer = "I have extensive experience dealing with this type of situation and I always prioritize clear communication and data-driven problem solving."
-            
-            st.markdown("<h4 style='margin-bottom:0.5rem;'>Your Answer</h4>", unsafe_allow_html=True)
-            answer = st.text_area(
-                "Your Answer",
-                value=saved_answer,
-                height=220,
-                placeholder="Type your response here... (Tip: use the STAR method for behavioral questions)",
-                label_visibility="collapsed"
-            )
-            
-            # Evaluate Button right under text
-            if st.button("Evaluate Response ✨", type="primary", use_container_width=True):
-                if answer.strip():
-                    st.session_state["interview_answers"][q_idx] = answer
-                    result = ml_utils.evaluate_interview_answer(current_q, answer)
-                    st.session_state["interview_evaluations"][q_idx] = result
-                else:
-                    st.warning("Please write your answer before evaluating.")
-                    
-            # Evaluation Results Box
-            ev = st.session_state.get("interview_evaluations", {}).get(q_idx)
-            if ev:
-                # Premium compact feedback
-                score = ev['score']
-                if score >= 60:
-                    color, bg, border = "#00C853", "rgba(0, 200, 83, 0.05)", "rgba(0, 200, 83, 0.2)"
-                    icon = "✅"
-                elif score >= 40:
-                    color, bg, border = "#FFB300", "rgba(255, 179, 0, 0.05)", "rgba(255, 179, 0, 0.2)"
-                    icon = "⚠️"
-                else:
-                    color, bg, border = "#E53935", "rgba(229, 57, 53, 0.05)", "rgba(229, 57, 53, 0.2)"
-                    icon = "🚨"
-                
-                st.markdown(f"""
-                <div style="background: {bg}; border: 1px solid {border}; border-radius: 12px; 
-                            padding: 1.5rem; margin-top: 1rem;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                        <span style="font-size: 1.2rem; font-weight: 600; color: var(--text-primary);">{icon} {ev['rating']}</span>
-                        <span style="font-size: 1.5rem; font-weight: 700; color: {color};">{score}%</span>
-                    </div>
-                    <div style="width: 100%; background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; margin-bottom: 1rem;">
-                        <div style="width: {score}%; background: {color}; height: 8px; border-radius: 4px;"></div>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem;">{ev['feedback']}</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                if ev.get('tips'):
-                    st.markdown("<div style='margin-top: 1rem; font-weight: 600; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;'>How to Improve</div>", unsafe_allow_html=True)
-                    for tip in ev.get('tips'):
-                        st.markdown(f"""
-                        <div style="display: flex; align-items: flex-start; margin-top: 0.5rem; padding: 0.5rem; background: var(--bg-elevated); border-radius: 6px; border-left: 3px solid var(--primary-blue);">
-                            <span style="margin-right: 8px;">💡</span>
-                            <span style="font-size: 0.9rem; color: var(--text-primary);">{tip}</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-
+                st.markdown("</div>", unsafe_allow_html=True)
 
 
 
