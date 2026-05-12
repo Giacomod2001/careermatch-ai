@@ -1595,7 +1595,7 @@ def render_cv_builder():
             with col1:
                 st.download_button(
                     label="📥 Download as PDF",
-                    data=ml_utils.generate_simple_cv_pdf(cv_text),
+                    data=ml_utils.generate_harvard_cv_pdf(cv_data),
                     file_name=f"{candidate_name}_CV.pdf",
                     mime="application/pdf",
                     use_container_width=True,

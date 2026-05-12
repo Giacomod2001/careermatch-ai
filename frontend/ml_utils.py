@@ -3837,6 +3837,145 @@ def generate_simple_cv_pdf(text_content: str) -> bytes:
     return pdf.output(dest='S').encode('latin-1')
 
 # =============================================================================
+# HARVARD STYLE CV PDF GENERATOR
+# =============================================================================
+def generate_harvard_cv_pdf(cv_data: Dict) -> bytes:
+    """
+    Generates a high-end, Harvard-style CV PDF.
+    Features: Centered Name, Horizontal Dividers, Structured Experience.
+    """
+    if not FPDF:
+        return None
+        
+    class HarvardPDF(FPDF):
+        def header(self):
+            pass
+        def footer(self):
+            self.set_y(-15)
+            self.set_font('Times', 'I', 8)
+            self.set_text_color(100, 100, 100)
+            self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
+
+    pdf = HarvardPDF()
+    pdf.set_auto_page_break(auto=True, margin=18)
+    pdf.add_page()
+    
+    # --- HELPER: CLEAN & ENCODE ---
+    def clean(t):
+        if not t: return ""
+        repl = {"•": "-", "·": ".", "–": "-", "—": "-", "’": "'", "é": "e", "á": "a", "í": "i", "ó": "o", "ú": "u", "€": "EUR"}
+        for k, v in repl.items(): t = t.replace(k, v)
+        try: return t.encode('latin-1', 'replace').decode('latin-1')
+        except: return "".join(c if ord(c) < 128 else "?" for c in t)
+
+    # --- 1. HEADER (NAME & CONTACT) ---
+    name = cv_data.get("name", "Giacomo Dellacqua")
+    pdf.set_font("Times", 'B', 20)
+    pdf.set_text_color(0, 0, 0)
+    pdf.cell(0, 12, clean(name), 0, 1, 'C')
+    
+    contact_parts = []
+    if cv_data.get("location"): contact_parts.append(cv_data["location"])
+    if cv_data.get("email"): contact_parts.append(cv_data["email"])
+    if cv_data.get("phone"): contact_parts.append(cv_data["phone"])
+    
+    pdf.set_font("Times", '', 10.5)
+    pdf.cell(0, 5, clean("  |  ".join(contact_parts)), 0, 1, 'C')
+    pdf.ln(5)
+
+    # --- 2. SUMMARY ---
+    if cv_data.get("summary"):
+        pdf.set_font("Times", 'B', 11)
+        pdf.write(5, "SUMMARY ")
+        pdf.set_font("Times", '', 11)
+        pdf.multi_cell(0, 5, clean(cv_data["summary"]))
+        pdf.ln(4)
+        pdf.set_draw_color(180, 180, 180)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(5)
+
+    # --- 3. EXPERIENCE ---
+    if cv_data.get("experiences"):
+        pdf.set_font("Times", 'B', 12)
+        pdf.cell(0, 7, "EXPERIENCE", 0, 1)
+        pdf.ln(1)
+        for exp in cv_data["experiences"]:
+            title = exp.get("title", "")
+            company = exp.get("company", "")
+            dates = exp.get("dates", "")
+            location = exp.get("location", "Milan, Italy")
+            
+            # Line 1: Title -- Company (Bold)
+            pdf.set_font("Times", 'B', 11)
+            left_text = f"{title} -- {company}"
+            pdf.cell(120, 6, clean(left_text), 0, 0)
+            
+            # Line 1 Right: Location | Dates (Regular)
+            pdf.set_font("Times", '', 10)
+            right_text = f"{location} | {dates}"
+            pdf.cell(0, 6, clean(right_text), 0, 1, 'R')
+            
+            if exp.get("bullets"):
+                pdf.set_font("Times", '', 10.5)
+                for bullet in exp["bullets"].split('\n'):
+                    b = bullet.strip().lstrip('•').lstrip('-').strip()
+                    if b:
+                        pdf.set_x(15) # Indent
+                        pdf.cell(4, 5, "-", 0, 0) # Simple bullet
+                        pdf.multi_cell(0, 5, clean(b))
+            pdf.ln(2)
+        pdf.ln(2)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(5)
+
+    # --- 4. EDUCATION ---
+    if cv_data.get("education"):
+        pdf.set_font("Times", 'B', 12)
+        pdf.cell(0, 7, "EDUCATION", 0, 1)
+        pdf.ln(1)
+        for edu in cv_data["education"]:
+            degree = edu.get("degree", "")
+            inst = edu.get("institution", "")
+            dates = edu.get("dates", "")
+            loc = edu.get("location", "Milan, Italy")
+            
+            pdf.set_font("Times", '', 11)
+            left_text = f"{degree} -- {inst}, {loc}"
+            pdf.cell(140, 6, clean(left_text), 0, 0)
+            pdf.cell(0, 6, clean(dates), 0, 1, 'R')
+            if edu.get("details"):
+                pdf.set_font("Times", 'I', 10)
+                pdf.set_x(15)
+                pdf.multi_cell(0, 5, clean(edu["details"]))
+            pdf.ln(1)
+        pdf.ln(2)
+        pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+        pdf.ln(5)
+
+    # --- 5. SKILLS ---
+    skills = cv_data.get("competencies", [])
+    if skills:
+        pdf.set_font("Times", 'B', 11)
+        pdf.write(6, "SKILLS ")
+        pdf.set_font("Times", '', 11)
+        # Use a middot-like character
+        dot = " . " 
+        pdf.multi_cell(0, 6, clean(dot.join(skills)))
+        pdf.ln(2)
+
+    # --- 6. LANGUAGES ---
+    langs = cv_data.get("languages", [])
+    if langs:
+        pdf.set_font("Times", 'B', 11)
+        pdf.write(6, "LANGUAGES ")
+        pdf.set_font("Times", '', 11)
+        l_parts = [f"{l['language']} ({l['level']})" for l in langs if l.get('language')]
+        pdf.multi_cell(0, 6, clean(" . ".join(l_parts)))
+        pdf.ln(4)
+
+    return pdf.output(dest='S').encode('latin-1')
+
+# =============================================================================
 # RUBEN AI - Sidebar Assistant Logic
 # =============================================================================
 
