@@ -4462,11 +4462,11 @@ def evaluate_interview_answer(question: Dict, answer: str) -> Dict:
     model_sketch = ""
     if score < 90:
         if star_focus:
-            model_sketch = "💡 **Coach's Tip:** Try phrasing it like this: 'In my role at [Company], I faced [Situation]. I took the initiative to [Action], which resulted in [Result - e.g. reduced time by 20%].'"
+            model_sketch = "**Coach's Tip:** Try phrasing it like this: 'In my role at [Company], I faced [Situation]. I took the initiative to [Action], which resulted in [Result - e.g. reduced time by 20%].'"
         elif expected_keywords:
-            model_sketch = f"💡 **Coach's Tip:** Try to incorporate technical keywords: 'By utilizing {', '.join(expected_keywords[:3])}, I was able to optimize the workflow and ensure a robust implementation...'"
+            model_sketch = f"**Coach's Tip:** Try to incorporate technical keywords: 'By utilizing {', '.join(expected_keywords[:3])}, I was able to optimize the workflow and ensure a robust implementation...'"
         else:
-            model_sketch = "💡 **Coach's Tip:** Try to be more specific about the 'What', 'How', and 'Result' of your experience to show more impact."
+            model_sketch = "**Coach's Tip:** Try to be more specific about the 'What', 'How', and 'Result' of your experience to show more impact."
 
     return {
         "score": score,

@@ -3000,52 +3000,46 @@ def render_interview_prep():
                     # 5. Evaluation Feedback (Inline)
                     score = ev['score']
                     color = "#00C853" if score >= 85 else "#FFB300" if score >= 60 else "#E53935"
-                    icon = "✅" if score >= 85 else "⚠️" if score >= 60 else "🚨"
                     
-                    st.markdown(f"""
-                    <div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-top: 1rem; border-left: 6px solid {color};">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                            <div>
-                                <span style="font-size: 1.2rem; font-weight: 700; color: {color}; display: block;">{ev['rating']}</span>
-                                <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Evaluation Result</span>
-                            </div>
-                            <div style="text-align: right;">
-                                <span style="font-size: 2rem; font-weight: 800; color: {color};">{score}%</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 1px dashed rgba(255,255,255,0.1);">
-                            <p style="color: var(--text-primary); line-height: 1.6; margin: 0; font-style: italic;">"{ev['feedback']}"</p>
-                        </div>
-                    """, unsafe_allow_html=True)
+                    st.markdown(f"""<div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-top: 1rem; border-left: 6px solid {color};">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+        <span style="font-size: 1.2rem; font-weight: 700; color: {color}; display: block;">{ev['rating']}</span>
+        <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Evaluation Result</span>
+    </div>
+    <div style="text-align: right;">
+        <span style="font-size: 2rem; font-weight: 800; color: {color};">{score}%</span>
+    </div>
+</div>
+<div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 1px dashed rgba(255,255,255,0.1);">
+    <p style="color: var(--text-primary); line-height: 1.6; margin: 0; font-style: italic;">"{ev['feedback']}"</p>
+</div>""", unsafe_allow_html=True)
                     
                     # Coach's Sketch (The "Insight")
                     if ev.get('model_sketch'):
-                        st.markdown(f"""
-                        <div style="background: rgba(0, 160, 220, 0.05); border-left: 4px solid #00A0DC; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
-                            <div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.5rem;">RUBEN'S COACHING TIP</div>
-                            <div style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">{ev['model_sketch']}</div>
-                        </div>
-                        """, unsafe_allow_html=True)
+                        st.markdown(f"""<div style="background: rgba(0, 160, 220, 0.05); border-left: 4px solid #00A0DC; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+<div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.5rem;">RUBEN'S COACHING TIP</div>
+<div style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">{ev['model_sketch']}</div>
+</div>""", unsafe_allow_html=True)
 
                     # Strengths & Weaknesses
                     c_fb1, c_fb2 = st.columns(2)
                     with c_fb1:
                         if ev.get('strengths'):
-                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #00C853;'>💎 Strengths</p>", unsafe_allow_html=True)
+                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #00C853;'>Strengths</p>", unsafe_allow_html=True)
                             for s in ev['strengths']:
-                                st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>• {s}</div>", unsafe_allow_html=True)
+                                st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>- {s}</div>", unsafe_allow_html=True)
                     
                     with c_fb2:
                         if ev.get('weaknesses'):
-                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #FFB300;'>🎯 Areas for Improvement</p>", unsafe_allow_html=True)
+                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #FFB300;'>Areas for Improvement</p>", unsafe_allow_html=True)
                             for w in ev['weaknesses']:
-                                st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>• {w}</div>", unsafe_allow_html=True)
+                                st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>- {w}</div>", unsafe_allow_html=True)
                     
                     # Insights Row
                     if ev.get('insights'):
                         st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
-                        st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.8rem; color: var(--text-primary);'>📊 Ruben's Insights</p>", unsafe_allow_html=True)
+                        st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.8rem; color: var(--text-primary);'>Insights</p>", unsafe_allow_html=True)
                         ins = ev['insights']
                         i_col1, i_col2, i_col3 = st.columns(3)
                         with i_col1:
