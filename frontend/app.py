@@ -86,19 +86,16 @@ st.set_page_config(
 t = get_t()
 
 # =============================================================================
+# APPLICAZIONE TEMA CSS PREMIUM (MUST BE BEFORE CONSENT GATE)
+# =============================================================================
+st.markdown(styles.get_premium_css(), unsafe_allow_html=True)
+
+# =============================================================================
 # GDPR CONSENT GATE
 # =============================================================================
 # Block the entire app until GDPR consent is given
 if not gdpr_compliance.render_consent_banner():
     st.stop()
-
-# =============================================================================
-# APPLICAZIONE TEMA CSS PREMIUM
-# =============================================================================
-# Carica il CSS personalizzato da styles.py
-# Include: palette LinkedIn, glassmorphism, animazioni
-
-st.markdown(styles.get_premium_css(), unsafe_allow_html=True)
 
 # =============================================================================
 # GESTIONE STATO SESSIONE
@@ -1887,6 +1884,7 @@ def render_career_discovery():
             international = st.selectbox("Scope", ["Any", "International", "Local"], key="pref_intl")
             dynamic = st.selectbox("Pace", ["Any", "Dynamic", "Stable"], key="pref_dynamic")
         with col3:
+            creative = st.selectbox("Style", ["Any", "Creative", "Structured"], key="pref_creative")
             st.markdown("")
     
     # --- DISCOVER BUTTON ---
