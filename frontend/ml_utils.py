@@ -3881,7 +3881,7 @@ def generate_harvard_cv_pdf(cv_data: Dict) -> bytes:
     
     pdf.set_font("Times", '', 10.5)
     pdf.cell(0, 5, clean("  |  ".join(contact_parts)), 0, 1, 'C')
-    pdf.ln(5)
+    pdf.ln(8) # Increased spacing after header
 
     # --- 2. SUMMARY ---
     if cv_data.get("summary"):
@@ -3889,10 +3889,10 @@ def generate_harvard_cv_pdf(cv_data: Dict) -> bytes:
         pdf.write(5, "SUMMARY ")
         pdf.set_font("Times", '', 11)
         pdf.multi_cell(0, 5, clean(cv_data["summary"]))
-        pdf.ln(4)
+        pdf.ln(6) # Increased
         pdf.set_draw_color(180, 180, 180)
         pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-        pdf.ln(5)
+        pdf.ln(7) # Increased
 
     # --- 3. EXPERIENCE ---
     if cv_data.get("experiences"):
@@ -3923,10 +3923,10 @@ def generate_harvard_cv_pdf(cv_data: Dict) -> bytes:
                         pdf.set_x(15) # Indent
                         pdf.cell(4, 5, "-", 0, 0) # Simple bullet
                         pdf.multi_cell(0, 5, clean(b))
-            pdf.ln(2)
+            pdf.ln(4) # Increased spacing between entries
         pdf.ln(2)
         pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-        pdf.ln(5)
+        pdf.ln(7) # Increased
 
     # --- 4. EDUCATION ---
     if cv_data.get("education"):
@@ -3947,10 +3947,10 @@ def generate_harvard_cv_pdf(cv_data: Dict) -> bytes:
                 pdf.set_font("Times", 'I', 10)
                 pdf.set_x(15)
                 pdf.multi_cell(0, 5, clean(edu["details"]))
-            pdf.ln(1)
+            pdf.ln(3) # Increased
         pdf.ln(2)
         pdf.line(10, pdf.get_y(), 200, pdf.get_y())
-        pdf.ln(5)
+        pdf.ln(7) # Increased
 
     # --- 5. SKILLS ---
     skills = cv_data.get("competencies", [])
