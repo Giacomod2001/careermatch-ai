@@ -1284,6 +1284,97 @@ h1 {
 }
 
 /* =============================================================================
+   PREMIUM UI COMPONENTS
+   ============================================================================= */
+
+.hero-gradient {
+    background: linear-gradient(135deg, rgba(0, 119, 181, 0.1) 0%, rgba(0, 160, 220, 0.05) 100%);
+    border: 1px solid rgba(0, 160, 220, 0.15);
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.hero-gradient h1 {
+    font-size: 2.8rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(90deg, #fff 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-md);
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 160, 220, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.config-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* 21. SMART TAGS */
+.skill-tag-matched {
+    background: rgba(0, 200, 83, 0.1);
+    color: #00C853;
+    border: 1px solid rgba(0, 200, 83, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin: 4px;
+    display: inline-block;
+}
+
+.skill-tag-missing {
+    background: rgba(229, 57, 53, 0.1);
+    color: #E53935;
+    border: 1px solid rgba(229, 57, 53, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin: 4px;
+    display: inline-block;
+}
+
+.skill-tag-transferable {
+    background: rgba(0, 160, 220, 0.1);
+    color: #00A0DC;
+    border: 1px solid rgba(0, 160, 220, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin: 4px;
+    display: inline-block;
+}
+
+.skill-tag-bonus {
+    background: rgba(255, 179, 0, 0.1);
+    color: #FFB300;
+    border: 1px solid rgba(255, 179, 0, 0.2);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin: 4px;
+    display: inline-block;
+}
+
+/* =============================================================================
    AI ASSISTANT UI
    ============================================================================= */
 

@@ -1218,13 +1218,13 @@ def render_cv_builder():
     if "cv_builder_step" not in st.session_state:
         st.session_state["cv_builder_step"] = 1
 
-    # HANDLE DEMO DATA LOADING REMOVED
-
     # TITLE (Centered)
     st.markdown(f"""
-    <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='margin: 0; padding: 0;'>{t("bld_title")}</h1>
-        <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>{t("bld_subtitle")}</p>
+    <div class="hero-gradient" style="text-align: center; padding: 2.5rem; margin-bottom: 2rem;">
+        <h1 style="margin-bottom: 0.5rem;">{t("bld_title")}</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+            {t("bld_subtitle")}
+        </p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1265,34 +1265,31 @@ def render_cv_builder():
     # Initialize Global JD Text for all steps
     jd_text = st.session_state.get("cv_builder_jd", "")
 
-    # (Custom sidebar removed to use Global Navigation)
-    
     # --- BUILDER STEPS CONTENT ---
     
     # STEP 1: PROFILE
     if curr_step == 1:
-        st.header("1. Personal Profile")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            cv_data["name"] = st.text_input("Full Name", value=cv_data.get("name", ""))
-            cv_data["email"] = st.text_input("Email", value=cv_data.get("email", ""))
-        with col2:
-            cv_data["location"] = st.text_input("Location", value=cv_data.get("location", ""))
-            cv_data["phone"] = st.text_input("Phone", value=cv_data.get("phone", ""))
-            
-        st.markdown("### Professional Summary")
-        cv_data["summary"] = st.text_area(
-            "Write a compelling summary", 
-            value=cv_data.get("summary", ""),
-            height=150,
-            placeholder="E.g. Experienced Project Manager with 5+ years..."
-        )
+        st.markdown(f"### {t('bld_step1')}")
+        with st.container(border=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                cv_data["name"] = st.text_input("Full Name", value=cv_data.get("name", ""))
+                cv_data["email"] = st.text_input("Email", value=cv_data.get("email", ""))
+            with col2:
+                cv_data["location"] = st.text_input("Location", value=cv_data.get("location", ""))
+                cv_data["phone"] = st.text_input("Phone", value=cv_data.get("phone", ""))
+                
+            st.markdown("### Professional Summary")
+            cv_data["summary"] = st.text_area(
+                "Write a compelling summary", 
+                value=cv_data.get("summary", ""),
+                height=150,
+                placeholder="E.g. Experienced Project Manager with 5+ years..."
+            )
 
         st.markdown("<br>", unsafe_allow_html=True)
 
         # JD Input for Smart Suggestions (Optional - Moved from Sidebar)
-        # Using a distinct key suffix or logic to keep session state
         with st.expander("Target Job Description (Optional)", expanded=False):
             st.caption("Paste a Job Description here to get real-time optimization advice and skill gap analysis.")
             
@@ -1386,43 +1383,38 @@ def render_cv_builder():
 
     # STEP 2: SKILLS
     elif curr_step == 2:
-        st.header("2. Skills & Competencies")
-        
-        # Smart Suggestions Logic
-        if jd_text:
-            jd_hard, _ = ml_utils.extract_skills_from_text(jd_text, is_jd=True)
-            user_skills = set(cv_data.get("competencies", []))
-            missing = jd_hard - user_skills
+        st.markdown(f"### {t('bld_step2')}")
+        with st.container(border=True):
+            # Smart Suggestions Logic
+            if jd_text:
+                jd_hard, _ = ml_utils.extract_skills_from_text(jd_text, is_jd=True)
+                user_skills = set(cv_data.get("competencies", []))
+                missing = jd_hard - user_skills
+                
+                if missing:
+                    st.info(f"**JD Suggestions:** Consider adding: {', '.join(list(missing)[:5])}")
             
-            if missing:
-                st.info(f"**JD Suggestions:** Consider adding: {', '.join(list(missing)[:5])}")
-        
-        # Form to prevent reruns on every selection
-        # Competencies - Immediate update for better UX
-        all_skills = sorted(list(set(list(constants.HARD_SKILLS.keys()) + list(constants.SOFT_SKILLS.keys()))))
-        
-        # Pre-select existing or default empty
-        default_skills = [c for c in cv_data.get("competencies", []) if c in all_skills]
-        
-        selected_skills = st.multiselect(
-            "Core Competencies (Select from DB)", 
-            options=all_skills, 
-            default=default_skills
-        )
-        # Update immediately
-        cv_data["competencies"] = selected_skills
-        
-        # Tech Skills Text
-        st.markdown("### Technical Skills (Free Text)")
-        tech_text = st.text_area(
-            "Categorized Skills",
-            value=cv_data.get("tech_skills_text", ""),
-            height=200,
-            placeholder="Languages: Python, Java\nTools: Tableau, Git"
-        )
-        # Update immediately
-        cv_data["tech_skills_text"] = tech_text
-        
+            # Competencies - Immediate update for better UX
+            all_skills = sorted(list(set(list(constants.HARD_SKILLS.keys()) + list(constants.SOFT_SKILLS.keys()))))
+            selected_skills = st.multiselect(
+                "Select Core Competencies",
+                options=all_skills,
+                default=cv_data.get("competencies", []),
+                placeholder="Search skills (e.g. Python, SQL, Project Management...)"
+            )
+            cv_data["competencies"] = selected_skills
+            
+            # Tech Skills Text
+            st.markdown("### Technical Skills (Free Text)")
+            tech_text = st.text_area(
+                "Categorized Skills",
+                value=cv_data.get("tech_skills_text", ""),
+                height=200,
+                placeholder="Languages: Python, Java\nTools: Tableau, Git"
+            )
+            # Update immediately
+            cv_data["tech_skills_text"] = tech_text
+
         # Nav Buttons (Standard Buttons)
         col_prev, col_next = st.columns([1, 1])
         with col_prev:
@@ -1438,101 +1430,101 @@ def render_cv_builder():
     # STEP 3: EXPERIENCE
     # STEP 3: EXPERIENCE & EDUCATION
     elif curr_step == 3:
-        st.header("3. Experience & Qualifications")
-        
-        # --- EXPERIENCE ---
-        st.markdown("### Professional Experience")
-        if "experiences" not in cv_data: cv_data["experiences"] = []
-        
-        if st.button("+ Add Position", key="add_exp"):
-            cv_data["experiences"].insert(0, {})
-            st.rerun()
+        st.markdown(f"### {t('bld_step3')}")
+        with st.container(border=True):
+            # --- EXPERIENCE ---
+            st.markdown("### Professional Experience")
+            if "experiences" not in cv_data: cv_data["experiences"] = []
             
-        for i, exp in enumerate(cv_data["experiences"]):
-            with st.expander(f"{exp.get('title', 'Position')} at {exp.get('company', 'Company')}", expanded=True):
-                c1, c2 = st.columns(2)
-                exp["title"] = c1.text_input("Job Title", value=exp.get("title", ""), key=f"t{i}")
-                exp["company"] = c2.text_input("Company", value=exp.get("company", ""), key=f"c{i}")
-                
-                c3, c4 = st.columns(2)
-                exp["dates"] = c3.text_input("Dates", value=exp.get("dates", ""), key=f"d{i}", placeholder="e.g. Jan 2023 - Present")
-                exp["location"] = c4.text_input("Location", value=exp.get("location", ""), key=f"l{i}")
-                
-                exp["bullets"] = st.text_area("Key Achievements", value=exp.get("bullets", ""), key=f"b{i}", height=100, placeholder="• Achieved X by doing Y...")
-                exp["tech"] = st.text_input("Technologies Used", value=exp.get("tech", ""), key=f"tech{i}")
-                
-                if st.button("Delete Position", key=f"del_exp{i}"):
-                    cv_data["experiences"].pop(i)
-                    st.rerun()
-
-        st.divider()
-
-        # --- EDUCATION ---
-        st.markdown("### Education")
-        if "education" not in cv_data: cv_data["education"] = []
-        
-        if st.button("+ Add Education", key="add_edu"):
-            cv_data["education"].insert(0, {})
-            st.rerun()
-            
-        for i, edu in enumerate(cv_data["education"]):
-            with st.expander(f"{edu.get('degree', 'Degree')} at {edu.get('institution', 'Institution')}", expanded=True):
-                edu["degree"] = st.text_input("Degree/Certificate", value=edu.get("degree", ""), key=f"ed_deg{i}")
-                
-                c1, c2 = st.columns(2)
-                edu["institution"] = c1.text_input("Institution", value=edu.get("institution", ""), key=f"ed_inst{i}")
-                edu["location"] = c2.text_input("Location", value=edu.get("location", ""), key=f"ed_loc{i}")
-                
-                edu["dates"] = st.text_input("Dates", value=edu.get("dates", ""), key=f"ed_date{i}")
-                edu["details"] = st.text_area("Details (Coursework, Honors)", value=edu.get("details", ""), key=f"ed_det{i}", height=80)
-                
-                if st.button("Delete Education", key=f"del_edu{i}"):
-                    cv_data["education"].pop(i)
-                    st.rerun()
-
-        st.divider()
-
-        # --- PROJECTS ---
-        st.markdown("### Key Projects")
-        if "projects" not in cv_data: cv_data["projects"] = []
-        
-        if st.button("+ Add Project", key="add_proj"):
-            cv_data["projects"].insert(0, {})
-            st.rerun()
-            
-        for i, proj in enumerate(cv_data["projects"]):
-            with st.expander(f"{proj.get('name', 'Project')}", expanded=True):
-                proj["name"] = st.text_input("Project Name", value=proj.get("name", ""), key=f"pj_name{i}")
-                proj["link"] = st.text_input("Link (URL)", value=proj.get("link", ""), key=f"pj_link{i}")
-                proj["description"] = st.text_area("Description", value=proj.get("description", ""), key=f"pj_desc{i}", height=80)
-                
-                if st.button("Delete Project", key=f"del_proj{i}"):
-                    cv_data["projects"].pop(i)
-                    st.rerun()
-
-        st.divider()
-
-        # --- LANGUAGES ---
-        st.markdown("### Languages")
-        if "languages" not in cv_data: cv_data["languages"] = []
-        
-        if st.button("+ Add Language", key="add_lang"):
-            cv_data["languages"].append({"language": "", "level": ""})
-            st.rerun()
-            
-        for i, lang in enumerate(cv_data["languages"]):
-            c1, c2, c3 = st.columns([2, 2, 1])
-            lang["language"] = c1.text_input("Language", value=lang.get("language", ""), key=f"lg_name{i}")
-            level_options = ["Native", "Professional (C1-C2)", "Intermediate (B1-B2)", "Basic (A1-A2)"]
-            current_level = lang.get("level", "")
-            try:
-                level_idx = level_options.index(current_level) if current_level in level_options else 0
-            except:
-                level_idx = 0
-            lang["level"] = c2.selectbox("Level", level_options, index=level_idx, key=f"lg_lvl{i}")
-            if c3.button("X", key=f"del_lang{i}"):
-                cv_data["languages"].pop(i)
+            if st.button("+ Add Position", key="add_exp"):
+                cv_data["experiences"].insert(0, {})
                 st.rerun()
+                
+            for i, exp in enumerate(cv_data["experiences"]):
+                with st.expander(f"{exp.get('title', 'Position')} at {exp.get('company', 'Company')}", expanded=True):
+                    c1, c2 = st.columns(2)
+                    exp["title"] = c1.text_input("Job Title", value=exp.get("title", ""), key=f"t{i}")
+                    exp["company"] = c2.text_input("Company", value=exp.get("company", ""), key=f"c{i}")
+                    
+                    c3, c4 = st.columns(2)
+                    exp["dates"] = c3.text_input("Dates", value=exp.get("dates", ""), key=f"d{i}", placeholder="e.g. Jan 2023 - Present")
+                    exp["location"] = c4.text_input("Location", value=exp.get("location", ""), key=f"l{i}")
+                    
+                    exp["bullets"] = st.text_area("Key Achievements", value=exp.get("bullets", ""), key=f"b{i}", height=100, placeholder="• Achieved X by doing Y...")
+                    exp["tech"] = st.text_input("Technologies Used", value=exp.get("tech", ""), key=f"tech{i}")
+                    
+                    if st.button("Delete Position", key=f"del_exp{i}"):
+                        cv_data["experiences"].pop(i)
+                        st.rerun()
+    
+            st.divider()
+    
+            # --- EDUCATION ---
+            st.markdown("### Education")
+            if "education" not in cv_data: cv_data["education"] = []
+            
+            if st.button("+ Add Education", key="add_edu"):
+                cv_data["education"].insert(0, {})
+                st.rerun()
+                
+            for i, edu in enumerate(cv_data["education"]):
+                with st.expander(f"{edu.get('degree', 'Degree')} at {edu.get('institution', 'Institution')}", expanded=True):
+                    edu["degree"] = st.text_input("Degree/Certificate", value=edu.get("degree", ""), key=f"ed_deg{i}")
+                    
+                    c1, c2 = st.columns(2)
+                    edu["institution"] = c1.text_input("Institution", value=edu.get("institution", ""), key=f"ed_inst{i}")
+                    edu["location"] = c2.text_input("Location", value=edu.get("location", ""), key=f"ed_loc{i}")
+                    
+                    edu["dates"] = st.text_input("Dates", value=edu.get("dates", ""), key=f"ed_date{i}")
+                    edu["details"] = st.text_area("Details (Coursework, Honors)", value=edu.get("details", ""), key=f"ed_det{i}", height=80)
+                    
+                    if st.button("Delete Education", key=f"del_edu{i}"):
+                        cv_data["education"].pop(i)
+                        st.rerun()
+    
+            st.divider()
+    
+            # --- PROJECTS ---
+            st.markdown("### Key Projects")
+            if "projects" not in cv_data: cv_data["projects"] = []
+            
+            if st.button("+ Add Project", key="add_proj"):
+                cv_data["projects"].insert(0, {})
+                st.rerun()
+                
+            for i, proj in enumerate(cv_data["projects"]):
+                with st.expander(f"{proj.get('name', 'Project')}", expanded=True):
+                    proj["name"] = st.text_input("Project Name", value=proj.get("name", ""), key=f"pj_name{i}")
+                    proj["link"] = st.text_input("Link (URL)", value=proj.get("link", ""), key=f"pj_link{i}")
+                    proj["description"] = st.text_area("Description", value=proj.get("description", ""), key=f"pj_desc{i}", height=80)
+                    
+                    if st.button("Delete Project", key=f"del_proj{i}"):
+                        cv_data["projects"].pop(i)
+                        st.rerun()
+    
+            st.divider()
+    
+            # --- LANGUAGES ---
+            st.markdown("### Languages")
+            if "languages" not in cv_data: cv_data["languages"] = []
+            
+            if st.button("+ Add Language", key="add_lang"):
+                cv_data["languages"].append({"language": "", "level": ""})
+                st.rerun()
+                
+            for i, lang in enumerate(cv_data["languages"]):
+                c1, c2, c3 = st.columns([2, 2, 1])
+                lang["language"] = c1.text_input("Language", value=lang.get("language", ""), key=f"lg_name{i}")
+                level_options = ["Native", "Professional (C1-C2)", "Intermediate (B1-B2)", "Basic (A1-A2)"]
+                current_level = lang.get("level", "")
+                try:
+                    level_idx = level_options.index(current_level) if current_level in level_options else 0
+                except:
+                    level_idx = 0
+                lang["level"] = c2.selectbox("Level", level_options, index=level_idx, key=f"lg_lvl{i}")
+                if c3.button("X", key=f"del_lang{i}"):
+                    cv_data["languages"].pop(i)
+                    st.rerun()
 
         # Nav Buttons
         st.divider()
@@ -1548,7 +1540,8 @@ def render_cv_builder():
 
     # STEP 4: REVIEW & EXPORT
     elif curr_step == 4:
-        st.header("4. Final Review")
+        st.markdown(f"### {t('bld_step4')}")
+        with st.container(border=True):
         
         # Generate CV Text (for TXT/PDF download)
         cv_text_lines = []
@@ -1684,10 +1677,6 @@ def render_cv_builder():
                  st.warning("PDF Error")
              
         with col3:
-             if st.button("Use for Analysis →", type="primary", use_container_width=True):
-                 st.session_state["cv_text"] = cv_text
-                 st.session_state["page"] = "CV Evaluation" # Redirect to Eval
-                 st.success("CV Loaded! Redirecting...")
                  st.rerun()
 
         # Nav Buttons
@@ -1764,84 +1753,80 @@ def render_landing_page():
     
     # HERO SECTION
     st.markdown(f"""
-    <div style='text-align: center; padding: 2rem 0 1rem 0; width: 100%;'>
-        <h1 style='font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem; background: -webkit-linear-gradient(45deg, #0077B5, #00C853); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>CareerMatch AI</h1>
-        <p style='font-size: 1.1rem; color: #8b949e;'>{t('landing_subtitle')}</p>
+    <div class="hero-gradient" style="text-align: center; padding: 3rem 1rem; margin-bottom: 2rem;">
+        <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem;">CareerMatch AI</h1>
+        <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto;">{t('landing_subtitle')}</p>
     </div>
     """, unsafe_allow_html=True)
 
     # Metrics Row
-    metric_gradient = "background: -webkit-linear-gradient(45deg, #0077B5, #00C853); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
-    
     st.markdown(f"""
-    <div style="display: flex; justify-content: center; gap: 6rem; margin-bottom: 2rem; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <h2 style="{metric_gradient} margin: 0; padding: 0; font-size: 2rem; font-weight: 600;">950+</h2>
-            <span style="color: #c9d1d9; font-size: 1.2rem;">Keywords</span>
+    <div style="display: flex; justify-content: center; gap: 6rem; margin-bottom: 3rem; flex-wrap: wrap;">
+        <div style="text-align: center;">
+            <h2 style="color: var(--primary-blue); margin: 0; font-size: 2.5rem; font-weight: 800;">950+</h2>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Keywords</div>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <h2 style="{metric_gradient} margin: 0; padding: 0; font-size: 2rem; font-weight: 600;">230+</h2>
-            <span style="color: #c9d1d9; font-size: 1.2rem;">Job Archetypes</span>
+        <div style="text-align: center;">
+            <h2 style="color: var(--primary-blue); margin: 0; font-size: 2.5rem; font-weight: 800;">230+</h2>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Job Archetypes</div>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <h2 style="{metric_gradient} margin: 0; padding: 0; font-size: 2rem; font-weight: 600;">25+</h2>
-            <span style="color: #c9d1d9; font-size: 1.2rem;">Sectors</span>
+        <div style="text-align: center;">
+            <h2 style="color: var(--primary-blue); margin: 0; font-size: 2.5rem; font-weight: 800;">25+</h2>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Sectors</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     # Description
     st.markdown(f"""
-    <div style='text-align: center; padding: 1rem 0; margin-bottom: 1.5rem;'>
-        <p style='color: #8b949e; font-size: 1rem; max-width: 700px; margin: 0 auto;'>
-            <strong style='color: #c9d1d9;'>Your Complete Career Toolkit:</strong> 
-            {t('landing_hero_text')}
+    <div style='text-align: center; margin-bottom: 3rem;'>
+        <p style='color: var(--text-secondary); font-size: 1.1rem; max-width: 800px; margin: 0 auto; line-height: 1.6;'>
+            <strong style='color: var(--text-primary);'>{t('landing_hero_text')}</strong> 
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Card Template
-    card_style = """
-    <div style='text-align: center;'>
-        <h3 style='margin-bottom: 0.75rem; font-size: 1.1rem;'>{}</h3>
-        <div style='min-height: 4.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;'>
-            <p style='color: #8b949e; font-size: 0.85rem; margin: 0; line-height: 1.4;'>{}</p>
-        </div>
-    </div>
-    """
-    
-    # 3-Column Layout to match sidebar funnel
+    # 3-Column Layout
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        with st.container(border=True):
-            st.markdown(card_style.format(
-                t('card_explore_title'),
-                t('card_explore_desc')
-            ), unsafe_allow_html=True)
-            if st.button(t('btn_start'), use_container_width=True, type="primary", key="land_explore"):
-                st.session_state["page"] = "Explore"
-                st.rerun()
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem;">{t('card_explore_title')}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
+                {t('card_explore_desc')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t('btn_start'), use_container_width=True, type="primary", key="land_explore"):
+            st.session_state["page"] = "Explore"
+            st.rerun()
     
     with col2:
-        with st.container(border=True):
-            st.markdown(card_style.format(
-                t('card_cv_title'),
-                t('card_cv_desc')
-            ), unsafe_allow_html=True)
-            if st.button(t('btn_start'), use_container_width=True, key="land_cveval"):
-                st.session_state["page"] = "CV Evaluation"
-                st.rerun()
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem;">{t('card_cv_title')}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
+                {t('card_cv_desc')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t('btn_start'), use_container_width=True, key="land_cveval"):
+            st.session_state["page"] = "CV Evaluation"
+            st.rerun()
 
     with col3:
-        with st.container(border=True):
-            st.markdown(card_style.format(
-                t('card_interview_title'),
-                t('card_interview_desc')
-            ), unsafe_allow_html=True)
-            if st.button(t('btn_start'), use_container_width=True, key="land_interview"):
-                st.session_state["page"] = "Interview Prep"
-                st.rerun()
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem;">{t('card_interview_title')}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
+                {t('card_interview_desc')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t('btn_start'), use_container_width=True, key="land_interview"):
+            st.session_state["page"] = "Interview Prep"
+            st.rerun()
 
     # Footer Divider
     st.markdown("<hr>", unsafe_allow_html=True)
@@ -1889,27 +1874,39 @@ def render_career_discovery():
     render_navigation() # GLOBAL NAVBAR
     
     
-    # --- HEADER (Same pattern as CV Builder) ---
-    
-    # --- HEADER (Same pattern as CV Builder) ---
+    # --- HEADER ---
     st.markdown(f"""
-    <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='margin: 0; padding: 0;'>{t("disc_title")}</h1>
-        <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>{t("disc_subtitle")}</p>
+    <div class="hero-gradient" style="text-align: center; padding: 2.5rem; margin-bottom: 2rem;">
+        <h1 style="margin-bottom: 0.5rem;">{t("disc_title")}</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+            {t("disc_subtitle")}
+        </p>
     </div>
     """, unsafe_allow_html=True)
     
     st.divider()
     
-    # --- INPUT: Just one text area ---
-    demo_discovery = "I am looking for a dynamic job where I can analyze data but also present my findings to stakeholders. I want to use tools like Python and Tableau, but I don't want to just code all day. I prefer a mix of technical work and business strategy, ideally in a fast-paced environment."
-    free_text = st.text_area(
-        t("disc_input_label"),
-        value=demo_discovery,
-        height=120,
-        placeholder=t("disc_input_placeholder"),
-        key="discovery_free_text"
-    )
+    # --- INPUT: Styled Config Hub ---
+    with st.container(border=True):
+        st.markdown(f"""
+            <div style="margin-bottom: 1.5rem;">
+                <span style="font-size: 0.75rem; font-weight: 800; background: var(--primary-blue); color: white; padding: 4px 10px; border-radius: 6px; letter-spacing: 1px;">PROFILE DISCOVERY</span>
+                <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.5rem;">Tell us about yourself</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                    Describe your ideal role, upload a CV, or use filters to find the best match.
+                </p>
+            </div>
+            <hr style="margin: 1.5rem 0; border: none; height: 1px; background: rgba(255,255,255,0.1);">
+        """, unsafe_allow_html=True)
+        
+        demo_discovery = "I am looking for a dynamic job where I can analyze data but also present my findings to stakeholders. I want to use tools like Python and Tableau, but I don't want to just code all day. I prefer a mix of technical work and business strategy, ideally in a fast-paced environment."
+        free_text = st.text_area(
+            t("disc_input_label"),
+            value=demo_discovery,
+            height=120,
+            placeholder=t("disc_input_placeholder"),
+            key="discovery_free_text"
+        )
     
     # Optional CV upload in expander
     with st.expander(t("disc_expander_cv"), expanded=False):
@@ -1954,9 +1951,7 @@ def render_career_discovery():
             international = st.selectbox("Scope", ["Any", "International", "Local"], key="pref_intl")
             dynamic = st.selectbox("Pace", ["Any", "Dynamic", "Stable"], key="pref_dynamic")
         with col3:
-            creative = st.selectbox("Style", ["Any", "Creative", "Structured"], key="pref_creative")
-    
-    st.markdown("")
+            st.markdown("")
     
     # --- DISCOVER BUTTON ---
 
@@ -2390,17 +2385,34 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
             st.markdown("<div style='text-align: center;'><h3 style='margin:0; color:#FFB300;'>Growth Opportunity</h3></div>", unsafe_allow_html=True)
 
     with col_stats:
-        st.subheader("Analysis Overview")
+        st.markdown("### Analysis Overview")
         m1, m2, m3 = st.columns(3)
         with m1:
-            st.metric("Matched", len(res["matching_hard"]))
+            st.markdown(f"""
+            <div class="glass-card" style="text-align: center; padding: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Matched</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #00C853;">{len(res["matching_hard"])}</div>
+            </div>
+            """, unsafe_allow_html=True)
         with m2:
-            st.metric("Missing", len(res["missing_hard"]))
+            st.markdown(f"""
+            <div class="glass-card" style="text-align: center; padding: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Missing</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #E53935;">{len(res["missing_hard"])}</div>
+            </div>
+            """, unsafe_allow_html=True)
         with m3:
-            st.metric("Bonus", len(res["extra_hard"]))
+            st.markdown(f"""
+            <div class="glass-card" style="text-align: center; padding: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Bonus</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #00A0DC;">{len(res["extra_hard"])}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
         
         if res["missing_hard"]:
-            st.markdown(f"**Priority:** Learn **{', '.join(list(res['missing_hard'])[:3])}**")
+            st.markdown(f"**Priority Focus:** {', '.join(list(res['missing_hard'])[:2])}")
             
         # SENIORITY CHECK
         seniority = res.get('seniority_info', {})
