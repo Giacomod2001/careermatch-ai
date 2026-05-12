@@ -73,7 +73,6 @@ from i18n import get_t
 
 st.set_page_config(
     page_title="CareerMatch AI",
-    page_icon="🎯",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -215,9 +214,9 @@ def render_navigation():
             # Language Toggle
             lang = st.session_state.get("language", "en")
             new_lang = st.selectbox(
-                "🌍 Language",
+                "Language",
                 ["en", "it"],
-                format_func=lambda x: "🇬🇧 English" if x == "en" else "🇮🇹 Italiano",
+                format_func=lambda x: "English" if x == "en" else "Italiano",
                 index=0 if lang == "en" else 1,
                 key="sidebar_lang_toggle",
                 label_visibility="collapsed"
@@ -1734,7 +1733,6 @@ def render_explore_page():
     with col1:
         st.markdown(f"""
         <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🧭</div>
             <h3 style="margin-bottom: 0.5rem;">{t("card_discovery_title")}</h3>
             <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
                 {t("card_discovery_desc")}
@@ -1748,7 +1746,6 @@ def render_explore_page():
     with col2:
         st.markdown(f"""
         <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
             <h3 style="margin-bottom: 0.5rem;">{t("card_builder_title")}</h3>
             <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
                 {t("card_builder_desc")}
@@ -2798,52 +2795,54 @@ def render_interview_prep():
     questions = st.session_state.get("interview_questions", [])
     
     if not questions:
-        # Setup View - Unified container for perfect alignment
-        st.subheader("Configure Your Practice Session")
+        # Centered Setup UI
+        st.markdown(f"### {t('int_config')}")
         
         with st.container(border=True):
-            col1, col2 = st.columns(2)
+            st.markdown("<div style='padding: 1.5rem;'>", unsafe_allow_html=True)
             
+            # Row 1: Role and Type
+            col1, col2 = st.columns(2)
             with col1:
-                st.markdown("#### Target Role")
+                st.markdown(f"**{t('int_target_role')}**")
                 role = st.selectbox(
-                    "Select your target role",
+                    "Role Selection",
                     ["Software Engineer", "Data Scientist", "Data Analyst", "Product Manager", "UX Designer", "General"],
                     label_visibility="collapsed",
                     key="role_selector"
                 )
             
             with col2:
-                st.markdown("#### Question Type")
+                st.markdown(f"**{t('int_q_type')}**")
                 q_type = st.radio(
-                    "Select question type",
+                    "Type Selection",
                     ["Mixed (All Types)", "Behavioral", "Technical", "HR"],
                     horizontal=True,
                     label_visibility="collapsed",
                     key="q_type_selector"
                 )
-        
-        q_type_map = {"Mixed (All Types)": "mixed", "Behavioral": "behavioral", "Technical": "technical", "HR": "hr"}
-        
-        # Spacer
-        st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
-
-        # Number of questions
-        st.markdown("#### Number of Questions")
-        with st.container(border=True):
+            
+            st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
+            
+            # Row 2: Count
+            st.markdown(f"**{t('int_num_q')}**")
             num_questions = st.radio(
-                "How many questions?",
+                "Count Selection",
                 [3, 5, 7, 10],
                 horizontal=True,
                 index=1,
                 label_visibility="collapsed",
                 key="num_q_selector"
             )
+            
+            st.markdown("</div>", unsafe_allow_html=True)
         
-        st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="height: 2rem;"></div>', unsafe_allow_html=True)
+        
+        q_type_map = {"Mixed (All Types)": "mixed", "Behavioral": "behavioral", "Technical": "technical", "HR": "hr"}
         
         # Start Button
-        if st.button("Start Practice Session", type="primary", use_container_width=True):
+        if st.button(t("btn_start_practice"), type="primary", use_container_width=True):
             questions = ml_utils.get_interview_questions(
                 role=role if role != "General" else None,
                 question_type=q_type_map.get(q_type, "mixed"),
