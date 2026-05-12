@@ -118,6 +118,13 @@ if current_url_p != st.session_state["last_p"]:
 if st.session_state["page"] != current_url_p:
     st.query_params["p"] = st.session_state["page"]
     st.session_state["last_p"] = st.session_state["page"]
+    
+    # FORCE BROWSER HISTORY PUSH (For Trackpad Gestures)
+    st.markdown(f"""
+        <script>
+            window.parent.history.pushState({{page: '{st.session_state["page"]}'}}, '', '?p={st.session_state["page"]}');
+        </script>
+    """, unsafe_allow_html=True)
 # No demo_mode initialization needed for production
 
 # CV Builder session state
