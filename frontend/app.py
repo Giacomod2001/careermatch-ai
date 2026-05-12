@@ -2886,8 +2886,8 @@ def render_interview_prep():
                         st.markdown(f"**Feedback:** {ev.get('feedback')}")
                     if ev.get('tips') and len(ev.get('tips')) > 0:
                         st.markdown("**Tips:**")
-                        for t in ev.get('tips'):
-                            st.markdown(f"- {t}")
+                        for tip in ev.get('tips'):
+                            st.markdown(f"- {tip}")
                 else:
                     st.warning("This question was not evaluated.")
                     
