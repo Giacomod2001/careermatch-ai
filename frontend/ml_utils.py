@@ -4229,13 +4229,13 @@ def _get_chatbot_response_base(message: str, current_page: str = "Landing", lang
         }
         return why_resp.get(lang, why_resp['en'])
 
-    # 15. THESIS / DATA MINING CONTEXT (IULM Master Support)
-    if any(kw in msg_lower for kw in ["thesis", "tesi", "master", "iulm", "data mining", "kdd"]):
-        thesis_resp = {
-            'en': "As a Technical Coach, I understand the academic rigor of your IULM thesis. CareerMatch AI is built on the KDD process: 1) Data Selection. 2) Preprocessing. 3) Transformation (TF-IDF). 4) Data Mining (RF/K-Means/LDA). 5) Interpretation. Mentioning this structural approach in interviews proves your deep understanding of the data lifecycle.",
-            'it': "Come Coach Tecnico, comprendo il rigore accademico della tua tesi IULM. CareerMatch AI è basato sul processo KDD: 1) Selezione Dati. 2) Preprocessing. 3) Trasformazione (TF-IDF). 4) Data Mining (RF/K-Means/LDA). 5) Interpretazione. Menzionare questo approccio strutturato nei colloqui dimostra la tua profonda conoscenza del lifecycle dei dati.",
+    # 15. METHODOLOGY / DATA MINING CONTEXT (KDD Implementation)
+    if any(kw in msg_lower for kw in ["how it works", "kdd", "data mining", "methodology", "logic", "come funziona", "logica"]):
+        methodology_resp = {
+            'en': "CareerMatch AI is engineered using the KDD (Knowledge Discovery in Databases) framework. Our pipeline follows: 1) Data Cleaning (Noise Filtering). 2) Integration. 3) Transformation (TF-IDF/N-Grams). 4) Data Mining (Random Forest, K-Means, LDA). 5) Interpretation. This ensures your career analysis is backed by robust data science principles.",
+            'it': "CareerMatch AI è progettato seguendo il framework KDD (Knowledge Discovery in Databases). La nostra pipeline include: 1) Data Cleaning. 2) Integrazione. 3) Trasformazione (TF-IDF). 4) Data Mining (Random Forest, K-Means, LDA). 5) Interpretazione. Questo garantisce che la tua analisi sia supportata da solidi principi di data science.",
         }
-        return thesis_resp.get(lang, thesis_resp['en'])
+        return methodology_resp.get(lang, methodology_resp['en'])
 
     # 16. INTELLIGENT FALLBACK - Tech Contextual
     fallback_resp = {

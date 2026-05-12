@@ -2738,43 +2738,6 @@ def render_chatbot():
             div_class = "chat-bubble-user" if msg["role"] == "user" else "chat-bubble-bot"
             st.markdown(f'<div class="{div_class}">{msg["content"]}</div>', unsafe_allow_html=True)
             
-    # 5. QUICK ACTIONS (Buttons for common queries)
-    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
-    
-    # CSS for Quick Action buttons
-    st.markdown("""
-    <style>
-        div:has(span#qa-marker) + div button {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #8b949e !important;
-            font-size: 0.7rem !important;
-            padding: 0.2rem 0.6rem !important;
-            border-radius: 20px !important;
-            min-height: 1.8rem !important;
-        }
-        div:has(span#qa-marker) + div button:hover {
-            border-color: #00A0DC !important;
-            color: #00A0DC !important;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    st.markdown('<span id="qa-marker"></span>', unsafe_allow_html=True)
-    qa_cols = st.columns(2)
-    with qa_cols[0]:
-        if st.button("Interview Prep", key="qa_int", use_container_width=True):
-            st.session_state["chat_history"].append({"role": "user", "content": "Tell me about Interview Prep"})
-            resp = ml_utils.get_chatbot_response("Tell me about Interview Prep", current_page, lang=lang)
-            st.session_state["chat_history"].append({"role": "assistant", "content": resp})
-            st.rerun()
-    with qa_cols[1]:
-        if st.button("ATS Resume Tips", key="qa_cv", use_container_width=True):
-            st.session_state["chat_history"].append({"role": "user", "content": "How to fix my CV for ATS?"})
-            resp = ml_utils.get_chatbot_response("How to fix my CV for ATS?", current_page, lang=lang)
-            st.session_state["chat_history"].append({"role": "assistant", "content": resp})
-            st.rerun()
-
     # 6. INPUT WIDGET
     st.text_input(
         "Chat with Ruben",
