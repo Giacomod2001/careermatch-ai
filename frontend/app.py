@@ -2964,8 +2964,8 @@ def render_interview_prep():
                 # 3. Answer Area
                 saved_answer = st.session_state.get("interview_answers", {}).get(q_idx, "")
                 
-                # Pre-fill demo data for the first question
-                if not saved_answer and q_idx == 0:
+                # Pre-fill demo data for all questions
+                if not saved_answer:
                     if current_q.get("star_focus"):
                         saved_answer = "In my previous role as a Data Analyst, we faced a situation where our weekly reporting took 5 hours. My task was to automate the process. I wrote a Python script using Pandas and scheduled it with cron. As a result, we reduced reporting time by 90% and eliminated manual errors."
                     elif current_q.get("expected_keywords"):
