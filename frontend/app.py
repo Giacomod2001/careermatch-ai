@@ -3017,9 +3017,9 @@ def render_interview_prep():
                     
                     # Coach's Sketch (The "Insight")
                     if ev.get('model_sketch'):
-                        st.markdown(f"""<div style="background: rgba(0, 160, 220, 0.05); border-left: 4px solid #00A0DC; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
-<div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.5rem;">RUBEN'S COACHING TIP</div>
-<div style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">{ev['model_sketch']}</div>
+                        st.markdown(f"""<div style="background: rgba(0, 160, 220, 0.05); border-left: 4px solid #00A0DC; border-radius: 8px; padding: 1.2rem; margin-top: 1.5rem; margin-bottom: 2rem;">
+<div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.6rem;">RUBEN'S COACHING TIP</div>
+<div style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">{ev['model_sketch']}</div>
 </div>""", unsafe_allow_html=True)
 
                     # Strengths & Weaknesses
