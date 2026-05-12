@@ -19,263 +19,12 @@ Features:
 
 import streamlit as st
 from datetime import datetime
-
-
-# =============================================================================
-# TRANSLATIONS
-# =============================================================================
-
-TRANSLATIONS = {
-    "en": {
-        "consent_title": "Privacy Notice and Data Processing Consent",
-        "consent_intro": (
-            "Welcome to <strong>CareerMatch AI</strong>. Before proceeding, we inform you that "
-            "this application processes your personal data in compliance with the "
-            "<strong>General Data Protection Regulation (GDPR - EU Reg. 2016/679)</strong> "
-            "and the <strong>Artificial Intelligence Act (AI Act - EU Reg. 2024/1689)</strong>."
-        ),
-        "consent_data_label": "Data processed:",
-        "consent_data_value": "CV text, personal data entered in the CV Builder (name, email, phone, skills), job descriptions.",
-        "consent_purpose_label": "Purpose:",
-        "consent_purpose_value": "Professional compatibility analysis using Machine Learning algorithms (TF-IDF, Random Forest, K-Means Clustering, LDA Topic Modeling).",
-        "consent_retention_label": "Data retention:",
-        "consent_retention_value": "Data is processed exclusively within the current browser session and <u>is not stored on any server</u>. When the session ends, all data is automatically deleted.",
-        "consent_details": 'For more details, see the full privacy policy in the "Privacy & AI" section of the menu.',
-        "checkbox_gdpr": "I have read and consent to the processing of my personal data pursuant to Art. 6(1)(a) GDPR",
-        "checkbox_ai": "I am aware that my data will be processed by Artificial Intelligence systems (AI Act Art. 52)",
-        "btn_accept": "Accept and Continue",
-        "consent_warning": "Both consents are required to use the application.",
-        "page_title": "Privacy & AI Compliance",
-        "page_subtitle": "Full privacy policy and data processing information",
-        "privacy_heading": "Privacy Policy (Art. 13-14 GDPR)",
-        "controller_title": "1. Data Controller",
-        "controller_body": (
-            "This project is developed in the academic context of "
-            "<strong>IULM University</strong> (Milan) - A.Y. 2025-2026, "
-            "CareerMatch AI project.<br><br>"
-            "<strong>Development team:</strong> Giacomo DellAcqua, Luca Tallarico, Ruben Scoletta<br>"
-            "<strong>Contact:</strong> Use the contact form at the bottom of this page."
-        ),
-        "data_title": "2. Personal Data Processed",
-        "data_body": (
-            "<ul>"
-            "<li><strong>Identity data:</strong> name, surname, email, phone number, location (voluntarily entered in CV Builder)</li>"
-            "<li><strong>Professional data:</strong> technical skills, work experience, education, projects</li>"
-            "<li><strong>Documents:</strong> Curriculum Vitae text (uploaded or pasted)</li>"
-            "<li><strong>Session data:</strong> Streamlit session state (non-persistent)</li>"
-            "</ul>"
-        ),
-        "legal_title": "3. Purpose and Legal Basis",
-        "legal_headers": ("Purpose", "Legal Basis"),
-        "legal_rows": [
-            ("CV vs Job Description compatibility analysis", "Consent (Art. 6(1)(a) GDPR)"),
-            ("CV generation via CV Builder", "Consent (Art. 6(1)(a) GDPR)"),
-            ("ML processing for scoring and gap analysis", "Consent (Art. 6(1)(a) GDPR)"),
-            ("Academic / research purpose (KDD demonstration)", "Legitimate interest (Art. 6(1)(f) GDPR)"),
-        ],
-        "retention_title": "4. Data Retention",
-        "retention_body": (
-            "Personal data is processed <strong>exclusively within the current session</strong> "
-            "of the browser. <strong>No persistent database</strong> stores the entered data.<br><br>"
-            "<strong>Retention period:</strong> Duration of the browser session.<br>"
-            "<strong>Deletion:</strong> Automatic when the browser/tab is closed, "
-            'or immediate via the "Delete My Data" button.'
-        ),
-        "rights_title": "5. Data Subject Rights (Art. 15-22 GDPR)",
-        "rights_items": [
-            "<strong>Access</strong> (Art. 15) -- Obtain confirmation and a copy of your data",
-            "<strong>Rectification</strong> (Art. 16) -- Correct inaccurate data",
-            "<strong>Erasure</strong> (Art. 17) -- Right to be forgotten",
-            "<strong>Restriction</strong> (Art. 18) -- Restrict processing",
-            "<strong>Portability</strong> (Art. 20) -- Receive data in a structured format",
-            "<strong>Objection</strong> (Art. 21) -- Object to processing",
-            "<strong>Withdraw consent</strong> (Art. 7(3)) -- Withdraw consent at any time",
-        ],
-        "rights_note": 'Since data exists only in the browser session, the right to erasure can be exercised immediately via the "Delete My Data" button in the sidebar.',
-        "transfer_title": "6. Data Transfers",
-        "transfer_body": (
-            "Data is <strong>not transferred to third parties</strong> nor to countries outside the EU.<br>"
-            "The application is hosted on <strong>Streamlit Community Cloud</strong> (AWS servers, EU region). "
-            "No data is persisted outside the user's browser session."
-        ),
-        "ai_heading": "AI Transparency (AI Act)",
-        "ai_intro": (
-            "This application uses <strong>Artificial Intelligence</strong> systems "
-            "for data processing. In compliance with <strong>Art. 52 of the AI Act</strong>, "
-            "we declare the following:"
-        ),
-        "ai_risk_label": "Risk classification:",
-        "ai_risk_value": "LIMITED / MINIMAL RISK",
-        "ai_models_label": "AI systems used:",
-        "ai_models_headers": ("Model", "Algorithm", "Purpose"),
-        "ai_decisions": (
-            "<strong>Automated decisions:</strong> The results provided by the AI are "
-            "<strong>purely indicative and for informational purposes</strong>. No automated "
-            "decisions are made that produce legal effects or significantly affect the user "
-            "(Art. 22 GDPR). The user is always free to disregard the suggestions provided."
-        ),
-        "ai_oversight": (
-            "<strong>Human oversight:</strong> All AI systems are designed as support tools. "
-            "Final decisions always rest with the human user."
-        ),
-        "ai_limitations": (
-            "<strong>Limitations:</strong> ML models may produce inaccurate or incomplete results. "
-            "The compatibility score is a statistical approximation and does not represent a "
-            "definitive judgment on the user's competencies."
-        ),
-        "exercise_rights": "Exercise Your Rights",
-        "delete_title": "Delete My Data",
-        "delete_body": (
-            "This action will immediately delete all data present in the current session, "
-            "including CV, analyses, CV Builder data, and preferences. This action is irreversible."
-        ),
-        "delete_confirm": "I confirm I want to delete all my data",
-        "delete_btn": "Delete All My Data",
-        "delete_success": "All your data has been successfully deleted. The session has been reset.",
-        "delete_info": "Your consent has been revoked. You will be asked again upon next access.",
-        "contact_heading": "Contact Us",
-        "contact_body": "For any questions regarding data processing, privacy, or to exercise your GDPR rights, please fill out the form below.",
-        "contact_name": "Full Name",
-        "contact_email": "Email Address",
-        "contact_subject": "Subject",
-        "contact_subject_options": ["Data Access Request (Art. 15)", "Data Deletion Request (Art. 17)", "Data Portability (Art. 20)", "Consent Withdrawal (Art. 7)", "General Inquiry"],
-        "contact_message": "Message",
-        "contact_submit": "Send Request",
-        "contact_success": "Your request has been submitted. We will respond within 30 days as required by GDPR.",
-        "contact_error": "Please fill in all fields.",
-        "footer": "Policy updated on {date} | Compliant with GDPR (EU Reg. 2016/679) and AI Act (EU Reg. 2024/1689)",
-        "sidebar_badge": "GDPR + AI Act Compliant",
-        "data_mgmt": "Data management",
-        "data_mgmt_caption": "Under GDPR (Art. 17), you can delete all data entered in the current session.",
-    },
-    "it": {
-        "consent_title": "Informativa sulla Privacy e Consenso al Trattamento",
-        "consent_intro": (
-            "Benvenuto in <strong>CareerMatch AI</strong>. Prima di procedere, ti informiamo che "
-            "questa applicazione tratta i tuoi dati personali in conformita' al "
-            "<strong>Regolamento Generale sulla Protezione dei Dati (GDPR - Reg. UE 2016/679)</strong> "
-            "e al <strong>Regolamento sull'Intelligenza Artificiale (AI Act - Reg. UE 2024/1689)</strong>."
-        ),
-        "consent_data_label": "Dati trattati:",
-        "consent_data_value": "Testo del CV, dati personali inseriti nel CV Builder (nome, email, telefono, competenze), descrizioni delle posizioni lavorative.",
-        "consent_purpose_label": "Finalita':",
-        "consent_purpose_value": "Analisi di compatibilita' professionale tramite algoritmi di Machine Learning (TF-IDF, Random Forest, K-Means Clustering, LDA Topic Modeling).",
-        "consent_retention_label": "Conservazione:",
-        "consent_retention_value": "I dati sono trattati esclusivamente nella sessione corrente del browser e <u>non vengono salvati su alcun server</u>. Alla chiusura della sessione, tutti i dati vengono automaticamente eliminati.",
-        "consent_details": 'Per maggiori dettagli, consulta l\'informativa completa nella sezione "Privacy & AI" del menu.',
-        "checkbox_gdpr": "Ho letto e acconsento al trattamento dei miei dati personali ai sensi dell'Art. 6(1)(a) GDPR",
-        "checkbox_ai": "Sono consapevole che i miei dati saranno elaborati da sistemi di Intelligenza Artificiale (AI Act Art. 52)",
-        "btn_accept": "Accetto e Proseguo",
-        "consent_warning": "E' necessario fornire entrambi i consensi per utilizzare l'applicazione.",
-        "page_title": "Privacy & Conformita' AI",
-        "page_subtitle": "Informativa completa sul trattamento dei dati personali",
-        "privacy_heading": "Informativa Privacy (Art. 13-14 GDPR)",
-        "controller_title": "1. Titolare del Trattamento",
-        "controller_body": (
-            "Progetto sviluppato nel contesto accademico dell'"
-            "<strong>Universita' IULM</strong> (Milano) - A.A. 2025-2026, "
-            "progetto CareerMatch AI.<br><br>"
-            "<strong>Team di sviluppo:</strong> Giacomo DellAcqua, Luca Tallarico, Ruben Scoletta<br>"
-            "<strong>Contatto:</strong> Utilizza il modulo di contatto in fondo a questa pagina."
-        ),
-        "data_title": "2. Dati Personali Trattati",
-        "data_body": (
-            "<ul>"
-            "<li><strong>Dati identificativi:</strong> nome, cognome, indirizzo email, numero di telefono, localita' (inseriti volontariamente nel CV Builder)</li>"
-            "<li><strong>Dati professionali:</strong> competenze tecniche, esperienze lavorative, percorso formativo, progetti</li>"
-            "<li><strong>Documenti:</strong> testo del Curriculum Vitae (caricato o incollato dall'utente)</li>"
-            "<li><strong>Dati di navigazione:</strong> stato della sessione Streamlit (non persistente)</li>"
-            "</ul>"
-        ),
-        "legal_title": "3. Finalita' e Base Giuridica del Trattamento",
-        "legal_headers": ("Finalita'", "Base Giuridica"),
-        "legal_rows": [
-            ("Analisi di compatibilita' CV vs Job Description", "Consenso (Art. 6(1)(a) GDPR)"),
-            ("Generazione CV tramite CV Builder", "Consenso (Art. 6(1)(a) GDPR)"),
-            ("Elaborazione ML per scoring e gap analysis", "Consenso (Art. 6(1)(a) GDPR)"),
-            ("Scopo accademico / ricerca (dimostrazione KDD)", "Legittimo interesse (Art. 6(1)(f) GDPR)"),
-        ],
-        "retention_title": "4. Conservazione dei Dati",
-        "retention_body": (
-            "I dati personali sono trattati <strong>esclusivamente nella sessione corrente</strong> "
-            "del browser. <strong>Non esiste alcun database persistente</strong> che memorizzi i dati inseriti.<br><br>"
-            "<strong>Periodo di conservazione:</strong> Durata della sessione browser.<br>"
-            "<strong>Cancellazione:</strong> Automatica alla chiusura del browser/tab, "
-            'oppure immediata tramite il pulsante "Cancella i Miei Dati".'
-        ),
-        "rights_title": "5. Diritti dell'Interessato (Art. 15-22 GDPR)",
-        "rights_items": [
-            "<strong>Accesso</strong> (Art. 15) -- Ottenere conferma del trattamento e copia dei dati",
-            "<strong>Rettifica</strong> (Art. 16) -- Correggere i dati inesatti",
-            "<strong>Cancellazione</strong> (Art. 17) -- Ottenere la cancellazione dei dati (diritto all'oblio)",
-            "<strong>Limitazione</strong> (Art. 18) -- Limitare il trattamento dei dati",
-            "<strong>Portabilita'</strong> (Art. 20) -- Ricevere i dati in formato strutturato",
-            "<strong>Opposizione</strong> (Art. 21) -- Opporsi al trattamento",
-            "<strong>Revoca del consenso</strong> (Art. 7(3)) -- Revocare il consenso in qualsiasi momento",
-        ],
-        "rights_note": 'Poiche\' i dati esistono solo nella sessione browser, il diritto di cancellazione e\' esercitabile immediatamente tramite il pulsante "Cancella i Miei Dati" nella barra laterale.',
-        "transfer_title": "6. Trasferimento Dati",
-        "transfer_body": (
-            "I dati <strong>non vengono trasferiti a terze parti</strong> ne' verso paesi extra-UE.<br>"
-            "L'applicazione e' ospitata su <strong>Streamlit Community Cloud</strong> (server in AWS, regione UE). "
-            "Nessun dato viene persistito al di fuori della sessione del browser dell'utente."
-        ),
-        "ai_heading": "Trasparenza sull'Intelligenza Artificiale (AI Act)",
-        "ai_intro": (
-            "Questa applicazione utilizza sistemi di <strong>Intelligenza Artificiale</strong> "
-            "per l'elaborazione dei dati. In conformita' all'<strong>Art. 52 dell'AI Act</strong>, "
-            "dichiariamo quanto segue:"
-        ),
-        "ai_risk_label": "Classificazione del rischio:",
-        "ai_risk_value": "RISCHIO LIMITATO / MINIMO",
-        "ai_models_label": "Sistemi AI utilizzati:",
-        "ai_models_headers": ("Modello", "Algoritmo", "Scopo"),
-        "ai_decisions": (
-            "<strong>Decisioni automatizzate:</strong> I risultati forniti dall'AI sono "
-            "<strong>puramente indicativi e a scopo informativo</strong>. Non vengono prese "
-            "decisioni automatizzate che producano effetti giuridici o che incidano significativamente "
-            "sull'utente (Art. 22 GDPR). L'utente e' sempre libero di ignorare i suggerimenti forniti."
-        ),
-        "ai_oversight": (
-            "<strong>Supervisione umana:</strong> Tutti i sistemi AI sono progettati come "
-            "strumenti di supporto. Le decisioni finali spettano sempre all'utente umano."
-        ),
-        "ai_limitations": (
-            "<strong>Limitazioni:</strong> I modelli ML possono produrre risultati imprecisi "
-            "o incompleti. Lo score di compatibilita' e' un'approssimazione statistica e non "
-            "rappresenta un giudizio definitivo sulle competenze dell'utente."
-        ),
-        "exercise_rights": "Esercita i Tuoi Diritti",
-        "delete_title": "Cancella i Miei Dati",
-        "delete_body": (
-            "Questa azione cancellera' immediatamente tutti i dati presenti nella sessione corrente, "
-            "inclusi CV, analisi, dati del CV Builder e preferenze. L'azione e' irreversibile."
-        ),
-        "delete_confirm": "Confermo di voler cancellare tutti i miei dati",
-        "delete_btn": "Cancella Tutti i Miei Dati",
-        "delete_success": "Tutti i tuoi dati sono stati cancellati con successo. La sessione e' stata ripristinata.",
-        "delete_info": "Il tuo consenso e' stato revocato. Ti verra' richiesto nuovamente all'accesso.",
-        "contact_heading": "Contattaci",
-        "contact_body": "Per qualsiasi domanda relativa al trattamento dei dati, alla privacy o per esercitare i tuoi diritti GDPR, compila il modulo sottostante.",
-        "contact_name": "Nome Completo",
-        "contact_email": "Indirizzo Email",
-        "contact_subject": "Oggetto",
-        "contact_subject_options": ["Richiesta Accesso Dati (Art. 15)", "Richiesta Cancellazione Dati (Art. 17)", "Portabilita' Dati (Art. 20)", "Revoca Consenso (Art. 7)", "Richiesta Generica"],
-        "contact_message": "Messaggio",
-        "contact_submit": "Invia Richiesta",
-        "contact_success": "La tua richiesta e' stata inviata. Risponderemo entro 30 giorni come previsto dal GDPR.",
-        "contact_error": "Per favore compila tutti i campi.",
-        "footer": "Informativa aggiornata al {date} | Conforme al GDPR (Reg. UE 2016/679) e AI Act (Reg. UE 2024/1689)",
-        "sidebar_badge": "GDPR + AI Act Compliant",
-        "data_mgmt": "Gestione dati personali",
-        "data_mgmt_caption": "Ai sensi del GDPR (Art. 17), puoi cancellare tutti i dati inseriti nella sessione corrente.",
-    },
-}
+from i18n import get_t
 
 def _t(key):
-    """Get translated string based on current language setting."""
-    lang = st.session_state.get("gdpr_lang", "en")
-    return TRANSLATIONS.get(lang, TRANSLATIONS["en"]).get(key, key)
+    """Wrapper to use global translation in GDPR module."""
+    t = get_t()
+    return t(key)
 
 
 # CareerMatch AI specific model data
@@ -428,11 +177,9 @@ def render_privacy_policy_page():
     render_language_toggle()
 
     st.markdown(f"""
-    <div style='display: flex; align-items: center; justify-content: space-between;'>
-        <div>
-            <h1 style='margin: 0;'>{_t("page_title")}</h1>
-            <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>{_t("page_subtitle")}</p>
-        </div>
+    <div class="hero-gradient" style="text-align: center; padding: 2.5rem; margin-bottom: 2rem;">
+        <h1 style="margin-bottom: 0.5rem;">{_t("page_title")}</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1rem;">{_t("page_subtitle")}</p>
         <div>
             <span class="compliance-badge">GDPR Compliant</span>
             <span class="compliance-badge" style="margin-left: 8px;">AI Act Compliant</span>
@@ -440,67 +187,34 @@ def render_privacy_policy_page():
     </div>
     """, unsafe_allow_html=True)
 
-    st.divider()
-
-    # --- PRIVACY POLICY SECTIONS ---
+    # --- SIMPLIFIED COMPLIANCE SECTIONS ---
     st.markdown(f"## {_t('privacy_heading')}")
 
-    for section_key in ["controller", "data"]:
-        st.markdown(f"""
-        <div class="privacy-section">
-            <h4>{_t(f"{section_key}_title")}</h4>
-            <p>{_t(f"{section_key}_body")}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    with st.expander(f"🏢 {_t('controller_title')}", expanded=True):
+        st.markdown(_t('controller_body'), unsafe_allow_html=True)
+        
+    with st.expander(f"📁 {_t('data_title')}", expanded=False):
+        st.markdown(_t('data_body'), unsafe_allow_html=True)
+        
+    with st.expander(f"⚖️ {_t('legal_title')}", expanded=False):
+        headers = _t("legal_headers")
+        rows = _t("legal_rows")
+        for purpose, basis in rows:
+            st.markdown(f"**{purpose}**  \n*Basis: {basis}*")
+            st.markdown("---")
+            
+    with st.expander(f"⏱️ {_t('retention_title')}", expanded=False):
+        st.markdown(_t('retention_body'), unsafe_allow_html=True)
 
-    # Legal basis table
-    headers = _t("legal_headers")
-    rows = _t("legal_rows")
-    rows_html = ""
-    for i, (purpose, basis) in enumerate(rows):
-        border = ' style="border-bottom: 1px solid #21262d;"' if i < len(rows) - 1 else ""
-        rows_html += f'<tr{border}><td style="padding: 8px;">{purpose}</td><td style="padding: 8px;">{basis}</td></tr>'
+    with st.expander(f"🛡️ {_t('rights_title')}", expanded=False):
+        for r in _t("rights_items"):
+            st.markdown(f"- {r}", unsafe_allow_html=True)
+        st.info(_t("rights_note"))
 
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("legal_title")}</h4>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
-            <tr style="border-bottom: 1px solid #30363d;">
-                <th style="text-align: left; padding: 8px; color: #00A0DC;">{headers[0]}</th>
-                <th style="text-align: left; padding: 8px; color: #00A0DC;">{headers[1]}</th>
-            </tr>
-            {rows_html}
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander(f"🌍 {_t('transfer_title')}", expanded=False):
+        st.markdown(_t('transfer_body'), unsafe_allow_html=True)
 
-    # Retention
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("retention_title")}</h4>
-        <p>{_t("retention_body")}</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Rights
-    rights_list = "".join(f"<li>{r}</li>" for r in _t("rights_items"))
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("rights_title")}</h4>
-        <ul>{rights_list}</ul>
-        <p style="margin-top: 0.5rem; color: #8b949e; font-size: 0.85rem;">{_t("rights_note")}</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Transfer
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("transfer_title")}</h4>
-        <p>{_t("transfer_body")}</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.divider()
+    st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
 
     # --- AI ACT TRANSPARENCY ---
     render_ai_transparency()
@@ -530,39 +244,20 @@ def render_privacy_policy_page():
 # =============================================================================
 
 def render_ai_transparency():
-    headers = _t("ai_models_headers")
-    rows_html = ""
-    for i, (model, algo, purpose) in enumerate(AI_MODELS):
-        border = ' style="border-bottom: 1px solid #21262d;"' if i < len(AI_MODELS) - 1 else ""
-        rows_html += f'<tr{border}><td style="padding: 8px;">{model}</td><td style="padding: 8px;">{algo}</td><td style="padding: 8px;">{purpose}</td></tr>'
-
-    st.markdown(f"""
-    ## {_t("ai_heading")}
-
-    <div class="ai-transparency-box">
-        <h4>AI Act - EU Reg. 2024/1689</h4>
-        <p>{_t("ai_intro")}</p>
-
-        <p style="margin-top: 1rem;"><strong>{_t("ai_risk_label")}</strong>
-            <span style="background: rgba(0, 200, 83, 0.2); padding: 2px 8px; border-radius: 4px; color: #00C853;">
-            {_t("ai_risk_value")}</span>
-        </p>
-
-        <p><strong>{_t("ai_models_label")}</strong></p>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
-            <tr style="border-bottom: 1px solid #30363d;">
-                <th style="text-align: left; padding: 8px; color: #3884F4;">{headers[0]}</th>
-                <th style="text-align: left; padding: 8px; color: #3884F4;">{headers[1]}</th>
-                <th style="text-align: left; padding: 8px; color: #3884F4;">{headers[2]}</th>
-            </tr>
-            {rows_html}
-        </table>
-
-        <p style="margin-top: 1rem;">{_t("ai_decisions")}</p>
-        <p>{_t("ai_oversight")}</p>
-        <p>{_t("ai_limitations")}</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f"## {_t('ai_heading')}")
+    st.info("Risk Classification: **LIMITED / MINIMAL RISK** (Art. 52 AI Act)")
+    
+    with st.expander("🤖 AI Models Used & Purpose", expanded=True):
+        for model, algo, purpose in AI_MODELS:
+            st.markdown(f"**{model}**")
+            st.markdown(f"- *Algorithm:* {algo}")
+            st.markdown(f"- *Purpose:* {purpose}")
+            st.markdown("---")
+            
+    with st.expander("⚖️ AI Decisions & Human Oversight", expanded=False):
+        st.markdown(_t("ai_decisions"), unsafe_allow_html=True)
+        st.markdown(_t("ai_oversight"), unsafe_allow_html=True)
+        st.markdown(_t("ai_limitations"), unsafe_allow_html=True)
 
 
 # =============================================================================

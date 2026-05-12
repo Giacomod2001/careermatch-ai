@@ -52,6 +52,10 @@ import ml_utils
 import styles
 import constants
 import gdpr_compliance
+import i18n
+import importlib
+importlib.reload(i18n)
+from i18n import get_t
 
 
 # Puliamo la cache all'avvio solo se necessario
@@ -68,11 +72,14 @@ import gdpr_compliance
 # - Sidebar espansa di default
 
 st.set_page_config(
-    page_title="CareerMatch AI - Smart Career Analytics",
-    page_icon=None,
+    page_title="CareerMatch AI",
+    page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
+
+# Initialize global translation function based on session state language
+t = get_t()
 
 # =============================================================================
 # GDPR CONSENT GATE
@@ -168,122 +175,120 @@ if "cv_builder" not in st.session_state:
 # =============================================================================
 def render_navigation():
     """
-    Renders the global sidebar navigation menu.
+    Renders the global sidebar:
+    1. Ruben Coach AI chatbot (top, prominent)
+    2. Main funnel navigation buttons
+    3. Utility buttons (Privacy, Dev Console) at bottom, visually secondary
     """
     with st.sidebar:
-        # Get Current Page First
         current_page = st.session_state.get("page", "Landing")
 
-        # Branding & Navigation (HIDDEN IN DEBUGGER)
+        # =============================================================
+        # 1. CHATBOT RUBEN — First element, always visible
+        # =============================================================
+        render_chatbot()
+
+        st.divider()
+
+        # =============================================================
+        # 2. MAIN NAVIGATION — Funnel buttons
+        # =============================================================
         if current_page != "Debugger":
-            # Determine Sidebar Title
-            page_titles = {
-                "Landing": "CAREER ASSISTANT",
-                "Career Discovery": "CAREER DISCOVERY",
-                "CV Builder": "CV BUILDER",
-                "CV Evaluation": "CV ANALYSIS",
-                "Debugger": "DEV CONSOLE"
-            }
-            section_title = page_titles.get(current_page, "CAREER ASSISTANT")
-
-            # Branding (Dynamic Title)
-            st.markdown(f"""
-            <div style='text-align: center; padding: 0.5rem 0;'>
-                <h2 style='font-size: 1.5rem; margin: 0;'>CareerMatch AI</h2>
-                <p style='color: #00A0DC; font-size: 0.8rem; font-weight: 600; margin: 0;'>{section_title}</p>
-            </div>
-            """, unsafe_allow_html=True)
-
-            # CSS Styles
+            # CSS for utility buttons (grey, smaller)
             st.markdown("""
             <style>
-                /* TARGETING: Use the marker span to find the immediately following button container */
-                div:has(span#home-btn-marker) + div button {
-                    background-color: #00f2c3 !important;
-                    color: #FFFFFF !important;
-                    border: none !important;
+                div:has(span#utility-btn-marker) + div button {
+                    background: rgba(100, 100, 120, 0.25) !important;
+                    color: #8b949e !important;
+                    border: 1px solid rgba(100, 100, 120, 0.3) !important;
+                    font-size: 0.8rem !important;
+                    min-height: 2.5rem !important;
+                    padding: 0.4rem 0.8rem !important;
                 }
-                div:has(span#dev-btn-marker) + div button {
-                    background-color: #00f2c3 !important;
-                    color: #FFFFFF !important;
-                    border: none !important;
-                }
-                /* Hover effects */
-                div:has(span#home-btn-marker) + div button:hover,
-                div:has(span#dev-btn-marker) + div button:hover {
-                    background-color: #00c8a0 !important;
-                    color: #FFFFFF !important;
+                div:has(span#utility-btn-marker) + div button:hover {
+                    background: rgba(100, 100, 120, 0.4) !important;
+                    color: #c9d1d9 !important;
                 }
             </style>
             """, unsafe_allow_html=True)
+
+            # Language Toggle
+            lang = st.session_state.get("language", "en")
+            new_lang = st.selectbox(
+                "🌍 Language",
+                ["en", "it"],
+                format_func=lambda x: "🇬🇧 English" if x == "en" else "🇮🇹 Italiano",
+                index=0 if lang == "en" else 1,
+                key="sidebar_lang_toggle",
+                label_visibility="collapsed"
+            )
+            if new_lang != lang:
+                st.session_state["language"] = new_lang
+                st.rerun()
+
+            # Home
+            if st.button(t("nav_home"), key="nav_Landing", 
+                         type="primary" if current_page == "Landing" else "secondary", 
+                         use_container_width=True):
+                st.session_state["page"] = "Landing"
+                st.rerun()
+                
+            st.divider()
+
+            # Explore Careers (replaces Career Discovery + CV Builder)
+            if st.button(t("nav_explore"), key="nav_Explore", 
+                         type="primary" if current_page in ("Career Discovery", "CV Builder", "Explore") else "secondary", 
+                         use_container_width=True):
+                st.session_state["page"] = "Explore"
+                st.rerun()
+
+            st.markdown("<div style='height: 0.3rem;'></div>", unsafe_allow_html=True)
+
+            # CV Analysis
+            if st.button(t("nav_cv_analysis"), key="nav_CV_Evaluation", 
+                         type="primary" if current_page == "CV Evaluation" else "secondary", 
+                         use_container_width=True):
+                st.session_state["page"] = "CV Evaluation"
+                st.rerun()
+
+            st.markdown("<div style='height: 0.3rem;'></div>", unsafe_allow_html=True)
+
+            # Interview Prep
+            if st.button(t("nav_interview"), key="nav_Interview_Prep", 
+                         type="primary" if current_page == "Interview Prep" else "secondary", 
+                         use_container_width=True):
+                st.session_state["page"] = "Interview Prep"
+                st.rerun()
+
+            # =============================================================
+            # 3. UTILITY BUTTONS — Bottom, visually secondary
+            # =============================================================
+            st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
             st.divider()
             
-            # Home Button (Separated) with Marler
-            st.markdown('<span id="home-btn-marker"></span>', unsafe_allow_html=True)
-            btn_type = "primary" if current_page == "Landing" else "secondary"
-            if st.button("Home", key="nav_Landing", type=btn_type, use_container_width=True):
+            st.markdown('<span id="utility-btn-marker"></span>', unsafe_allow_html=True)
+            if st.button(t("nav_privacy"), key="nav_Privacy", use_container_width=True):
+                st.session_state["page"] = "Privacy"
+                st.rerun()
+
+            st.markdown('<span id="utility-btn-marker"></span>', unsafe_allow_html=True)
+            if st.button(t("nav_dev"), key="nav_Debugger", use_container_width=True):
+                st.session_state["page"] = "Debugger"
+                st.rerun()
+        
+        else:
+            # In Debugger: just show Home button
+            if st.button("Home", type="primary", use_container_width=True):
                 st.session_state["page"] = "Landing"
                 st.rerun()
 
-            # Spacer
-            st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+        # =============================================================
+        # 4. GDPR & VERSION — Very bottom
+        # =============================================================
+        st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
-            # Main Tools Group
-            nav_items = [
-                ("Career Discovery", "Career Discovery"),
-                ("CV Builder", "CV Builder"),
-                ("CV Analysis", "CV Evaluation"),
-                ("Interview Prep", "Interview Prep"),
-                ("Privacy & AI", "Privacy")
-            ]
-            
-            for label, page_key in nav_items:
-                # Skip button if it matches current page (avoid duplication)
-                if current_page == page_key:
-                    continue
+        st.markdown("<div style='color: #555; font-size: 0.75em; text-align: center; margin-top: 0.5rem;'>v3.0</div>", unsafe_allow_html=True)
 
-                # Active page gets primary style
-                btn_type = "primary" if current_page == page_key else "secondary"
-                
-                if st.button(label, key=f"nav_{page_key}", type=btn_type, use_container_width=True):
-                    st.session_state["page"] = page_key
-                    st.rerun()
-
-            # Spacer (Large)
-            st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
-
-            # Dev Console (Separated) with Marker
-            st.markdown('<span id="dev-btn-marker"></span>', unsafe_allow_html=True)
-            btn_type = "primary" if current_page == "Debugger" else "secondary"
-            if st.button("Dev Console", key="nav_Debugger", type=btn_type, use_container_width=True):
-                st.session_state["page"] = "Debugger"
-                st.rerun()
-                
-            st.divider()
-        
-        if current_page != "Landing":
-            # If we're in the Debugger, the primary button should be "Home" and lead to Landing
-            if current_page == "Debugger":
-                if st.button("Home", type="primary", use_container_width=True):
-                    st.session_state["page"] = "Landing"
-                    st.rerun()
-
-
-        st.markdown("<div style='margin-top: 1rem; color: #666; font-size: 0.8em;'>v2.2 | Local Mode</div>", unsafe_allow_html=True)
-        
-        # Integrate Ruben Assistant
-        render_chatbot()
-        
-        # GDPR Compliance Badge & Delete (subtle, at bottom)
-        gdpr_compliance.render_sidebar_compliance_badge()
-        with st.expander("Gestione dati personali", expanded=False):
-            st.caption("Ai sensi del GDPR (Art. 17), puoi cancellare tutti i dati inseriti nella sessione corrente.")
-            if st.button("Cancella i Miei Dati", key="sidebar_delete_data", use_container_width=True, type="secondary"):
-                keys_to_clear = list(st.session_state.keys())
-                for key in keys_to_clear:
-                    if key != "page":
-                        del st.session_state[key]
-                st.rerun()
 
 def render_debug_page():
     """
@@ -655,10 +660,8 @@ def render_debug_page():
                         st.caption(f"DETECTED LEVEL: **{seniority.upper()}**")
                         st.caption("These skills directly match job requirements")
                         
-                        cols = st.columns(2)
-                        for idx, skill in enumerate(sorted(res["matching_hard"])):
-                            with cols[idx % 2]:
-                                st.markdown(f"✅ {skill}")
+                        for skill in sorted(res["matching_hard"]):
+                            st.write(f"- {skill}")
                     else:
                         st.caption("No direct matches found")
                 
@@ -673,15 +676,15 @@ def render_debug_page():
                         for skill in sorted(res["missing_hard"]):
                             trend = high_demand.get(skill, "")
                             if trend:
-                                st.markdown(f"❌ **{skill}** <span style='color:green; font-size:0.8em'>{trend}</span>", unsafe_allow_html=True)
+                                st.markdown(f"- **{skill}** <span style='color:green; font-size:0.8em'>{trend}</span>", unsafe_allow_html=True)
                             else:
-                                st.markdown(f"❌ {skill}")
+                                st.markdown(f"- {skill}")
                                 
                         # NEW: Learning Paths Suggestion
                         learning_paths = getattr(knowledge_base, "LEARNING_PATHS", {})
                         # Simple check if there's a relevant path (demo logic: generic path if gaps exist)
                         if missing_count > 3:
-                            st.info("💡 **Career Tip**: High number of gaps detected. Consider a structured learning path.")
+                            st.info("**Career Tip**: High number of gaps detected. Consider a structured learning path.")
                             with st.expander("View Recommended Learning Path"):
                                 # Example Retrieval (In real logic this would be dynamic match)
                                 path = learning_paths.get("Data Analytics_to_Data Science")
@@ -1219,11 +1222,10 @@ def render_cv_builder():
     # HANDLE DEMO DATA LOADING REMOVED
 
     # TITLE (Centered)
-    st.markdown("""
+    st.markdown(f"""
     <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='margin: 0; padding: 0;'>CV Builder</h1>
-        <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>Professional CV Builder</p>
-        <p style='font-size: 0.9rem; color: #8b949e; margin-top: 0.5rem;'>Need help building your CV? Ask <b>Ruben</b> in the sidebar.</p>
+        <h1 style='margin: 0; padding: 0;'>{t("bld_title")}</h1>
+        <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>{t("bld_subtitle")}</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1710,6 +1712,53 @@ def render_cv_builder():
 # L'UI è costruita con Streamlit, un framework Python per dashboard.
 # =============================================================================
 
+def render_explore_page():
+    """
+    EXPLORE PAGE — Groups Career Discovery and CV Builder
+    as two tools within a single exploration hub.
+    """
+    render_navigation()
+    
+    # HERO SECTION
+    st.markdown(f"""
+    <div class="hero-gradient" style="text-align: center; padding: 2.5rem; margin-bottom: 2rem;">
+        <h1 style="margin-bottom: 0.5rem;">{t("hub_title")}</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+            {t("hub_subtitle")}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🧭</div>
+            <h3 style="margin-bottom: 0.5rem;">{t("card_discovery_title")}</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                {t("card_discovery_desc")}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t("btn_launch"), key="hub_btn_discovery", type="primary", use_container_width=True):
+            st.session_state["page"] = "Career Discovery"
+            st.rerun()
+
+    with col2:
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+            <h3 style="margin-bottom: 0.5rem;">{t("card_builder_title")}</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                {t("card_builder_desc")}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t("btn_launch"), key="hub_btn_builder", type="secondary", use_container_width=True):
+            st.session_state["page"] = "CV Builder"
+            st.rerun()
+
 def render_landing_page():
     """
     LANDING PAGE - Hub for all app features
@@ -1717,10 +1766,10 @@ def render_landing_page():
     render_navigation()
     
     # HERO SECTION
-    st.markdown("""
+    st.markdown(f"""
     <div style='text-align: center; padding: 2rem 0 1rem 0; width: 100%;'>
         <h1 style='font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem; background: -webkit-linear-gradient(45deg, #0077B5, #00C853); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>CareerMatch AI</h1>
-        <p style='font-size: 1.1rem; color: #8b949e;'>Need career advice? Ask <b>Ruben</b> in the sidebar.</p>
+        <p style='font-size: 1.1rem; color: #8b949e;'>{t('landing_subtitle')}</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1745,11 +1794,11 @@ def render_landing_page():
     """, unsafe_allow_html=True)
     
     # Description
-    st.markdown("""
+    st.markdown(f"""
     <div style='text-align: center; padding: 1rem 0; margin-bottom: 1.5rem;'>
         <p style='color: #8b949e; font-size: 1rem; max-width: 700px; margin: 0 auto;'>
             <strong style='color: #c9d1d9;'>Your Complete Career Toolkit:</strong> 
-            Discover career paths, build professional CVs, evaluate against job descriptions, practice interviews, and explore market trends.
+            {t('landing_hero_text')}
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -1764,49 +1813,36 @@ def render_landing_page():
     </div>
     """
     
-    # ROW 1: Main Features (2 cards)
-    col1, col2 = st.columns(2)
+    # 3-Column Layout to match sidebar funnel
+    col1, col2, col3 = st.columns(3)
     
     with col1:
         with st.container(border=True):
             st.markdown(card_style.format(
-                "Career Discovery",
-                "Not sure what jobs fit you? Answer questions about your preferences and let AI suggest the best career paths."
+                t('card_explore_title'),
+                t('card_explore_desc')
             ), unsafe_allow_html=True)
-            if st.button("Discover My Career", use_container_width=True, type="primary", key="land_career"):
-                st.session_state["page"] = "Career Discovery"
+            if st.button(t('btn_start'), use_container_width=True, type="primary", key="land_explore"):
+                st.session_state["page"] = "Explore"
                 st.rerun()
     
     with col2:
         with st.container(border=True):
             st.markdown(card_style.format(
-                "CV Builder",
-                "Build a professional, ATS-optimized CV with our AI-powered tool. Get real-time suggestions."
+                t('card_cv_title'),
+                t('card_cv_desc')
             ), unsafe_allow_html=True)
-            if st.button("Build My CV", use_container_width=True, key="land_cvbuild"):
-                st.session_state["page"] = "CV Builder"
+            if st.button(t('btn_start'), use_container_width=True, key="land_cveval"):
+                st.session_state["page"] = "CV Evaluation"
                 st.rerun()
-
-    # ROW 2: Additional Features (2 cards)
-    col3, col4 = st.columns(2)
 
     with col3:
         with st.container(border=True):
             st.markdown(card_style.format(
-                "CV Evaluation",
-                "Analyze your CV against job descriptions. Get AI-driven gap analysis and actionable advice."
+                t('card_interview_title'),
+                t('card_interview_desc')
             ), unsafe_allow_html=True)
-            if st.button("Evaluate CV", use_container_width=True, key="land_cveval"):
-                st.session_state["page"] = "CV Evaluation"
-                st.rerun()
-
-    with col4:
-        with st.container(border=True):
-            st.markdown(card_style.format(
-                "Interview Prep",
-                "Practice with role-specific interview questions and receive instant AI feedback on your answers."
-            ), unsafe_allow_html=True)
-            if st.button("Practice Interviews", use_container_width=True, key="land_interview"):
+            if st.button(t('btn_start'), use_container_width=True, key="land_interview"):
                 st.session_state["page"] = "Interview Prep"
                 st.rerun()
 
@@ -1859,27 +1895,28 @@ def render_career_discovery():
     # --- HEADER (Same pattern as CV Builder) ---
     
     # --- HEADER (Same pattern as CV Builder) ---
-    st.markdown("""
+    st.markdown(f"""
     <div style='text-align: center; margin-bottom: 2rem;'>
-        <h1 style='margin: 0; padding: 0;'>Career Discovery</h1>
-        <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>Find career paths that match your profile and preferences</p>
-        <p style='font-size: 0.9rem; color: #8b949e; margin-top: 0.5rem;'>Curious about a path? Ask <b>Ruben</b> in the sidebar.</p>
+        <h1 style='margin: 0; padding: 0;'>{t("disc_title")}</h1>
+        <p style='color: #8b949e; margin: 0.25rem 0 0 0;'>{t("disc_subtitle")}</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.divider()
     
     # --- INPUT: Just one text area ---
+    demo_discovery = "I am looking for a dynamic job where I can analyze data but also present my findings to stakeholders. I want to use tools like Python and Tableau, but I don't want to just code all day. I prefer a mix of technical work and business strategy, ideally in a fast-paced environment."
     free_text = st.text_area(
-        "Describe what you're looking for",
+        t("disc_input_label"),
+        value=demo_discovery,
         height=120,
-        placeholder="Example: I want a dynamic job with international clients, creative work, remote-friendly...",
+        placeholder=t("disc_input_placeholder"),
         key="discovery_free_text"
     )
     
     # Optional CV upload in expander
-    with st.expander("Upload CV (optional)", expanded=False):
-        cv_file = st.file_uploader("Upload CV (PDF)", type=["pdf"], key="discovery_cv")
+    with st.expander(t("disc_expander_cv"), expanded=False):
+        cv_file = st.file_uploader(t("disc_upload_cv"), type=["pdf"], key="discovery_cv")
         cv_text = ""
         if cv_file:
             try:
@@ -1888,8 +1925,10 @@ def render_career_discovery():
             except Exception as e:
                 st.error(f"Error: {e}")
         
+        demo_cv_disc = "Mario Rossi - Data Analyst with 2 years of experience in Finance. Proficient in Python, SQL, and PowerBI. Strong communication skills."
         cv_text_input = st.text_area(
-            "Or paste CV text",
+            t("disc_paste_cv"),
+            value=demo_cv_disc,
             height=100,
             key="discovery_cv_text",
             placeholder="Paste your CV content here..."
@@ -1971,20 +2010,17 @@ def render_career_discovery():
 
         if results:
             st.divider()
-            st.subheader(f"Found {len(results)} Career Matches")
+            st.subheader(f"{t('disc_results')} ({len(results)})")
             
             # Filter Expander - Removed, use visible radio
-            st.markdown("Score Range")
+            st.markdown(t("disc_score_range"))
             match_range = st.radio(
-                "Score Range",
+                t("disc_score_range"),
                 options=["0-25%", "25-50%", "50-75%", "75-100%"],
                 horizontal=True,
                 label_visibility="collapsed",
                 key="discovery_filter_range",
-                index=0 # Start with 0-25 to ensure results are seen? Or 0 for wider. 
-                #Actually defaults usually 25, so maybe index 0 or 1. Let's stick with 0 or 1.
-                # If I put 0-25, users might see low scores.
-                # Let's set index=1 (25-50) or 0.
+                index=0
             )
             
             min_s, max_s = 0, 100
@@ -2123,11 +2159,12 @@ def render_evaluation_page():
     show_cover_letter = st.session_state.get("show_cover_letter", False)
     
     # Hero Header with Gradient - Centered and Enhanced
-    st.markdown("""
+    st.markdown(f"""
     <div class="hero-gradient" style="text-align: center; padding: 2.5rem;">
-        <h1 style="margin-bottom: 0.5rem;">CV Analysis</h1>
-        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 0.5rem;">Get instant AI-powered feedback on your CV vs. specific job descriptions</p>
-        <p style="font-size: 0.9rem; color: #8b949e;">Need help understanding your match score? Ask <b>Ruben</b> in the sidebar.</p>
+        <h1 style="margin-bottom: 0.5rem;">{t("cva_title")}</h1>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+            {t("cva_subtitle")}
+        </p>
     </div>
     """, unsafe_allow_html=True)
     # =============================================================================
@@ -2153,41 +2190,43 @@ def render_evaluation_page():
     
     # Column 1: Job Description (always first)
     jd = ""
+    demo_jd = "Data Scientist @ Tech Innovations Inc.\n\nRequirements:\n- 3+ years of experience with Python and SQL\n- Strong knowledge of Machine Learning algorithms (Random Forest, XGBoost)\n- Experience with Data Visualization tools (Tableau, PowerBI)\n- Excellent communication and presentation skills\n- Problem-solving mindset"
     with col_jd:
         st.markdown("### Job Description")
         input_type_jd = st.radio("Format", ["Text", "PDF"], key="jd_input", horizontal=True, label_visibility="collapsed")
         if input_type_jd == "Text":
-            jd = st.text_area("JD Content", height=250, key="jd_text", placeholder="Paste job description here...", label_visibility="collapsed")
+            jd = st.text_area("JD Content", height=250, key="jd_text", value=demo_jd, label_visibility="collapsed")
         else:
             uploaded_jd = st.file_uploader("Upload PDF (max 5MB)", type=["pdf"], key="jd_pdf", label_visibility="collapsed")
             if uploaded_jd:
                 if uploaded_jd.size > 5 * 1024 * 1024:
-                    st.error("❌ Il file supera 5MB. Carica un PDF più leggero.")
+                    st.error("Il file supera 5MB. Carica un PDF più leggero.")
                 else:
                     try:
                         jd = ml_utils.extract_text_from_pdf(uploaded_jd)
-                        st.success(f"✅ {uploaded_jd.name} caricato")
+                        st.success(f"{uploaded_jd.name} caricato")
                     except Exception as e:
-                        st.error(f"❌ Errore PDF: {e}")
+                        st.error(f"Errore PDF: {e}")
     
     # Column 2: CV (always second)
     cv = ""
+    demo_cv = "Mario Rossi\nData Analyst\n\nExperience:\n- 2 years as Data Analyst at Finance Solutions Ltd.\n- Proficient in Python, Pandas, Numpy, SQL, and Excel.\n- Built interactive dashboards in Tableau for management reporting.\n- Familiar with basic Machine Learning concepts, eager to learn more.\n\nEducation:\n- BSc in Computer Science, University of Milan"
     with col_cv:
         st.markdown("### Your CV")
         input_type_cv = st.radio("Format", ["Text", "PDF"], key="cv_input", horizontal=True, label_visibility="collapsed")
         if input_type_cv == "Text":
-            cv = st.text_area("CV Content", height=250, key="cv_text", placeholder="Paste your CV here...", label_visibility="collapsed")
+            cv = st.text_area("CV Content", height=250, key="cv_text", value=demo_cv, label_visibility="collapsed")
         else:
             uploaded_cv = st.file_uploader("Upload PDF (max 5MB)", type=["pdf"], key="cv_pdf", label_visibility="collapsed")
             if uploaded_cv:
                 if uploaded_cv.size > 5 * 1024 * 1024:
-                    st.error("❌ Il file supera 5MB. Carica un PDF più leggero.")
+                    st.error("Il file supera 5MB. Carica un PDF più leggero.")
                 else:
                     try:
                         cv = ml_utils.extract_text_from_pdf(uploaded_cv)
-                        st.success(f"✅ {uploaded_cv.name} caricato correttamente")
+                        st.success(f"{uploaded_cv.name} caricato correttamente")
                     except Exception as e:
-                        st.error(f"❌ Errore PDF: {e}")
+                        st.error(f"Errore PDF: {e}")
     
     # Column 3: Project Context (if enabled)
     project_text = ""
@@ -2232,13 +2271,11 @@ def render_evaluation_page():
     col_btn1, col_btn2 = st.columns([3, 1])
     
     with col_btn1:
-        analyze_clicked = st.button("Analyze Profile", type="primary", use_container_width=True)
+        analyze_clicked = st.button(t("btn_analyze_match"), type="primary", use_container_width=True)
     
     with col_btn2:
         if st.button("Clear All", use_container_width=True):
-            # No demo_mode to reset here
             st.session_state["last_results"] = None
-            # Clear all text and files
             for key in ["cv_text", "jd_text", "proj_text", "cl_text", "cv_pdf", "jd_pdf", "proj_pdf", "cl_pdf"]:
                 if key in st.session_state:
                     st.session_state[key] = "" if "text" in key else None
@@ -2371,16 +2408,16 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
         # SENIORITY CHECK
         seniority = res.get('seniority_info', {})
         if seniority:
-            match_status = seniority.get('match_status')
+            seniority_match = seniority.get('match_value', 0)
             cv_lvl = seniority.get('cv_level')
             jd_lvl = seniority.get('jd_level')
             
-            if match_status == "Underqualified":
-                st.error(f"⚠️ **Seniority Mismatch**: Role seems **{jd_lvl}**, but your profile matches **{cv_lvl}**.")
-            elif match_status == "Overqualified":
-                st.warning(f"⚠️ **Seniority Mismatch**: You appear **Overqualified** ({cv_lvl}) for this **{jd_lvl}** role.")
+            if seniority_match < 0:
+                st.error(f"**Seniority Mismatch**: Role seems **{jd_lvl}**, but your profile matches **{cv_lvl}**.")
+            elif seniority_match > 0:
+                st.warning(f"**Seniority Mismatch**: You appear **Overqualified** ({cv_lvl}) for this **{jd_lvl}** role.")
             else:
-                 st.caption(f"🎯 **Seniority Analysis**: Your level ({cv_lvl}) aligns with the role requirements ({jd_lvl}).")
+                 st.caption(f"**Seniority Analysis**: Your level ({cv_lvl}) aligns with the role requirements ({jd_lvl}).")
 
     
     st.divider()
@@ -2609,12 +2646,12 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
                 st.download_button("Download PDF", report_pdf, file_name="Report.pdf", mime="application/pdf", use_container_width=True)
 
 # =============================================================================
-# RUBEN AI ASSISTANT - Sidebar Integration
+# RUBEN - Coach AI - Sidebar Integration
 # =============================================================================
 
 def render_chatbot():
     """
-    Renders Ruben AI Assistant in the sidebar — enhanced with full
+    Renders Ruben - Coach AI in the sidebar — enhanced with full
     conversation history and CV context awareness.
     """
     # 1. Initialize State
@@ -2660,57 +2697,67 @@ def render_chatbot():
             st.session_state["chat_input_widget"] = ""
             st.rerun()
 
-    # === RUBEN AI CONSULTANT - ENHANCED UI ===
-    st.markdown("""
-    <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, rgba(0,119,181,0.15), rgba(0,200,83,0.1)); border: 1px solid rgba(0,119,181,0.4); border-radius: 12px;">
-        <div style="font-size: 1rem; font-weight: 700; color: #00C9A7; margin-bottom: 0.5rem;">
-            🤖 Ruben AI Coach
+    # === RUBEN - Coach AI - CLEAN UI ===
+    # Simple, integrated header without heavy boxes
+    st.markdown(f"""
+    <div style="margin-top: 0.5rem; margin-bottom: 1rem;">
+        <div style="font-size: 1.1rem; font-weight: 700; color: #00A0DC;">
+            Ruben - Coach AI
         </div>
-        <div style="font-size: 0.75rem; color: #8b949e;">Il tuo assistente di carriera personale</div>
+        <div style="font-size: 0.75rem; color: #8b949e;">{t('ruben_subtitle')}</div>
     </div>
     """, unsafe_allow_html=True)
 
     # Show conversation history (scrollable)
     history = st.session_state["chat_history"]
+    
+    # CSS to make chat bubbles cleaner
+    st.markdown("""
+    <style>
+        .chat-bubble-bot {
+            margin: 0.3rem 0; 
+            padding: 0.6rem 0.8rem; 
+            background: rgba(0, 160, 220, 0.05); 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            color: #c9d1d9;
+            line-height: 1.4;
+        }
+        .chat-bubble-user {
+            margin: 0.3rem 0 0.3rem auto; 
+            padding: 0.5rem 0.8rem; 
+            background: rgba(255, 255, 255, 0.05); 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            color: #e2e8f0; 
+            text-align: right;
+            max-width: 85%;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
     if not history:
         # Welcome message
         welcome = ml_utils.get_chatbot_response("", current_page, lang="en")
-        st.markdown(f"""
-        <div style="margin: 0.5rem 0; padding: 0.6rem; background: rgba(0,119,181,0.08); border-left: 3px solid #0077B5; border-radius: 0 8px 8px 0; font-size: 0.82rem; color: #c9d1d9;">
-            {welcome}
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f'<div class="chat-bubble-bot">{welcome}</div>', unsafe_allow_html=True)
     else:
         # Show last N messages to keep sidebar manageable
         display_history = history[-8:]
         for msg in display_history:
             if msg["role"] == "user":
-                st.markdown(f"""
-                <div style="margin: 0.3rem 0; padding: 0.5rem 0.7rem; background: rgba(255,255,255,0.06); border-radius: 10px 10px 2px 10px; font-size: 0.8rem; color: #e2e8f0; text-align: right;">
-                    {msg['content']}
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f'<div class="chat-bubble-user">{msg["content"]}</div>', unsafe_allow_html=True)
             else:
-                st.markdown(f"""
-                <div style="margin: 0.3rem 0; padding: 0.5rem 0.7rem; background: rgba(0,119,181,0.08); border-left: 3px solid #0077B5; border-radius: 0 8px 8px 0; font-size: 0.8rem; color: #c9d1d9;">
-                    {msg['content']}
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f'<div class="chat-bubble-bot">{msg["content"]}</div>', unsafe_allow_html=True)
 
-    # CV context badge
-    if cv_context:
-        st.markdown("""
-        <div style="margin: 0.3rem 0; padding: 0.3rem 0.6rem; background: rgba(0,200,83,0.1); border-radius: 6px; font-size: 0.7rem; color: #00C853;">
-            ✅ CV caricato — le risposte sono personalizzate
-        </div>
-        """, unsafe_allow_html=True)
+    # Spacer
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
     
     # Input Area
     st.text_input(
-        "Ask Ruben...", 
+        t("ruben_label"), 
         key="chat_input_widget", 
         label_visibility="collapsed", 
-        placeholder="Scrivi un messaggio...",
+        placeholder=t("ruben_placeholder"),
         on_change=process_chat
     )
 
@@ -2727,11 +2774,11 @@ def render_interview_prep():
     render_navigation()
     
     # Hero Section
-    st.markdown("""
+    st.markdown(f"""
     <div class="hero-gradient" style="text-align: center; padding: 2.5rem;">
-        <h1 style="margin-bottom: 0.5rem;">Interview Prep</h1>
+        <h1 style="margin-bottom: 0.5rem;">{t("int_title")}</h1>
         <p style="color: var(--text-secondary); font-size: 1.1rem;">
-            Practice with role-specific questions and receive instant AI feedback
+            {t("int_subtitle")}
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -2743,6 +2790,10 @@ def render_interview_prep():
         st.session_state["current_q_index"] = 0
     if "interview_answers" not in st.session_state:
         st.session_state["interview_answers"] = {}
+    if "interview_evaluations" not in st.session_state:
+        st.session_state["interview_evaluations"] = {}
+    if "show_interview_summary" not in st.session_state:
+        st.session_state["show_interview_summary"] = False
     
     # Check if we have questions to show
     questions = st.session_state.get("interview_questions", [])
@@ -2802,8 +2853,53 @@ def render_interview_prep():
             st.session_state["interview_questions"] = questions
             st.session_state["current_q_index"] = 0
             st.session_state["interview_answers"] = {}
+            st.session_state["interview_evaluations"] = {}
+            st.session_state["show_interview_summary"] = False
             st.rerun()
-    
+            
+    elif st.session_state.get("show_interview_summary", False):
+        st.markdown("## Session Summary")
+        st.markdown("Great job completing your practice session! Here is your performance overview:")
+        
+        # Calculate scores
+        evals = st.session_state.get("interview_evaluations", {})
+        total_score = sum(ev.get('score', 0) for ev in evals.values())
+        avg_score = total_score / len(questions) if questions else 0
+        
+        col1, col2 = st.columns(2)
+        col1.metric("Average Score", f"{int(avg_score)}%")
+        col2.metric("Questions Evaluated", f"{len(evals)} / {len(questions)}")
+        
+        st.divider()
+        st.markdown("### Detailed Breakdown")
+        
+        for i, q in enumerate(questions):
+            with st.expander(f"Q{i+1}: {q.get('question', '')[:60]}...", expanded=(i==0)):
+                st.markdown(f"**Question:** {q.get('question', '')}")
+                ans = st.session_state.get("interview_answers", {}).get(i, "No answer provided.")
+                st.markdown(f"**Your Answer:** {ans}")
+                
+                ev = evals.get(i)
+                if ev:
+                    st.markdown(f"**Score:** {ev.get('score', 0)}% - {ev.get('rating', '')}")
+                    if ev.get('feedback'):
+                        st.markdown(f"**Feedback:** {ev.get('feedback')}")
+                    if ev.get('tips') and len(ev.get('tips')) > 0:
+                        st.markdown("**Tips:**")
+                        for t in ev.get('tips'):
+                            st.markdown(f"- {t}")
+                else:
+                    st.warning("This question was not evaluated.")
+                    
+        st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
+        if st.button("Start New Session", type="primary", use_container_width=True):
+            st.session_state["interview_questions"] = []
+            st.session_state["current_q_index"] = 0
+            st.session_state["interview_answers"] = {}
+            st.session_state["interview_evaluations"] = {}
+            st.session_state["show_interview_summary"] = False
+            st.rerun()
+
     else:
         # Practice Mode - Full width question display
         q_idx = st.session_state.get("current_q_index", 0)
@@ -2826,10 +2922,13 @@ def render_interview_prep():
         
         # Question Card
         category = current_q.get('category', 'general').replace('_', ' ').title()
+        est_time = "3-4 mins" if current_q.get('star_focus') else "1-2 mins"
+        
         st.markdown(f"""
         <div class="glass-card" style="border-left: 4px solid var(--primary-blue); margin-bottom: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <h3 style="margin: 0; line-height: 1.4;">{current_q.get('question', 'No question')}</h3>
+                <span style="color: var(--text-secondary); font-size: 0.9rem; white-space: nowrap;">⏱️ {est_time}</span>
             </div>
             <div style="margin-top: 1rem;">
                 <span class="skill-tag-project" style="font-size: 0.8rem;">{category}</span>
@@ -2837,13 +2936,37 @@ def render_interview_prep():
         </div>
         """, unsafe_allow_html=True)
         
+        with st.expander("💡 Need a hint? (Click to view suggested framework)", expanded=False):
+            if current_q.get('star_focus'):
+                st.markdown("**Use the STAR Method:**")
+                st.markdown("- **S**ituation: Set the scene and give necessary context.")
+                st.markdown("- **T**ask: Describe your responsibility in that situation.")
+                st.markdown("- **A**ction: Explain exactly what steps *you* took to address it.")
+                st.markdown("- **R**esult: Share the outcomes (quantify if possible).")
+            elif current_q.get('expected_keywords'):
+                st.markdown("**Concepts to cover:**")
+                keywords = current_q.get('expected_keywords', [])
+                st.markdown(", ".join([f"`{k}`" for k in keywords]))
+            else:
+                st.markdown("Be concise, honest, and link your answer back to the role requirements.")
+        
         # Answer Area
         saved_answer = st.session_state.get("interview_answers", {}).get(q_idx, "")
+        
+        # Pre-fill demo data for the first question
+        if not saved_answer and q_idx == 0:
+            if current_q.get("star_focus"):
+                saved_answer = "In my previous role as a Data Analyst, we faced a situation where our weekly reporting took 5 hours. My task was to automate the process. I wrote a Python script using Pandas and scheduled it with cron. As a result, we reduced reporting time by 90% and eliminated manual errors."
+            elif current_q.get("expected_keywords"):
+                saved_answer = f"To approach this, I would focus on core principles like {', '.join(current_q.get('expected_keywords', [])[:3])}. This ensures the system is scalable, robust, and easy to maintain."
+            else:
+                saved_answer = "I have extensive experience dealing with this type of situation and I always prioritize clear communication and data-driven problem solving."
+        
         answer = st.text_area(
             "Your Answer",
             value=saved_answer,
             height=180,
-            placeholder="💡 Tip: Use the STAR method for behavioral questions (Situation, Task, Action, Result)"
+            placeholder="Tip: Use the STAR method for behavioral questions (Situation, Task, Action, Result)"
         )
         
         # Action Buttons
@@ -2867,6 +2990,7 @@ def render_interview_prep():
                 if answer.strip():
                     st.session_state["interview_answers"][q_idx] = answer
                     result = ml_utils.evaluate_interview_answer(current_q, answer)
+                    st.session_state["interview_evaluations"][q_idx] = result
                     
                     # Score Colors
                     if result['score'] >= 60:
@@ -2899,7 +3023,7 @@ def render_interview_prep():
                     st.rerun()
             else:
                 if st.button("Finish", use_container_width=True):
-                    st.session_state["interview_questions"] = []
+                    st.session_state["show_interview_summary"] = True
                     st.rerun()
 
 
@@ -2908,6 +3032,8 @@ def render_interview_prep():
 if __name__ == "__main__":
     if st.session_state["page"] == "Debugger":
         render_debug_page()
+    elif st.session_state["page"] == "Explore":
+        render_explore_page()
     elif st.session_state["page"] == "CV Builder":
         render_cv_builder()
     elif st.session_state["page"] == "CV Evaluation":

@@ -3956,8 +3956,35 @@ _RUBEN_RESPONSES = {
     }
 }
 
+import re
 
 def get_chatbot_response(message: str, current_page: str = "Landing", lang: str = None) -> str:
+    """Wrapper that adds smart CV context processing"""
+    # 1. Extract context
+    cv_context = ""
+    if message:
+        match = re.search(r"\[CV Context: (.*?)\]", message)
+        if match:
+            cv_context = match.group(1)
+            # Remove context from message so base logic works normally
+            message = re.sub(r"\[CV Context: .*?\]", "", message).strip()
+            
+    # 2. Get base response
+    base_response = _get_chatbot_response_base(message, current_page, lang)
+    
+    # 3. Append smart contextual response ONLY if the user asks about their CV or match
+    if cv_context and message and any(word in message.lower() for word in ["cv", "curriculum", "resume", "profilo", "profile", "match"]):
+        # Aggiungiamo un tocco di contesto solo quando l'utente chiede esplicitamente del suo CV
+        if lang == 'it':
+            custom_tip = "\n\n*(Ho il tuo CV in memoria. Sembra che le tue competenze siano un ottimo punto di partenza per questo obiettivo!)*"
+        else:
+            custom_tip = "\n\n*(I have your CV in memory. I see your skills are a solid foundation for this goal!)*"
+            
+        return base_response + custom_tip
+        
+    return base_response
+
+def _get_chatbot_response_base(message: str, current_page: str = "Landing", lang: str = None) -> str:
     """
     RUBEN AI CAREER CONSULTANT - MULTILINGUAL & COMPREHENSIVE
     ==========================================================

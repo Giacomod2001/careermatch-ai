@@ -119,6 +119,8 @@ This project is the result of a collaborative effort at **IULM University (A.Y. 
 - **Giacomo Dell'Acqua** - Lead UI/UX Designer & System Architect
 - **Luca Tallarico** - Data Scientist (ML & NLP Implementation)
 - **Ruben Scoletta** - QA Engineer & Technical Documentation
+- **Paolo Junior Del Giudice** - Data Analytics & Validation
+- **Valeria Valdata** - Data Ethics & Compliance
 
 ---
 
