@@ -2695,7 +2695,6 @@ def render_chatbot():
             response = ml_utils.get_chatbot_response(enriched_msg, current_page, lang=detected_lang)
             st.session_state["chat_history"].append({"role": "assistant", "content": response})
             st.session_state["chat_input_widget"] = ""
-            st.rerun()
 
     # === RUBEN - Coach AI - CLEAN UI ===
     # Simple, integrated header without heavy boxes

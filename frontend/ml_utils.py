@@ -3963,11 +3963,11 @@ def get_chatbot_response(message: str, current_page: str = "Landing", lang: str 
     # 1. Extract context
     cv_context = ""
     if message:
-        match = re.search(r"\[CV Context: (.*?)\]", message)
+        match = re.search(r"\[CV Context: (.*?)\]", message, re.DOTALL)
         if match:
             cv_context = match.group(1)
             # Remove context from message so base logic works normally
-            message = re.sub(r"\[CV Context: .*?\]", "", message).strip()
+            message = re.sub(r"\[CV Context: .*?\]", "", message, flags=re.DOTALL).strip()
             
     # 2. Get base response
     base_response = _get_chatbot_response_base(message, current_page, lang)
