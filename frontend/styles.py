@@ -151,8 +151,11 @@ h1 {
    ============================================================================= */
    
 /* Standard Buttons (Primary & Default) */
-.stButton > button[kind="primary"],
-.stButton > button {
+.stButton > button,
+.stDownloadButton > button,
+[data-testid="stFormSubmitButton"] > button,
+button[kind="primary"],
+button[kind="secondary"] {
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%) !important;
     color: white !important;
     border: none !important;
@@ -169,7 +172,9 @@ h1 {
     justify-content: center !important;
 }
 
-.stButton > button:hover {
+.stButton > button:hover,
+.stDownloadButton > button:hover,
+[data-testid="stFormSubmitButton"] > button:hover {
     transform: translateY(-2px) !important;
     box-shadow: var(--shadow-lg), 0 0 20px rgba(0, 119, 181, 0.4) !important;
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-blue) 100%) !important;
