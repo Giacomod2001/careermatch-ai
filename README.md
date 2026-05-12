@@ -116,11 +116,11 @@ pytest test_scoring.py test_multilingual.py test_ruben.py test_deep.py -v
 
 This project is the result of a collaborative effort at **IULM University (A.Y. 2025-2026)**:
 
-- **Giacomo Dell'Acqua** - Lead UI/UX Designer & System Architect
-- **Luca Tallarico** - Data Scientist (ML & NLP Implementation)
-- **Ruben Scoletta** - QA Engineer & Technical Documentation
-- **Paolo Junior Del Giudice** - Data Analytics & Validation
-- **Valeria Valdata** - Data Ethics & Compliance
+- **Giacomo Dellacqua**
+- **Luca Tallarico**
+- **Ruben Scoletta**
+- **Paolo Junior Del Giudice**
+- **Valeria Valdata**
 
 ---
 
