@@ -45,53 +45,60 @@ def get_compliance_css():
     return """
     <style>
         .gdpr-banner {
-            background: linear-gradient(135deg, rgba(0, 119, 181, 0.15), rgba(0, 160, 220, 0.08));
-            border: 1px solid rgba(0, 160, 220, 0.3);
-            border-radius: 12px;
-            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 160, 220, 0.1), rgba(0, 80, 150, 0.05));
+            border: 1px solid rgba(0, 160, 220, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
             margin: 1rem 0 2rem 0;
         }
-        .gdpr-banner h3 { color: #00A0DC; margin-bottom: 1rem; }
-        .gdpr-banner p { color: #c9d1d9; line-height: 1.6; }
-        .privacy-section {
-            background: rgba(13, 17, 23, 0.6);
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 1rem 0;
+        .gdpr-banner h3 { color: #00A0DC; margin-bottom: 1.2rem; font-weight: 700; }
+        .gdpr-banner p { color: #c9d1d9; line-height: 1.7; font-size: 0.95rem; }
+        
+        .compliance-hero {
+            background: linear-gradient(180deg, rgba(0, 160, 220, 0.05) 0%, transparent 100%);
+            border-radius: 20px;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .privacy-section h4 { color: #00A0DC; margin-bottom: 0.75rem; }
-        .ai-transparency-box {
-            background: linear-gradient(135deg, rgba(56, 132, 244, 0.1), rgba(0, 200, 160, 0.08));
-            border-left: 4px solid #3884F4;
-            border-radius: 0 10px 10px 0;
-            padding: 1.5rem;
-            margin: 1rem 0;
-        }
-        .ai-transparency-box h4 { color: #3884F4; margin-bottom: 0.5rem; }
-        .delete-warning {
-            background: rgba(229, 57, 53, 0.1);
-            border: 1px solid rgba(229, 57, 53, 0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 0.5rem 0;
-        }
+
         .compliance-badge {
             display: inline-block;
-            background: rgba(0, 200, 83, 0.15);
+            background: rgba(0, 200, 83, 0.1);
             color: #00C853;
-            border: 1px solid rgba(0, 200, 83, 0.3);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            border: 1px solid rgba(0, 200, 83, 0.2);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
-        .contact-form {
-            background: rgba(13, 17, 23, 0.6);
-            border: 1px solid #30363d;
-            border-radius: 10px;
+
+        .ai-transparency-box {
+            background: rgba(56, 132, 244, 0.03);
+            border: 1px solid rgba(56, 132, 244, 0.1);
+            border-left: 5px solid #3884F4;
+            border-radius: 12px;
             padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .delete-warning {
+            background: rgba(229, 57, 53, 0.05);
+            border: 1px solid rgba(229, 57, 53, 0.15);
+            border-radius: 12px;
+            padding: 1.2rem;
             margin: 1rem 0;
+            border-left: 4px solid #E53935;
+        }
+
+        .contact-form-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 1.5rem;
         }
     </style>
     """
@@ -177,41 +184,43 @@ def render_privacy_policy_page():
     render_language_toggle()
 
     st.markdown(f"""
-    <div class="hero-gradient" style="text-align: center; padding: 2.5rem; margin-bottom: 2rem;">
+    <div class="compliance-hero">
         <h1 style="margin-bottom: 0.5rem;">{_t("page_title")}</h1>
-        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1rem;">{_t("page_subtitle")}</p>
-        <div>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1.5rem;">{_t("page_subtitle")}</p>
+        <div style="display: flex; justify-content: center; gap: 12px;">
             <span class="compliance-badge">GDPR Compliant</span>
-            <span class="compliance-badge" style="margin-left: 8px;">AI Act Compliant</span>
+            <span class="compliance-badge">AI Act Compliant</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     # --- SIMPLIFIED COMPLIANCE SECTIONS ---
     st.markdown(f"## {_t('privacy_heading')}")
+    
+    # ... (Expander code already updated in previous step)
 
-    with st.expander(f"🏢 {_t('controller_title')}", expanded=True):
+    with st.expander(f"Controller: {_t('controller_title')}", expanded=True):
         st.markdown(_t('controller_body'), unsafe_allow_html=True)
         
-    with st.expander(f"📁 {_t('data_title')}", expanded=False):
+    with st.expander(f"Data: {_t('data_title')}", expanded=False):
         st.markdown(_t('data_body'), unsafe_allow_html=True)
         
-    with st.expander(f"⚖️ {_t('legal_title')}", expanded=False):
+    with st.expander(f"Legal: {_t('legal_title')}", expanded=False):
         headers = _t("legal_headers")
         rows = _t("legal_rows")
         for purpose, basis in rows:
             st.markdown(f"**{purpose}**  \n*Basis: {basis}*")
             st.markdown("---")
             
-    with st.expander(f"⏱️ {_t('retention_title')}", expanded=False):
+    with st.expander(f"Retention: {_t('retention_title')}", expanded=False):
         st.markdown(_t('retention_body'), unsafe_allow_html=True)
 
-    with st.expander(f"🛡️ {_t('rights_title')}", expanded=False):
+    with st.expander(f"Rights: {_t('rights_title')}", expanded=False):
         for r in _t("rights_items"):
             st.markdown(f"- {r}", unsafe_allow_html=True)
         st.info(_t("rights_note"))
 
-    with st.expander(f"🌍 {_t('transfer_title')}", expanded=False):
+    with st.expander(f"Transfers: {_t('transfer_title')}", expanded=False):
         st.markdown(_t('transfer_body'), unsafe_allow_html=True)
 
     st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
@@ -245,16 +254,16 @@ def render_privacy_policy_page():
 
 def render_ai_transparency():
     st.markdown(f"## {_t('ai_heading')}")
-    st.info("Risk Classification: **LIMITED / MINIMAL RISK** (Art. 52 AI Act)")
+    st.info("Risk Classification: LIMITED / MINIMAL RISK (Art. 52 AI Act)")
     
-    with st.expander("🤖 AI Models Used & Purpose", expanded=True):
+    with st.expander("AI Models Used & Purpose", expanded=True):
         for model, algo, purpose in AI_MODELS:
             st.markdown(f"**{model}**")
-            st.markdown(f"- *Algorithm:* {algo}")
-            st.markdown(f"- *Purpose:* {purpose}")
+            st.markdown(f"- Algorithm: {algo}")
+            st.markdown(f"- Purpose: {purpose}")
             st.markdown("---")
             
-    with st.expander("⚖️ AI Decisions & Human Oversight", expanded=False):
+    with st.expander("AI Decisions & Human Oversight", expanded=False):
         st.markdown(_t("ai_decisions"), unsafe_allow_html=True)
         st.markdown(_t("ai_oversight"), unsafe_allow_html=True)
         st.markdown(_t("ai_limitations"), unsafe_allow_html=True)
@@ -292,7 +301,7 @@ def render_delete_my_data_button():
 def render_contact_form():
     st.markdown(f"## {_t('contact_heading')}")
     st.markdown(f"""
-    <div class="contact-form">
+    <div class="contact-form-container">
         <p>{_t("contact_body")}</p>
     </div>
     """, unsafe_allow_html=True)
@@ -321,9 +330,9 @@ def render_contact_form():
 
 def render_sidebar_compliance_badge():
     st.markdown(f"""
-    <div style='margin-top: 1rem; padding: 8px; background: rgba(0, 200, 83, 0.08);
-         border: 1px solid rgba(0, 200, 83, 0.2); border-radius: 8px; text-align: center;'>
-        <span style='color: #00C853; font-size: 0.7rem; font-weight: 600;'>
+    <div style='margin-top: 1rem; padding: 10px; background: rgba(0, 200, 83, 0.05);
+         border: 1px solid rgba(0, 200, 83, 0.15); border-radius: 12px; text-align: center;'>
+        <span style='color: #00C853; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.3px;'>
             {_t("sidebar_badge")}
         </span>
     </div>
