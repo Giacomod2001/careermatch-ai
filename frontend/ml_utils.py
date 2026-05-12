@@ -4229,7 +4229,15 @@ def _get_chatbot_response_base(message: str, current_page: str = "Landing", lang
         }
         return why_resp.get(lang, why_resp['en'])
 
-    # 15. INTELLIGENT FALLBACK - Tech Contextual
+    # 15. THESIS / DATA MINING CONTEXT (IULM Master Support)
+    if any(kw in msg_lower for kw in ["thesis", "tesi", "master", "iulm", "data mining", "kdd"]):
+        thesis_resp = {
+            'en': "As a Technical Coach, I understand the academic rigor of your IULM thesis. CareerMatch AI is built on the KDD process: 1) Data Selection. 2) Preprocessing. 3) Transformation (TF-IDF). 4) Data Mining (RF/K-Means/LDA). 5) Interpretation. Mentioning this structural approach in interviews proves your deep understanding of the data lifecycle.",
+            'it': "Come Coach Tecnico, comprendo il rigore accademico della tua tesi IULM. CareerMatch AI è basato sul processo KDD: 1) Selezione Dati. 2) Preprocessing. 3) Trasformazione (TF-IDF). 4) Data Mining (RF/K-Means/LDA). 5) Interpretazione. Menzionare questo approccio strutturato nei colloqui dimostra la tua profonda conoscenza del lifecycle dei dati.",
+        }
+        return thesis_resp.get(lang, thesis_resp['en'])
+
+    # 16. INTELLIGENT FALLBACK - Tech Contextual
     fallback_resp = {
         'en': f"Interesting query about '{message[:40]}...'. As a Technical Strategist, I see this through the lens of data-driven careers. While I don't have a canned response for this, I can pivot to: technical interview hacks, cloud certification paths, or high-growth data roles. What's your priority?",
         'it': f"Domanda interessante su '{message[:40]}...'. Come Technical Strategist, la inquadro nella prospettiva delle carriere data-driven. Anche se non ho una risposta predefinita, possiamo parlare di: interview hacks tecnici, percorsi cert cloud, o ruoli data ad alta crescita. Qual è la tua priorità?",

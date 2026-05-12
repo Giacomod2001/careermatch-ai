@@ -2659,109 +2659,125 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
 
 def render_chatbot():
     """
-    Renders Ruben - Coach AI in the sidebar — enhanced with full
-    conversation history and CV context awareness.
+    Renders Ruben - Coach AI in the sidebar — enhanced with 
+    Functional Quick Actions and Proactive Context Awareness.
     """
     # 1. Initialize State
     if "chat_history" not in st.session_state:
         st.session_state["chat_history"] = []
     
     current_page = st.session_state.get("page", "Landing")
+    lang = st.session_state.get("language", "en")
     
-    # Bot state management
-    if "chat_lang" not in st.session_state:
-        st.session_state["chat_lang"] = "en"
-        
-    if "last_chat_page" not in st.session_state:
-        st.session_state["last_chat_page"] = current_page
-    elif st.session_state["last_chat_page"] != current_page:
-        st.session_state["chat_history"] = []
-        st.session_state["last_chat_page"] = current_page
-
-    # Build CV context string from cv_builder session state
-    cv_context = ""
+    # 2. Extract Rich Context (CV + Analysis)
     cv_data = st.session_state.get("cv_builder", {})
+    analysis_res = st.session_state.get("last_results", None)
+    
+    cv_summary = ""
     if cv_data.get("name"):
-        ctx_parts = [f"Nome: {cv_data['name']}"]
-        if cv_data.get("summary"): ctx_parts.append(f"Summary: {cv_data['summary']}")
-        if cv_data.get("tech_skills_text"): ctx_parts.append(f"Skills: {cv_data['tech_skills_text']}")
-        for exp in cv_data.get("experiences", []):
-            if exp.get("title"): ctx_parts.append(f"Exp: {exp['title']} @ {exp.get('company', '')}")
-        cv_context = " | ".join(ctx_parts)
-
-    # Define Callback to process chat
+        cv_summary = f"User {cv_data['name']} is viewing {current_page}."
+        if analysis_res:
+            score = analysis_res.get('match_score', 0)
+            cv_summary += f" Analysis Match Score: {score}%."
+    
+    # 3. Define Callback to process chat
     def process_chat():
         user_msg = st.session_state.get("chat_input_widget", "")
         if user_msg:
-            st.session_state["chat_history"].append({"role": "user", "content": user_msg})
+            # Detect language for this specific query
             detected_lang = ml_utils._detect_chat_language(user_msg)
-            st.session_state["chat_lang"] = detected_lang
-            # Enrich message with CV context for better responses
-            enriched_msg = user_msg
-            if cv_context:
-                enriched_msg = f"[CV Context: {cv_context[:500]}] {user_msg}"
-            response = ml_utils.get_chatbot_response(enriched_msg, current_page, lang=detected_lang)
+            
+            # Store history
+            st.session_state["chat_history"].append({"role": "user", "content": user_msg})
+            
+            # Enrich message with full context
+            context_prefix = f"[System Context: {cv_summary}] " if cv_summary else ""
+            response = ml_utils.get_chatbot_response(context_prefix + user_msg, current_page, lang=detected_lang)
+            
             st.session_state["chat_history"].append({"role": "assistant", "content": response})
             st.session_state["chat_input_widget"] = ""
 
-    # === RUBEN - Coach AI - CLEAN UI ===
-    # Simple, integrated header without heavy boxes
+    # === RUBEN - AI COACH UI ===
     st.markdown(f"""
-    <div style="margin-top: 0.5rem; margin-bottom: 1rem;">
-        <div style="font-size: 1.1rem; font-weight: 700; color: #00A0DC;">
-            Ruben - Coach AI
+    <div style="margin-bottom: 0.8rem;">
+        <div style="font-size: 1rem; font-weight: 800; color: #00A0DC; display: flex; align-items: center; gap: 8px;">
+             Ruben AI Coach
+             <span style="background: rgba(0, 200, 83, 0.1); color: #00C853; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; border: 1px solid rgba(0, 200, 83, 0.2);">SMART CONTEXT</span>
         </div>
         <div style="font-size: 0.75rem; color: #8b949e;">{t('ruben_subtitle')}</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Show conversation history (scrollable)
+    # 4. CHAT HISTORY DISPLAY
     history = st.session_state["chat_history"]
-    
-    # CSS to make chat bubbles cleaner
     st.markdown("""
     <style>
         .chat-bubble-bot {
-            margin: 0.3rem 0; 
-            padding: 0.6rem 0.8rem; 
-            background: rgba(0, 160, 220, 0.05); 
-            border-radius: 8px; 
-            font-size: 0.85rem; 
-            color: #c9d1d9;
-            line-height: 1.4;
+            margin: 0.4rem 0; padding: 0.8rem; 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(0, 160, 220, 0.2);
+            border-radius: 12px; font-size: 0.85rem; color: #f0f6fc;
+            line-height: 1.5;
         }
         .chat-bubble-user {
-            margin: 0.3rem 0 0.3rem auto; 
-            padding: 0.5rem 0.8rem; 
-            background: rgba(255, 255, 255, 0.05); 
-            border-radius: 8px; 
-            font-size: 0.85rem; 
-            color: #e2e8f0; 
-            text-align: right;
-            max-width: 85%;
+            margin: 0.4rem 0 0.4rem auto; padding: 0.7rem; 
+            background: rgba(0, 119, 181, 0.15); 
+            border-radius: 12px; font-size: 0.85rem; color: #fff; 
+            text-align: left; max-width: 90%;
         }
     </style>
     """, unsafe_allow_html=True)
 
     if not history:
-        # Welcome message
-        welcome = ml_utils.get_chatbot_response("", current_page, lang="en")
+        # Initial Proactive Message based on page
+        welcome = ml_utils.get_chatbot_response("", current_page, lang=lang)
         st.markdown(f'<div class="chat-bubble-bot">{welcome}</div>', unsafe_allow_html=True)
     else:
         # Show last N messages to keep sidebar manageable
-        display_history = history[-8:]
-        for msg in display_history:
-            if msg["role"] == "user":
-                st.markdown(f'<div class="chat-bubble-user">{msg["content"]}</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(f'<div class="chat-bubble-bot">{msg["content"]}</div>', unsafe_allow_html=True)
-
-    # Spacer
+        for msg in history[-5:]:
+            div_class = "chat-bubble-user" if msg["role"] == "user" else "chat-bubble-bot"
+            st.markdown(f'<div class="{div_class}">{msg["content"]}</div>', unsafe_allow_html=True)
+            
+    # 5. QUICK ACTIONS (Buttons for common queries)
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
     
-    # Input Area
+    # CSS for Quick Action buttons
+    st.markdown("""
+    <style>
+        div:has(span#qa-marker) + div button {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #8b949e !important;
+            font-size: 0.7rem !important;
+            padding: 0.2rem 0.6rem !important;
+            border-radius: 20px !important;
+            min-height: 1.8rem !important;
+        }
+        div:has(span#qa-marker) + div button:hover {
+            border-color: #00A0DC !important;
+            color: #00A0DC !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<span id="qa-marker"></span>', unsafe_allow_html=True)
+    qa_cols = st.columns(2)
+    with qa_cols[0]:
+        if st.button("Interview Prep", key="qa_int", use_container_width=True):
+            st.session_state["chat_history"].append({"role": "user", "content": "Tell me about Interview Prep"})
+            resp = ml_utils.get_chatbot_response("Tell me about Interview Prep", current_page, lang=lang)
+            st.session_state["chat_history"].append({"role": "assistant", "content": resp})
+            st.rerun()
+    with qa_cols[1]:
+        if st.button("ATS Resume Tips", key="qa_cv", use_container_width=True):
+            st.session_state["chat_history"].append({"role": "user", "content": "How to fix my CV for ATS?"})
+            resp = ml_utils.get_chatbot_response("How to fix my CV for ATS?", current_page, lang=lang)
+            st.session_state["chat_history"].append({"role": "assistant", "content": resp})
+            st.rerun()
+
+    # 6. INPUT WIDGET
     st.text_input(
-        t("ruben_label"), 
+        "Chat with Ruben",
         key="chat_input_widget", 
         label_visibility="collapsed", 
         placeholder=t("ruben_placeholder"),
