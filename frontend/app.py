@@ -103,7 +103,17 @@ st.markdown(styles.get_premium_css(), unsafe_allow_html=True)
 # - demo_mode: se l'utente ha attivato la modalità demo
 
 if "page" not in st.session_state:
-    st.session_state["page"] = "Landing"
+    if "p" in st.query_params:
+        st.session_state["page"] = st.query_params["p"]
+    else:
+        st.session_state["page"] = "Landing"
+
+# Navigation Sync
+if "p" in st.query_params and st.query_params["p"] != st.session_state["page"]:
+    st.session_state["page"] = st.query_params["p"]
+
+if st.query_params.get("p") != st.session_state["page"]:
+    st.query_params["p"] = st.session_state["page"]
 # No demo_mode initialization needed for production
 
 # CV Builder session state
