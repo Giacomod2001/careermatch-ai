@@ -4347,101 +4347,120 @@ def get_interview_questions(role: str = None, question_type: str = "mixed", coun
 
 def evaluate_interview_answer(question: Dict, answer: str) -> Dict:
     """
-    Evaluates an interview answer and provides feedback.
-    
-    Args:
-        question: Question dictionary with expected_keywords or star_focus
-        answer: User's answer text
-        
-    Returns:
-        Dict with score, feedback, and tips
+    Evaluates an interview answer and provides deep insights, strengths, and weaknesses.
     """
     if not answer or len(answer.strip()) < 20:
         return {
             "score": 0,
-            "rating": "Too Short",
-            "feedback": "Your answer is too short. Aim for at least 2-3 sentences.",
-            "tips": ["Provide more detail", "Use the STAR method for behavioral questions"]
+            "rating": "Insufficient",
+            "feedback": "Your answer is significantly too short. A professional interview response should typically be between 100-300 words.",
+            "strengths": [],
+            "weaknesses": ["Answer is too brief", "Missing structure"],
+            "tips": ["Aim for at least 3-4 detailed sentences", "Use the STAR method"],
+            "insights": {"structure": "Poor", "tone": "Incomplete"}
         }
     
     answer_lower = answer.lower()
     score = 0
-    feedback_items = []
+    strengths = []
+    weaknesses = []
     tips = []
+    insights = {}
     
-    # Check length (ideal: 100-300 words)
+    # 1. Structural Analysis
     word_count = len(answer.split())
-    if word_count >= 50:
+    if word_count >= 150:
         score += 20
-        feedback_items.append("Good length")
-    elif word_count >= 30:
+        strengths.append("Comprehensive length and detail")
+    elif word_count >= 60:
         score += 10
-        feedback_items.append("Reasonable length, could be more detailed")
+        strengths.append("Appropriate brevity for initial response")
     else:
-        tips.append("Expand your answer with more details and examples")
-    
-    # Check for STAR method components (for behavioral questions)
+        weaknesses.append("Lack of depth - answer is quite short")
+        tips.append("Expand on the 'Action' and 'Result' phases of your story")
+
+    # 2. STAR Framework Analysis
     star_focus = question.get("star_focus", "")
-    if "situation" in star_focus.lower():
-        if any(w in answer_lower for w in ["when", "while", "during", "at my previous", "in my role", "last year"]):
+    has_situation = any(w in answer_lower for w in ["when", "while", "during", "at my previous", "in my role", "last year", "situazione", "nel mio ruolo"])
+    has_action = any(w in answer_lower for w in ["i decided", "i implemented", "i created", "i led", "i worked", "i spoke", "ho deciso", "ho creato", "ho implementato"])
+    has_result = any(w in answer_lower for w in ["result", "outcome", "achieved", "improved", "increased", "decreased", "saved", "risultato", "ottenuto", "migliorato"])
+    
+    if has_situation:
+        score += 15
+        strengths.append("Well-defined context/situation")
+    else:
+        weaknesses.append("Weak situational context")
+        tips.append("Start by clearly setting the scene: 'In my previous role as X, we faced Y...'")
+        
+    if has_action:
+        score += 20
+        strengths.append("Clear description of actions taken")
+        # Personal ownership check
+        if " i " in " " + answer_lower + " " or " ho " in " " + answer_lower + " ":
+            score += 5
+            strengths.append("Demonstrated personal ownership ('I' instead of 'We')")
+        else:
+            weaknesses.append("Vague personal contribution (too much 'we')")
+            tips.append("Focus more on YOUR specific actions rather than the team's general work")
+    else:
+        weaknesses.append("Lack of specific actions described")
+
+    if has_result:
+        score += 20
+        strengths.append("Outcome-oriented mindset")
+        # Quantified results bonus
+        if any(c.isdigit() for c in answer):
             score += 15
-            feedback_items.append("Good situation context")
+            strengths.append("Quantified impact (use of data/metrics)")
         else:
-            tips.append("Start with the specific situation or context")
-    
-    if "action" in star_focus.lower():
-        if any(w in answer_lower for w in ["i decided", "i implemented", "i created", "i led", "i worked", "i spoke"]):
-            score += 20
-            feedback_items.append("Clear actions described")
-        else:
-            tips.append("Describe the specific actions YOU took (use 'I' not 'we')")
-    
-    if "result" in star_focus.lower():
-        if any(w in answer_lower for w in ["result", "outcome", "achieved", "improved", "increased", "decreased", "saved", "risultato", "ottenuto", "migliorato", "aumentato"]):
-            score += 20
-            feedback_items.append("Results mentioned")
-            # Bonus for quantified results
-            if any(c.isdigit() for c in answer):
-                score += 15  # Increased bonus
-                feedback_items.append("Quantified results - excellent!")
-        else:
-            tips.append("End with the concrete results or impact (outcome)")
-    
-    # 2b. Broad STAR matching (Italian + context)
-    if any(w in answer_lower for w in ["situazione", "compito", "azione", "quindi", "grazie a"]):
-        score += 10
-        feedback_items.append("Structural variety")
-    
-    # Check for expected keywords (for technical questions)
+            weaknesses.append("Non-quantified results")
+            tips.append("Try to add numbers: 'reduced time by 20%' or 'saved €10k'")
+    else:
+        weaknesses.append("Missing or weak results/outcomes")
+
+    # 3. Technical/Keyword Analysis
     expected_keywords = question.get("expected_keywords", [])
     if expected_keywords:
         keywords_found = [kw for kw in expected_keywords if kw.lower() in answer_lower]
         keyword_ratio = len(keywords_found) / len(expected_keywords)
-        score += int(keyword_ratio * 40)
+        score += int(keyword_ratio * 30)
         
-        if keyword_ratio >= 0.6:
-            feedback_items.append(f"Good coverage of key concepts ({len(keywords_found)}/{len(expected_keywords)})")
+        if keyword_ratio >= 0.7:
+            strengths.append(f"Strong technical vocabulary ({len(keywords_found)}/{len(expected_keywords)} key terms)")
+        elif keyword_ratio > 0:
+             strengths.append("Used some relevant industry terminology")
         else:
-            missing = [kw for kw in expected_keywords if kw.lower() not in answer_lower][:3]
-            tips.append(f"Consider mentioning: {', '.join(missing)}")
-    
-    # Determine rating (Softer thresholds)
-    if score >= 75: # Lowered from 80
-        rating = "Excellent"
-    elif score >= 50: # Lowered from 60
-        rating = "Good"
-    elif score >= 35: # Lowered from 40
-        rating = "Fair"
-    elif score >= 15: # Lowered from 20
-        rating = "Needs Improvement"
+            weaknesses.append("Missing core technical concepts")
+            tips.append(f"Consider integrating terms like: {', '.join(expected_keywords[:3])}")
+
+    # 4. Final Rating & Insights
+    insights["structure"] = "STAR Compliant" if (has_situation and has_action and has_result) else "Partial"
+    insights["tone"] = "Professional" if word_count > 40 else "Informal"
+    insights["impact_focus"] = "High" if any(c.isdigit() for c in answer) else "Low"
+
+    score = min(score, 100)
+    if score >= 85: rating = "Excellent"
+    elif score >= 70: rating = "Good"
+    elif score >= 50: rating = "Fair"
+    elif score >= 30: rating = "Needs Improvement"
+    else: rating = "Insufficient"
+
+    # Compile feedback from strengths and weaknesses
+    if strengths and not weaknesses:
+        main_feedback = "This is a very strong and well-structured answer. You've clearly demonstrated your impact."
+    elif score < 40:
+        main_feedback = "Your answer lacks the necessary detail and structure to be effective in a professional interview."
     else:
-        rating = "Insufficient"
-    
+        main_feedback = f"A solid {rating.lower()} response, but it could be strengthened by addressing the missing elements below."
+
     return {
-        "score": min(score, 100),
+        "score": score,
         "rating": rating,
-        "feedback": "; ".join(feedback_items) if feedback_items else "Answer needs more structure",
-        "tips": tips[:3]  # Max 3 tips
+        "feedback": main_feedback,
+        "strengths": strengths[:3],
+        "weaknesses": weaknesses[:3],
+        "tips": tips[:3],
+        "insights": insights
     }
 
 

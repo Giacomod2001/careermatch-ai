@@ -2999,27 +2999,53 @@ def render_interview_prep():
                 else:
                     # 5. Evaluation Feedback (Inline)
                     score = ev['score']
-                    color = "#00C853" if score >= 60 else "#FFB300" if score >= 40 else "#E53935"
-                    icon = "✅" if score >= 60 else "⚠️" if score >= 40 else "🚨"
+                    color = "#00C853" if score >= 85 else "#FFB300" if score >= 60 else "#E53935"
+                    icon = "✅" if score >= 85 else "⚠️" if score >= 60 else "🚨"
                     
                     st.markdown(f"""
-                    <div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.5rem; margin-top: 1rem; border-top: 4px solid {color};">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span style="font-size: 1.1rem; font-weight: 600;">{icon} {ev['rating']}</span>
-                            <span style="font-size: 1.4rem; font-weight: 700; color: {color};">{score}%</span>
+                    <div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-top: 1rem; border-left: 6px solid {color};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <div>
+                                <span style="font-size: 1.2rem; font-weight: 700; color: {color}; display: block;">{ev['rating']}</span>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Evaluation Result</span>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 2rem; font-weight: 800; color: {color};">{score}%</span>
+                            </div>
                         </div>
-                        <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">{ev['feedback']}</p>
+                        
+                        <div style="background: rgba(255,255,255,0.03); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 1px dashed rgba(255,255,255,0.1);">
+                            <p style="color: var(--text-primary); line-height: 1.6; margin: 0; font-style: italic;">"{ev['feedback']}"</p>
+                        </div>
                     """, unsafe_allow_html=True)
                     
-                    if ev.get('tips'):
-                        for tip in ev.get('tips'):
-                            st.markdown(f"""
-                            <div style="display: flex; margin-bottom: 0.5rem;">
-                                <span style="color: {color}; margin-right: 8px;">•</span>
-                                <span style="font-size: 0.9rem; color: var(--text-secondary);">{tip}</span>
-                            </div>
-                            """, unsafe_allow_html=True)
+                    # Strengths & Weaknesses
+                    c_fb1, c_fb2 = st.columns(2)
+                    with c_fb1:
+                        if ev.get('strengths'):
+                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #00C853;'>💎 Strengths</p>", unsafe_allow_html=True)
+                            for s in ev['strengths']:
+                                st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>• {s}</div>", unsafe_allow_html=True)
                     
+                    with c_fb2:
+                        if ev.get('weaknesses'):
+                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #FFB300;'>🎯 Areas for Improvement</p>", unsafe_allow_html=True)
+                            for w in ev['weaknesses']:
+                                st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>• {w}</div>", unsafe_allow_html=True)
+                    
+                    # Insights Row
+                    if ev.get('insights'):
+                        st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+                        st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.8rem; color: var(--text-primary);'>📊 Ruben's Insights</p>", unsafe_allow_html=True)
+                        ins = ev['insights']
+                        i_col1, i_col2, i_col3 = st.columns(3)
+                        with i_col1:
+                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>Structure</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('structure', 'N/A')}</div></div>", unsafe_allow_html=True)
+                        with i_col2:
+                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>Tone</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('tone', 'N/A')}</div></div>", unsafe_allow_html=True)
+                        with i_col3:
+                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>Impact</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('impact_focus', 'N/A')}</div></div>", unsafe_allow_html=True)
+
                     st.markdown("</div>", unsafe_allow_html=True)
                     
                     # 6. Navigation (Next Question / Finish) - Only visible after evaluation
