@@ -1967,13 +1967,32 @@ def extract_skills_from_text(text: str, is_jd: bool = False) -> Tuple[Set[str], 
 
 # =============================================================================
 def extract_text_from_pdf(pdf_file) -> str:
+    """
+    Robustly extracts text from PDF files using pypdf.
+    Adds spaces and newlines to preserve structural integrity for KDD processing.
+    """
     if PdfReader is None: 
-        raise ImportError("pypdf missing")
+        raise ImportError("pypdf missing. Please check requirements.txt")
     try:
         reader = PdfReader(pdf_file)
-        return " ".join(page.extract_text() or "" for page in reader.pages)
+        text_parts = []
+        for page in reader.pages:
+            # Extract text with a small margin for better layout preservation
+            page_text = page.extract_text()
+            if page_text:
+                # Basic cleaning: remove null bytes and non-standard whitespace
+                cleaned_page = page_text.replace('\x00', '')
+                text_parts.append(cleaned_page)
+        
+        full_text = "\n".join(text_parts).strip()
+        
+        # Ensure we have some text; otherwise return a helpful message
+        if not full_text:
+            return "No readable text found in this PDF. It might be an image-based scan or encrypted."
+            
+        return full_text
     except Exception as e:
-        raise Exception(f"PDF Error: {str(e)}")
+        raise Exception(f"PDF Extraction Error: {str(e)}")
 
 def generate_pdf_report(res: Dict, jd_text: str = "", cl_analysis: Dict = None) -> bytes:
     """

@@ -59,7 +59,7 @@ TRANSLATIONS = {
         "bld_step1": "1. Personal Information",
         "bld_step2": "2. Professional Summary",
         "bld_step3": "3. Skills",
-        "bld_step4": "4. Target Role",
+        "bld_step4": "4. Review & Export",
         "btn_generate_cv": "Generate CV",
         
         # --- CV ANALYSIS ---
@@ -230,7 +230,7 @@ TRANSLATIONS = {
         "bld_step1": "1. Informazioni Personali",
         "bld_step2": "2. Profilo Professionale",
         "bld_step3": "3. Competenze",
-        "bld_step4": "4. Ruolo Target",
+        "bld_step4": "4. Revisione & Export",
         "btn_generate_cv": "Genera CV",
         
         # --- CV ANALYSIS ---
