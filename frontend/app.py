@@ -103,28 +103,7 @@ st.markdown(styles.get_premium_css(), unsafe_allow_html=True)
 # - demo_mode: se l'utente ha attivato la modalità demo
 
 if "page" not in st.session_state:
-    st.session_state["page"] = st.query_params.get("p", "Landing")
-
-if "last_p" not in st.session_state:
-    st.session_state["last_p"] = st.query_params.get("p", "Landing")
-
-# 1. Detect if URL changed via Browser History (Back/Forward/Swipe)
-current_url_p = st.query_params.get("p", "Landing")
-if current_url_p != st.session_state["last_p"]:
-    st.session_state["page"] = current_url_p
-    st.session_state["last_p"] = current_url_p
-
-# 2. Detect if Page changed via Button Interaction
-if st.session_state["page"] != current_url_p:
-    st.query_params["p"] = st.session_state["page"]
-    st.session_state["last_p"] = st.session_state["page"]
-    
-    # FORCE BROWSER HISTORY PUSH (For Trackpad Gestures)
-    st.markdown(f"""
-        <script>
-            window.parent.history.pushState({{page: '{st.session_state["page"]}'}}, '', '?p={st.session_state["page"]}');
-        </script>
-    """, unsafe_allow_html=True)
+    st.session_state["page"] = "Landing"
 # No demo_mode initialization needed for production
 
 # CV Builder session state
