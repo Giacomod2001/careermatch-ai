@@ -1544,7 +1544,6 @@ def render_cv_builder():
                 st.rerun()
 
     # STEP 4: REVIEW & EXPORT
-    # STEP 4: REVIEW & EXPORT
     elif curr_step == 4:
         st.markdown(f"### {t('bld_step4')}")
         
@@ -1621,11 +1620,6 @@ def render_cv_builder():
                 st.session_state["cv_builder_step"] = 3
                 st.rerun()
 
-            # Nav Buttons
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("← Back to Edit"):
-                st.session_state["cv_builder_step"] = 3
-                st.rerun()
 
 # =============================================================================
 # INTERFACCIA UTENTE PRINCIPALE (UI)
