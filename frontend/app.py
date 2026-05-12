@@ -44,6 +44,11 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import urllib.parse
+import sys
+import os
+
+# Ensure local directory is in path for imports on cloud environments
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Force reload modules (disabled for performance, enable only in dev)
