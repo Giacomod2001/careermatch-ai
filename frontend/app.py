@@ -2795,27 +2795,25 @@ def render_interview_prep():
     questions = st.session_state.get("interview_questions", [])
     
     if not questions:
-        # Configuration Hub
-        st.markdown('<div class="config-container">', unsafe_allow_html=True)
+        # Integrated Setup Hub
+        st.markdown(f"### {t('int_config')}")
         
-        st.markdown(f"""
-        <div class="config-card shimmer-card">
-            <span class="config-step-number">SESSION SETUP</span>
-            <h2 class="config-header">Configure Your Practice Environment</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                Select your target role and desired question types to begin a personalized interview simulation.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        # Main Setup Card
-        with st.container():
-            st.markdown('<div class="config-card">', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown(f"""
+                <div style="margin-bottom: 1.5rem;">
+                    <span style="font-size: 0.75rem; font-weight: 800; background: var(--primary-blue); color: white; padding: 4px 10px; border-radius: 6px; letter-spacing: 1px;">SESSION SETUP</span>
+                    <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.5rem;">Configure Your Practice Environment</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                        Select your target role and question types to begin.
+                    </p>
+                </div>
+                <hr style="margin: 1.5rem 0; border: none; height: 1px; background: rgba(255,255,255,0.1);">
+            """, unsafe_allow_html=True)
             
             # Section 1: Role & Type
             col1, col2 = st.columns(2)
             with col1:
-                st.markdown(f'<p class="input-label-premium">{t("int_target_role")}</p>', unsafe_allow_html=True)
+                st.markdown(f'**{t("int_target_role")}**')
                 role = st.selectbox(
                     "Role Selection",
                     ["Software Engineer", "Data Scientist", "Data Analyst", "Product Manager", "UX Designer", "General"],
@@ -2824,7 +2822,7 @@ def render_interview_prep():
                 )
             
             with col2:
-                st.markdown(f'<p class="input-label-premium">{t("int_q_type")}</p>', unsafe_allow_html=True)
+                st.markdown(f'**{t("int_q_type")}**')
                 q_type = st.radio(
                     "Type Selection",
                     ["Mixed (All Types)", "Behavioral", "Technical", "HR"],
@@ -2833,10 +2831,10 @@ def render_interview_prep():
                     key="q_type_selector"
                 )
             
-            st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
             
             # Section 2: Question Count
-            st.markdown(f'<p class="input-label-premium">{t("int_num_q")}</p>', unsafe_allow_html=True)
+            st.markdown(f'**{t("int_num_q")}**')
             num_questions = st.radio(
                 "Count Selection",
                 [3, 5, 7, 10],
@@ -2846,16 +2844,11 @@ def render_interview_prep():
                 key="num_q_selector"
             )
             
-            st.markdown("<div style='height: 2.5rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
             
             # Action Button
             if st.button(t("btn_start_practice"), type="primary", use_container_width=True):
-                # Trigger logic will follow after this card
                 st.session_state["start_clicked"] = True
-                
-            st.markdown("</div>", unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
         
         q_type_map = {"Mixed (All Types)": "mixed", "Behavioral": "behavioral", "Technical": "technical", "HR": "hr"}
         
