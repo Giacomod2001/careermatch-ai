@@ -284,7 +284,10 @@ def render_delete_my_data_button():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         confirm = st.checkbox(_t("delete_confirm"), key="delete_confirm_checkbox")
-        if st.button(_t("delete_btn"), type="primary", use_container_width=True,
+        
+        # Wrapped in destructive-btn class for red color only here
+        st.markdown('<div class="destructive-btn">', unsafe_allow_html=True)
+        if st.button(_t("delete_btn"), type="primary", key="btn_real_delete", use_container_width=True,
                      disabled=not confirm):
             keys_to_clear = list(st.session_state.keys())
             for key in keys_to_clear:
@@ -292,6 +295,7 @@ def render_delete_my_data_button():
                     del st.session_state[key]
             st.success(_t("delete_success"))
             st.info(_t("delete_info"))
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # =============================================================================

@@ -150,7 +150,7 @@ h1 {
    BUTTONS
    ============================================================================= */
    
-/* Primary Button (Analyze, etc.) */
+/* Standard Buttons (Primary & Default) */
 .stButton > button[kind="primary"],
 .stButton > button {
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%) !important;
@@ -162,8 +162,8 @@ h1 {
     transition: all var(--transition-normal) !important;
     box-shadow: var(--shadow-sm) !important;
     width: 100% !important;
-    min-height: 3.5rem !important; /* Standardized height */
-    white-space: nowrap !important; /* Prevent text wrapping */
+    min-height: 3.5rem !important;
+    white-space: nowrap !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -175,8 +175,17 @@ h1 {
     background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-blue) 100%) !important;
 }
 
-.stButton > button:active {
-    transform: translateY(0) !important;
+/* Destructive Button (Special Styling for Deletion) */
+div.destructive-btn button {
+    background: linear-gradient(135deg, #E53935 0%, #B71C1C 100%) !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(229, 57, 53, 0.2) !important;
+}
+
+div.destructive-btn button:hover {
+    background: linear-gradient(135deg, #FF5252 0%, #E53935 100%) !important;
+    box-shadow: 0 6px 15px rgba(229, 57, 53, 0.4) !important;
+    transform: translateY(-2px) !important;
 }
 
 /* =============================================================================
