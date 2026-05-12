@@ -979,6 +979,113 @@ h1 {
     }
 }
 
+    /* 10. CONFIGURATION CARDS - Interview Prep & Setup */
+    .config-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .config-card {
+        background: linear-gradient(145deg, rgba(22, 27, 34, 0.6) 0%, rgba(13, 17, 23, 0.8) 100%);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(48, 54, 61, 0.8);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .config-card:hover {
+        border-color: var(--primary-blue);
+        box-shadow: 0 15px 50px rgba(0, 119, 181, 0.2);
+        transform: translateY(-4px);
+    }
+
+    .config-step-number {
+        font-size: 0.75rem;
+        font-weight: 800;
+        background: var(--primary-blue);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: inline-block;
+        letter-spacing: 1px;
+    }
+
+    .config-header {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem !important;
+        color: var(--text-primary);
+    }
+
+    /* Segmented Radio Controls for Premium Feel */
+    div[data-testid="stRadio"] > label {
+        display: none !important; /* Hide the default radio label */
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] {
+        gap: 12px !important;
+    }
+
+    /* Hide the radio circles and style labels as buttons */
+    div[data-testid="stRadio"] div[role="radiogroup"] > label {
+        background: #161b22 !important;
+        border: 1px solid #30363d !important;
+        padding: 0.6rem 1.25rem !important;
+        border-radius: 12px !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+        border-color: var(--primary-blue) !important;
+        background: rgba(0, 119, 181, 0.05) !important;
+    }
+
+    /* Target the selected state - Streamlit uses a specific div for this */
+    div[data-testid="stRadio"] div[role="radiogroup"] input:checked + div + div {
+        color: var(--primary-light) !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Fallback for the radio pill background if possible */
+    div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {
+        border-color: var(--primary-blue) !important;
+        background: rgba(0, 119, 181, 0.1) !important;
+    }
+
+    /* Custom Input Labels */
+    .input-label-premium {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* 11. ANIMATIONS & MICRO-INTERACTIONS */
+    @keyframes shimmer-border {
+        0% { border-color: rgba(48, 54, 61, 0.8); }
+        50% { border-color: var(--primary-blue); }
+        100% { border-color: rgba(48, 54, 61, 0.8); }
+    }
+
+    .shimmer-card {
+        animation: shimmer-border 3s infinite ease-in-out;
+    }
+    .glass-card:hover,
+    .metric-card:hover {
+        transform: none !important;
+        -webkit-transform: none !important;
+    }
+
 /* 9. MOBILE TOUCH OPTIMIZATION */
 @media (pointer: coarse) {
     /* Increase touch targets */
