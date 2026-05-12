@@ -3019,6 +3019,15 @@ def render_interview_prep():
                         </div>
                     """, unsafe_allow_html=True)
                     
+                    # Coach's Sketch (The "Insight")
+                    if ev.get('model_sketch'):
+                        st.markdown(f"""
+                        <div style="background: rgba(0, 160, 220, 0.05); border-left: 4px solid #00A0DC; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.5rem;">RUBEN'S COACHING TIP</div>
+                            <div style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">{ev['model_sketch']}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
+
                     # Strengths & Weaknesses
                     c_fb1, c_fb2 = st.columns(2)
                     with c_fb1:

@@ -4438,6 +4438,11 @@ def evaluate_interview_answer(question: Dict, answer: str) -> Dict:
     insights["tone"] = "Professional" if word_count > 40 else "Informal"
     insights["impact_focus"] = "High" if any(c.isdigit() for c in answer) else "Low"
 
+    # 4. Final Rating & Insights
+    insights["structure"] = "STAR Compliant" if (has_situation and has_action and has_result) else "Partial"
+    insights["tone"] = "Professional" if word_count > 40 else "Informal"
+    insights["impact_focus"] = "High" if any(c.isdigit() for c in answer) else "Low"
+
     score = min(score, 100)
     if score >= 85: rating = "Excellent"
     elif score >= 70: rating = "Good"
@@ -4453,6 +4458,16 @@ def evaluate_interview_answer(question: Dict, answer: str) -> Dict:
     else:
         main_feedback = f"A solid {rating.lower()} response, but it could be strengthened by addressing the missing elements below."
 
+    # 5. Model Sketch (Coach's suggestion)
+    model_sketch = ""
+    if score < 90:
+        if star_focus:
+            model_sketch = "💡 **Coach's Tip:** Try phrasing it like this: 'In my role at [Company], I faced [Situation]. I took the initiative to [Action], which resulted in [Result - e.g. reduced time by 20%].'"
+        elif expected_keywords:
+            model_sketch = f"💡 **Coach's Tip:** Try to incorporate technical keywords: 'By utilizing {', '.join(expected_keywords[:3])}, I was able to optimize the workflow and ensure a robust implementation...'"
+        else:
+            model_sketch = "💡 **Coach's Tip:** Try to be more specific about the 'What', 'How', and 'Result' of your experience to show more impact."
+
     return {
         "score": score,
         "rating": rating,
@@ -4460,7 +4475,8 @@ def evaluate_interview_answer(question: Dict, answer: str) -> Dict:
         "strengths": strengths[:3],
         "weaknesses": weaknesses[:3],
         "tips": tips[:3],
-        "insights": insights
+        "insights": insights,
+        "model_sketch": model_sketch
     }
 
 
