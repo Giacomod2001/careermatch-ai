@@ -66,6 +66,7 @@ def test_skill_hierarchy():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 2: Bidirectional Skill Expansion
@@ -106,6 +107,7 @@ def test_skill_expansion():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 3: Job Archetypes Deep Validation
@@ -154,6 +156,7 @@ def test_job_archetypes_deep():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 4: SKILL_CLUSTERS Validation
@@ -196,6 +199,7 @@ def test_skill_clusters():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 5: Role Recommendation System
@@ -249,6 +253,7 @@ def test_recommend_roles():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 6: Inference Rules in Action (Gap Analysis)
@@ -296,6 +301,7 @@ def test_inference_in_gap():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 7: Dev Console Data Integrity
@@ -360,6 +366,7 @@ def test_dev_console_data():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # MAIN

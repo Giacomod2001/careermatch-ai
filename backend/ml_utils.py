@@ -4491,6 +4491,4 @@ def search_companies(query: str = None, sector: str = None) -> List[Dict]:
 
 
     # Sort by demand
-    trends.sort(key=lambda x: x['demand'], reverse=True)
-    return trends[:top_n]
 

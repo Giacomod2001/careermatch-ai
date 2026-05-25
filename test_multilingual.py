@@ -80,6 +80,7 @@ def test_language_detection():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 
 def test_multilingual_responses():
@@ -146,6 +147,7 @@ def test_multilingual_responses():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 
 def show_demo_conversations():

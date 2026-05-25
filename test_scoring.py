@@ -75,6 +75,7 @@ def test_calculate_match_score():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 2: Skill Extraction
@@ -124,6 +125,7 @@ def test_skill_extraction():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 3: Gap Analysis
@@ -188,6 +190,7 @@ def test_gap_analysis():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 4: Role-Based Analysis (Archetype Fallback)
@@ -231,6 +234,7 @@ def test_role_archetype():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 5: Composite Scoring
@@ -266,6 +270,7 @@ def test_composite_scoring():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 6: Seniority Detection
@@ -296,6 +301,7 @@ def test_seniority_detection():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 7: Knowledge Base Integrity
@@ -341,6 +347,7 @@ def test_knowledge_base():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # TEST 8: Portfolio Analysis (if project text provided)
@@ -386,6 +393,7 @@ def test_portfolio_analysis():
     
     print(f"\n  Summary: {tests_passed}/{total_tests} tests passed")
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 # =============================================================================
 # MAIN TEST RUNNER

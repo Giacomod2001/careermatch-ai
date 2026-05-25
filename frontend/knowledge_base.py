@@ -568,13 +568,11 @@ SKILL_HIERARCHY = {
     "Looker Studio": ["Data Visualization", "BI Tools", "Google Analytics"],
     
     # Spreadsheets
-    "Excel": ["Spreadsheets", "Data Analysis", "Business Analysis"],
     "Google Sheets": ["Spreadsheets", "Data Analysis"],
     
     # Digital Marketing Tools
     "Google Ads": ["SEM", "PPC", "Digital Marketing"],
     "Facebook Ads": ["Social Media Marketing", "Digital Marketing", "PPC"],
-    "Google Analytics": ["Web Analytics", "Digital Marketing", "Data Analysis"],
     "GA4": ["Web Analytics", "Google Analytics", "Digital Marketing"],
     "SEO": ["Digital Marketing", "Content Marketing"],
     
@@ -607,7 +605,6 @@ SKILL_HIERARCHY = {
     "PV": ["Solar Energy", "Photovoltaics"],
     "Matlab": ["Programming", "Simulink", "Engineering Software"],
     "PVSyst": ["Solar Energy", "Energy Modeling"],
-    "AutoCAD": ["CAD", "Technical Drawing", "Design Software"],
     
     # Languages
     "English": ["Languages", "Communication"],
@@ -639,9 +636,6 @@ SKILL_HIERARCHY = {
     "CDM": ["HealthTech", "Clinical Research"],
     
     # Luxury & Fashion
-    "Luxury Retail": ["Sales", "Luxury & Fashion"],
-    "Visual Merchandising": ["Design", "Retail"],
-    "Textile Knowledge": ["Fashion Design", "Materials Science"],
     "Haute Couture": ["Fashion Design", "Luxury & Fashion"],
     "Salesforce Clienteling": ["CRM", "Luxury Retail"],
     
@@ -695,9 +689,7 @@ SKILL_HIERARCHY = {
 SKILL_IMPLICATIONS = {
     # High-level domains imply foundational skills
     "Data Science": ["Machine Learning", "Statistics", "Data Analysis", "Programming", "Python", "SQL"],
-    "Machine Learning": ["Statistics", "Data Analysis", "Modeling", "Python", "Mathematics"],
     "Deep Learning": ["Machine Learning", "Neural Networks", "Statistics", "Python"],
-    "Artificial Intelligence": ["Machine Learning", "Programming", "Algorithms"],
     
     "Full Stack Development": ["Frontend Development", "Backend Development", "Database Management", "API Development"],
     "Backend Development": ["Database Management", "API Development", "Server Management"],
@@ -715,7 +707,6 @@ SKILL_IMPLICATIONS = {
     "Product Management": ["Market Research", "User Research", "Data Analysis", "Agile"],
     
     "Business Intelligence": ["Data Analysis", "Reporting", "Visualization", "SQL"],
-    "Data Analysis": ["Excel", "SQL", "Statistics", "Reporting", "Visualization", "Critical Thinking"],
     "Analytics": ["Data Analysis", "Reporting", "Metrics", "KPI Management"],
     "Advanced Excel": ["Excel", "Spreadsheets", "Data Analysis", "VBA"],
     "Marketing Analytics": ["Google Analytics", "Excel", "Data Analysis", "SQL", "KPI Management"],
@@ -1069,7 +1060,6 @@ HARD_SKILLS = {
     "Machine Learning": ["machine learning", "ml"],
     "Deep Learning": ["deep learning", "neural networks"],
     "Artificial Intelligence": ["artificial intelligence", "ai"],
-    "Statistics": ["statistics", "statistica", "statistical analysis"],
     "Data Visualization": ["data visualization", "data viz", "visualizzazione dati"],
     "Excel": ["excel", "microsoft excel", "spreadsheet"],
     "Python (Data)": ["pandas", "numpy", "scipy"],
@@ -1138,18 +1128,12 @@ HARD_SKILLS = {
     "Accounting": ["accounting", "contabilità", "billing", "financial reporting", "marketing accounting", "fatturazione", "amministrazione"],
     "Financial Analysis": ["financial analysis", "analisi finanziaria", "financial reporting"],
     "Financial Modeling": ["financial modeling", "modelli finanziari"],
-    "Taxation": ["taxation", "fiscalità", "tax"],
-    "Auditing": ["auditing", "audit", "revisione"],
     "Risk Management": ["risk management", "gestione rischio"],
     
     # ========== ENGINEERING ==========
     "Mechanical Engineering": ["mechanical engineering", "ingegneria meccanica"],
-    "Electrical Engineering": ["electrical engineering", "ingegneria elettrica"],
-    "Civil Engineering": ["civil engineering", "ingegneria civile"],
-    "CAD": ["autocad", "solidworks", "catia", "cad"],
     "AutoCAD": ["autocad"],
     "SolidWorks": ["solidworks"],
-    "Simulation": ["ansys", "abaqus", "comsol", "fem", "fea"],
     "PLC": ["plc", "siemens", "allen bradley"],
     "SCADA": ["scada"],
     

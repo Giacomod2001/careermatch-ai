@@ -116,6 +116,7 @@ def test_ruben_ai():
         print(f"    [{page}]: {resp[:60]}...")
     
     assert tests_passed == total_tests, f"Failed {total_tests - tests_passed} tests"
+    return True
 
 if __name__ == "__main__":
     success = test_ruben_ai()
