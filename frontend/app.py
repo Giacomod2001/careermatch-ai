@@ -60,6 +60,7 @@ import gdpr_compliance
 import i18n
 import importlib
 importlib.reload(i18n)
+importlib.reload(ml_utils)
 from i18n import get_t
 
 
