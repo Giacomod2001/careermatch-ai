@@ -4174,27 +4174,33 @@ def get_chatbot_response(message: str, current_page: str = "Landing", lang: str 
 
     def personalize(text):
         import random
-        # Add a random variation prefix/suffix
+        # Add a random variation prefix
+        name_part = f" {user_name}" if user_name else ""
+        
         prefixes = {
-            'it': [f"Ottima domanda {user_name}! ", f"Certo {user_name}, ti spiego: ", "Ecco come funziona: ", ""],
-            'en': [f"Great question {user_name}! ", f"Sure {user_name}, let me explain: ", "Here is how it works: ", ""]
+            'it': [f"Ottima domanda{name_part}! ", f"Certo{name_part}, ti spiego: ", "Ecco come funziona: ", "Guarda, è molto semplice: "],
+            'en': [f"Great question{name_part}! ", f"Sure{name_part}, let me explain: ", "Here is how it works: ", "It's quite simple: "]
         }
         lang_prefs = prefixes.get(lang, prefixes['en'])
         
-        if user_name and random.random() > 0.5:
-            return random.choice(lang_prefs) + text
+        # Always add a prefix 75% of the time, regardless of whether we have a name
+        if random.random() > 0.25:
+            prefix = random.choice(lang_prefs)
+            # Avoid double spaces if name is empty
+            prefix = prefix.replace("! !", "!").replace(", !", "!").replace(" ,", ",")
+            return prefix + text
         return text
 
     # 12. PLATFORM-SPECIFIC PAGES (Original handlers)
     if any(kw in msg_lower for kw in ["service", "how works", "project", "app", "servizio", "come funziona", "progetto"]):
-        if current_page == "CV Evaluation":
+        if "CV Evaluation" in current_page:
             ans = "In CV Evaluation, confronto il tuo CV con la Job Description usando algoritmi NLP. Estraiamo le skill e calcoliamo il match esatto!" if lang == 'it' else "In CV Evaluation, I compare your CV against the JD using NLP. I'll extract skills and compute an exact match score!"
-        elif current_page == "Career Discovery":
-            ans = "In Career Discovery, usiamo il clustering per suggerirti i ruoli migliori in base alle tue preferenze e skill attuali." if lang == 'it' else "In Career Discovery, we use clustering to suggest the best roles based on your preferences and skills."
-        elif current_page == "CV Builder":
+        elif "Explore" in current_page or "Discovery" in current_page:
+            ans = "In questa sezione usiamo algoritmi di clustering per suggerirti i ruoli migliori in base alle tue preferenze e skill attuali." if lang == 'it' else "Here we use clustering to suggest the best roles based on your preferences and skills."
+        elif "Builder" in current_page:
             ans = "Nel CV Builder, ti guido passo passo per creare un curriculum ottimizzato per i sistemi ATS, suggerendo parole chiave rilevanti." if lang == 'it' else "In the CV Builder, I guide you step-by-step to create an ATS-optimized resume with relevant keywords."
         else:
-            ans = responses['landing']
+            ans = "Inizia esplorando i percorsi di carriera (Explore) o valuta quanto il tuo CV è adatto per un certo lavoro (CV Analysis). Posso anche darti consigli per superare i colloqui (Interview Prep)." if lang == 'it' else "Start by exploring career paths or evaluate how well your CV matches a job (CV Analysis). I can also give you interview tips (Interview Prep)."
         return personalize(ans)
 
     if current_page == "Landing" and not msg_lower:
