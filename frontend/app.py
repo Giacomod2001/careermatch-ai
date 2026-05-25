@@ -2420,33 +2420,7 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
 
     st.divider()
 
-    # --- JOB CONTEXT ANALYSIS (Moved Up) ---
-    if jd_text:
-        st.subheader("Job Context Analysis")
-        jd_corpus = [line for line in jd_text.split('\n') if len(line.split()) > 3]
-        if len(jd_corpus) > 5:
-            result = ml_utils.perform_topic_modeling(jd_corpus)
-            if result:
-                # Use a cleaner card layout
-                with st.container():
-                     c_summary, c_topics = st.columns([2, 1])
-                     with c_summary:
-                         st.markdown("##### Role Summary")
-                         st.info(result['summary'])
-                     
-                     with c_topics:
-                         st.markdown("##### Key Themes")
-                         for topic in result['topics'][:3]:
-                             # Extract just the title part before ":"
-                             if ":" in topic:
-                                 short_topic = topic.split(":")[0]
-                                 desc = topic.split(":")[1]
-                                 st.markdown(f"**{short_topic}**")
-                                 st.caption(desc.strip())
-                             else:
-                                 st.markdown(f"- {topic}")
-        else:
-            st.caption("Job Description too brief for deep analysis.")
+
     
     st.divider()
     
