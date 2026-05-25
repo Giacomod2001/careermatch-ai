@@ -93,7 +93,7 @@ def test_ruben_ai():
         ml_utils.get_chatbot_response("help", "CV Evaluation"),
         ml_utils.get_chatbot_response("what", "Career Discovery"),
     ]
-    emoji_chars = ['👋', '🤖', '😊', '✨', '🎯', '💡']
+    emoji_chars = ['', '', '', '', '', '']
     has_emoji = any(emoji in resp for resp in all_responses for emoji in emoji_chars)
     passed = not has_emoji
     if print_test("Responses have no emojis (professional)", passed):

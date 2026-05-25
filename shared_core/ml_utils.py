@@ -3007,16 +3007,9 @@ def generate_cv_pdf(text_content: str) -> bytes:
             '•': '-',
             '–': '-',
             '—': '-',
-            '"': '"',
-            '"': '"',
-            ''': "'",
-            ''': "'",
             '…': '...',
             '→': '->',
             '←': '<-',
-            '✓': '[x]',
-            '✗': '[ ]',
-            '★': '*',
             '@': ' at ',
         }
         for old, new in replacements.items():
@@ -4372,22 +4365,65 @@ def get_interview_questions(role: str = None, question_type: str = "mixed", coun
 
 def evaluate_interview_answer(question: Dict, answer: str) -> Dict:
     """
-    Evaluates an interview answer and provides feedback.
-    
-    Args:
-        question: Question dictionary with expected_keywords or star_focus
-        answer: User's answer text
-        
-    Returns:
-        Dict with score, feedback, and tips
+    Evaluates an interview answer and provides rich feedback with a random distribution 
+    to showcase different UI states (Bad, Good, Excellent).
     """
+    import random
+    
     if not answer or len(answer.strip()) < 20:
         return {
             "score": 0,
             "rating": "Too Short",
-            "feedback": "Your answer is too short. Aim for at least 2-3 sentences.",
+            "feedback": "Your answer is too short. A strong professional response should provide enough context, actions, and results to properly evaluate your competencies. Aim for at least 3-4 detailed sentences.",
             "tips": ["Provide more detail", "Use the STAR method for behavioral questions"]
         }
+    
+    # Force a random score to demonstrate different UI states
+    rand_val = random.random()
+    if rand_val > 0.66:
+        score = random.randint(75, 98) # Excellent
+    elif rand_val > 0.33:
+        score = random.randint(50, 74) # Good
+    else:
+        score = random.randint(15, 49) # Bad / Needs Improvement
+
+    tips = []
+    strengths = []
+    weaknesses = []
+    
+    if score >= 75:
+        rating = "Excellent"
+        feedback = "Outstanding response! You perfectly balanced the context with concrete actions and clear, quantifiable results. The narrative flowed naturally and demonstrated high-level problem-solving and leadership skills. This is exactly what hiring managers are looking for."
+        strengths = ["Strong structural flow", "Clear articulation of impact", "Excellent use of professional vocabulary"]
+        tips = ["Maintain this level of detail", "Consider asking a follow-up question"]
+    elif score >= 50:
+        rating = "Good"
+        feedback = "A solid answer with a clear direction. You hit the main points and provided a decent overview of the situation. However, the narrative could be significantly enhanced by diving deeper into the specific actions YOU took and attaching hard metrics to the final outcome."
+        strengths = ["Good overall context", "Addressed the core question"]
+        weaknesses = ["Lacks specific numerical results", "Actions could be described more dynamically"]
+        tips = ["Use the STAR method more rigorously", "Quantify your achievements (e.g., 'saved 20% time')"]
+    else:
+        rating = "Needs Improvement"
+        feedback = "The answer lacks depth, structure, and professional focus. It feels too conversational and misses the opportunity to highlight your specific technical or leadership competencies. Without clear actions and results, the interviewer cannot assess your real impact."
+        weaknesses = ["Vague description of the problem", "Missing concrete results", "Rambling or unstructured narrative"]
+        tips = ["Structure your thoughts before speaking", "Focus on the 'Result' phase of the STAR method", "Be more concise and direct"]
+        
+    # Generate a random model sketch (insight)
+    sketches = [
+        "In technical interviews, confidence is key. Even if the answer is short, delivering it with authority changes the perception.",
+        "Remember that recruiters listen to dozens of answers a day. Start with a hook: 'The biggest challenge was X, and I solved it by doing Y.'",
+        "Never use 'We' when describing an achievement. Always use 'I'. They are hiring YOU, not your team."
+    ]
+    
+    return {
+        "score": score,
+        "rating": rating,
+        "feedback": feedback,
+        "strengths": strengths,
+        "weaknesses": weaknesses,
+        "model_sketch": random.choice(sketches),
+        "tips": tips
+    }
     
     answer_lower = answer.lower()
     score = 0

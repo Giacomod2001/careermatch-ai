@@ -1584,7 +1584,7 @@ def render_cv_builder():
         cv_text = "\n".join(cv_text_lines)
 
         with st.container(border=True):
-            st.success("✅ **CV Structure Ready!** Your professional resume has been generated based on your inputs.")
+            st.success(" **CV Structure Ready!** Your professional resume has been generated based on your inputs.")
             st.markdown("""
                 <div style='background: rgba(0, 160, 220, 0.05); padding: 1.5rem; border-radius: 10px; border: 1px solid rgba(0, 160, 220, 0.2); margin-bottom: 1.5rem;'>
                     <p style='margin: 0; color: #c9d1d9; font-size: 0.95rem;'>
@@ -1598,7 +1598,7 @@ def render_cv_builder():
             
             with col1:
                 st.download_button(
-                    label="📥 Download as PDF",
+                    label=" Download as PDF",
                     data=ml_utils.generate_harvard_cv_pdf(cv_data),
                     file_name=f"{candidate_name}_CV.pdf",
                     mime="application/pdf",
@@ -1608,7 +1608,7 @@ def render_cv_builder():
             
             with col2:
                 st.download_button(
-                    label="📄 Download as TXT",
+                    label=" Download as TXT",
                     data=cv_text,
                     file_name=f"{candidate_name}_CV.txt",
                     mime="text/plain",
@@ -2772,7 +2772,7 @@ def render_interview_prep():
     elif st.session_state.get("show_interview_summary", False):
         st.markdown(f"""
         <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 style="margin-bottom: 0.5rem;">Session Complete! 🎉</h2>
+            <h2 style="margin-bottom: 0.5rem;">Session Complete! </h2>
             <p style="color: var(--text-secondary);">Here is your performance overview across all questions.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -2900,7 +2900,7 @@ def render_interview_prep():
                 
                 # Show Evaluate button ONLY if not evaluated yet
                 if not ev:
-                    if st.button("Evaluate My Answer ✨", type="primary", use_container_width=True):
+                    if st.button("Evaluate My Answer ", type="primary", use_container_width=True):
                         if answer.strip():
                             st.session_state["interview_answers"][q_idx] = answer
                             result = ml_utils.evaluate_interview_answer(current_q, answer)
@@ -2911,7 +2911,7 @@ def render_interview_prep():
                 else:
                     # 5. Evaluation Feedback (Inline)
                     score = ev['score']
-                    color = "#00C853" if score >= 85 else "#FFB300" if score >= 60 else "#E53935"
+                    color = "#00C853" if score >= 75 else "#FFB300" if score >= 50 else "#E53935"
                     
                     st.markdown(f"""<div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-top: 1rem; border-left: 6px solid {color};">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">

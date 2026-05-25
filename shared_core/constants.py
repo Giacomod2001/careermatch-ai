@@ -77,14 +77,14 @@ ML_MODELS = {}
 # Skill Demand Matrix (Market Intelligence)
 SKILL_DEMAND_MATRIX = {
     "high_demand": [
-        ("Python", "🔥 High demand in Data & AI"),
-        ("Cloud Computing", "☁️ Growing 25% YoY"),
-        ("Machine Learning", "🤖 AI boom driving demand"),
-        ("React", "⚛️ Top frontend framework"),
-        ("DevOps", "🚀 Critical for modern teams"),
-        ("Cybersecurity", "🔒 Increasing threats = more jobs"),
-        ("Data Analysis", "📊 Every company needs analysts"),
-        ("SQL", "💾 Universal database skill"),
+        ("Python", " High demand in Data & AI"),
+        ("Cloud Computing", "️ Growing 25% YoY"),
+        ("Machine Learning", " AI boom driving demand"),
+        ("React", "️ Top frontend framework"),
+        ("DevOps", " Critical for modern teams"),
+        ("Cybersecurity", " Increasing threats = more jobs"),
+        ("Data Analysis", " Every company needs analysts"),
+        ("SQL", " Universal database skill"),
     ],
     "emerging": [
         ("MLOps", "Bridging ML and Operations"),
@@ -254,13 +254,13 @@ def _validate_knowledge_base():
     
     # Print validation results
     if errors:
-        print("⚠️  Knowledge Base Validation Warnings:")
+        print("️  Knowledge Base Validation Warnings:")
         for error in errors[:10]:  # Show first 10 only
             print(f"   - {error}")
         if len(errors) > 10:
             print(f"   ... and {len(errors) - 10} more")
     else:
-        print("✅ Knowledge Base validated successfully")
+        print(" Knowledge Base validated successfully")
 
 # Run validation on import (comment out in production if needed)
 # _validate_knowledge_base()
