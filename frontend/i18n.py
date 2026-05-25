@@ -31,7 +31,7 @@ TRANSLATIONS = {
         "card_interview_title": "Interview Prep",
         "card_interview_desc": "Practice with AI and get instant feedback.",
         "btn_start": "Start",
-        "landing_hero_text": "Not sure where to start? Just ask **Ruben** in the sidebar!",
+        "landing_hero_text": "Not sure where to start? Just ask Ruben in the sidebar!",
         
         # --- EXPLORE CAREERS (HUB) ---
         "hub_title": "Explore Careers",
@@ -202,7 +202,7 @@ TRANSLATIONS = {
         "card_interview_title": "Preparazione Colloqui",
         "card_interview_desc": "Fai pratica con l'AI e ottieni feedback istantanei.",
         "btn_start": "Inizia",
-        "landing_hero_text": "Non sai da dove iniziare? Chiedi a **Ruben** nella barra laterale!",
+        "landing_hero_text": "Non sai da dove iniziare? Chiedi a Ruben nella barra laterale!",
         
         # --- EXPLORE CAREERS (HUB) ---
         "hub_title": "Esplora Carriere",
