@@ -48,7 +48,9 @@ import sys
 import os
 
 # Ensure local directory is in path for imports on cloud environments
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(root_dir, "shared_core"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
 # Force reload modules (disabled for performance, enable only in dev)
