@@ -377,12 +377,59 @@ def render_debug_page():
         # We use radio to simulate vertical tabs
         selected_tab = st.radio(
             "Menu", 
-            ["System Status", "Analysis Data", "Skill Clusters", "NLP Stats", "Knowledge Base", "CV Builder State", "Discovery"],
+            ["Architecture Overview", "System Status", "Analysis Data", "Skill Clusters", "NLP Stats", "Knowledge Base", "CV Builder State", "Discovery"],
             label_visibility="collapsed"
         )
         
     with right_content:
-    
+
+        # =========================================================================
+        # TAB 0: ARCHITECTURE OVERVIEW
+        # =========================================================================
+        if selected_tab == "Architecture Overview":
+            st.subheader("CareerMatch AI - System Architecture")
+            st.caption("High-level overview of the data flow and NLP pipelines.")
+            
+            st.markdown("""
+            <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;'>
+                <div style='background: rgba(0, 160, 220, 0.05); border: 1px solid rgba(0, 160, 220, 0.2); padding: 1.5rem; border-radius: 12px;'>
+                    <h3 style='margin-top: 0; color: #00A0DC;'>1. Data Ingestion & NLP</h3>
+                    <ul style='margin-bottom: 0;'>
+                        <li><b>CV Parsing:</b> Extracts raw text from PDF/TXT uploads.</li>
+                        <li><b>Text Preprocessing:</b> Tokenization, lowercasing, and cleaning.</li>
+                        <li><b>Entity Extraction:</b> Uses Regex and Knowledge Base matching to isolate hard/soft skills.</li>
+                    </ul>
+                </div>
+                <div style='background: rgba(229, 57, 53, 0.05); border: 1px solid rgba(229, 57, 53, 0.2); padding: 1.5rem; border-radius: 12px;'>
+                    <h3 style='margin-top: 0; color: #E53935;'>2. KDD Evaluation Engine</h3>
+                    <ul style='margin-bottom: 0;'>
+                        <li><b>Vectorization:</b> TF-IDF transforms text into mathematical space.</li>
+                        <li><b>Cosine Similarity:</b> Calculates exact mathematical distance between CV and Job Description.</li>
+                        <li><b>Gap Analysis:</b> Computes missing competencies and outputs an ATS-like score.</li>
+                    </ul>
+                </div>
+                <div style='background: rgba(0, 200, 83, 0.05); border: 1px solid rgba(0, 200, 83, 0.2); padding: 1.5rem; border-radius: 12px;'>
+                    <h3 style='margin-top: 0; color: #00C853;'>3. ML Assistants & Insights</h3>
+                    <ul style='margin-bottom: 0;'>
+                        <li><b>Ruben AI:</b> 100% offline semantic NLP bot powered by Scikit-Learn.</li>
+                        <li><b>Topic Modeling (LDA):</b> Discovers latent job themes.</li>
+                        <li><b>Market Trends:</b> Simulates skill demand growth based on role archetypes.</li>
+                    </ul>
+                </div>
+                <div style='background: rgba(255, 171, 0, 0.05); border: 1px solid rgba(255, 171, 0, 0.2); padding: 1.5rem; border-radius: 12px;'>
+                    <h3 style='margin-top: 0; color: #FFAB00;'>4. Streamlit UI Layer</h3>
+                    <ul style='margin-bottom: 0;'>
+                        <li><b>Context-Aware:</b> UI and Assistant adapt to the current page.</li>
+                        <li><b>Privacy-First:</b> Zero persistent databases. All data destroyed on session exit.</li>
+                        <li><b>Multilingual:</b> Auto-detects input language dynamically.</li>
+                    </ul>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.info("💡 **100% Local & Offline Execution:** The entire architecture runs entirely on the host without relying on external third-party APIs (no OpenAI, no external LLMs). This ensures maximum data privacy (GDPR & AI Act Compliant) and zero latency.")
+
         # =========================================================================
         # TAB 1: SYSTEM OVERVIEW - Collapsible Sections with Index
         # =========================================================================
