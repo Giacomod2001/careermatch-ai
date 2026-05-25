@@ -1033,9 +1033,11 @@ def render_debug_page():
             It includes skill relationships, equivalences, and training data for the ML models.
             """)
         
-            kb_tab1, kb_tab2, kb_tab3, kb_tab4 = st.tabs(["Inference Rules", "Skill Clusters", "Sector Overview", "Training Data"])
+            st.markdown("<br>", unsafe_allow_html=True)
+            selected_ktab = st.radio("Knowledge Base Category", ["Inference Rules", "Skill Clusters", "Sector Overview", "Training Data"], horizontal=True, label_visibility="collapsed")
+            st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 1rem; border-color: #30363d;'>", unsafe_allow_html=True)
         
-            with kb_tab1:
+            if selected_ktab == "Inference Rules":
                 st.markdown("**How inference works:** When a specific skill is found, related parent skills are automatically inferred.")
                 st.markdown("")
             
@@ -1063,7 +1065,7 @@ def render_debug_page():
                 inf_data = [{"Child Skill": k, "Infers Parent": ", ".join(v)} for k, v in constants.INFERENCE_RULES.items()]
                 st.dataframe(pd.DataFrame(inf_data), use_container_width=True, hide_index=True)
         
-            with kb_tab2:
+            if selected_ktab == "Skill Clusters":
                 st.markdown("**Skill clusters:** Skills in the same cluster are considered transferable/equivalent.")
             
                 for cluster_name, skills in constants.SKILL_CLUSTERS.items():
@@ -1071,7 +1073,7 @@ def render_debug_page():
                         skills_html = " ".join([f"<span class='skill-tag-transferable'>{s}</span>" for s in sorted(skills)])
                         st.markdown(skills_html, unsafe_allow_html=True)
         
-            with kb_tab3:
+            if selected_ktab == "Sector Overview":
                 st.markdown("**Sectors & Archetypes:** Breakdown of jobs covered by each sector.")
                 job_archs = getattr(knowledge_base, "JOB_ARCHETYPES_EXTENDED", {})
                 sector_counts = {}
@@ -1093,7 +1095,7 @@ def render_debug_page():
                     st.write(f"**Roles in {selected_sec}:**")
                     st.markdown(", ".join([f"`{r}`" for r in sorted(roles_in_sec)]))
 
-            with kb_tab4:
+            if selected_ktab == "Training Data":
                 st.markdown("**ML Training Data:** Sample data used to train the Random Forest classifier.")
                 _, df = ml_utils.train_rf_model()
                 st.dataframe(df, use_container_width=True, hide_index=True)
