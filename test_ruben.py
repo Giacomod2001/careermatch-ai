@@ -47,7 +47,7 @@ def test_ruben_ai():
     # Test 3: Landing page context
     total_tests += 1
     response = ml_utils.get_chatbot_response("what can you do", "Landing")
-    passed = "Career Discovery" in response or "CV Evaluation" in response or "help" in response.lower()
+    passed = "Career Discovery" in response or "CV Evaluation" in response or "career" in response.lower() or "tech" in response.lower()
     if print_test("Landing context provides services info", passed, f"Response: {response[:80]}..."):
         tests_passed += 1
     
@@ -93,7 +93,7 @@ def test_ruben_ai():
         ml_utils.get_chatbot_response("help", "CV Evaluation"),
         ml_utils.get_chatbot_response("what", "Career Discovery"),
     ]
-    emoji_chars = ['', '', '', '', '', '']
+    emoji_chars = ['🎯', '🤖', '📈', '🚀', '💡', '✨']
     has_emoji = any(emoji in resp for resp in all_responses for emoji in emoji_chars)
     passed = not has_emoji
     if print_test("Responses have no emojis (professional)", passed):
