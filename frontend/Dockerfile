@@ -9,11 +9,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copia requirements e installa
-COPY requirements.txt .
+COPY frontend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt requests
 
+# Copia i file condivisi
+COPY shared_core/ /app/
+
 # Copia il codice del frontend
-COPY . .
+COPY frontend/ /app/
 
 # Espone Streamlit
 EXPOSE 8501

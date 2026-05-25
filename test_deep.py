@@ -7,6 +7,7 @@ Verifica approfondita delle regole di inferenza e degli archetipi.
 
 import sys
 import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "shared_core"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import ml_utils
