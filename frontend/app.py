@@ -333,7 +333,7 @@ def render_debug_page():
                 <p style='color: gray; margin-bottom: 2rem;'>Please enter the access code to continue</p>
             """, unsafe_allow_html=True)
             
-            pwd = st.text_input("Enter Access Code", type="password", help="System Administrator Password", label_visibility="collapsed", placeholder="Enter PIN (1234)")
+            pwd = st.text_input("Enter Access Code", type="password", help="System Administrator Password", label_visibility="collapsed", placeholder="Enter PIN")
             
             if st.button("Authenticate System", type="primary", use_container_width=True):
                 if pwd == "1234":
@@ -391,7 +391,7 @@ def render_debug_page():
             st.caption("High-level overview of the data flow and NLP pipelines.")
             
             st.markdown("""
-            <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;'>
+            <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-top: 2rem; margin-bottom: 2rem;'>
                 <div style='background: rgba(0, 160, 220, 0.05); border: 1px solid rgba(0, 160, 220, 0.2); padding: 1.5rem; border-radius: 12px;'>
                     <h3 style='margin-top: 0; color: #00A0DC;'>1. Data Ingestion & NLP</h3>
                     <ul style='margin-bottom: 0;'>
