@@ -383,835 +383,835 @@ def render_debug_page():
         
     with right_content:
     
-    # =========================================================================
-    # TAB 1: SYSTEM OVERVIEW - Collapsible Sections with Index
-    # =========================================================================
+        # =========================================================================
+        # TAB 1: SYSTEM OVERVIEW - Collapsible Sections with Index
+        # =========================================================================
         if selected_tab == "System Status":
-        st.subheader("Machine Learning Models")
-        st.caption("Click each section to expand/collapse. All algorithms used in this application.")
+            st.subheader("Machine Learning Models")
+            st.caption("Click each section to expand/collapse. All algorithms used in this application.")
         
         
-        # 1. Skill Matching
-        with st.expander("1. Skill Matching - Random Forest Classifier", expanded=False):
-            st.markdown("""
-            **Purpose:** Classifies text snippets into skill categories.
+            # 1. Skill Matching
+            with st.expander("1. Skill Matching - Random Forest Classifier", expanded=False):
+                st.markdown("""
+                **Purpose:** Classifies text snippets into skill categories.
             
-            **Algorithm:** Random Forest with TF-IDF vectorization
+                **Algorithm:** Random Forest with TF-IDF vectorization
             
-            | Parameter | Value | Why |
-            |-----------|-------|-----|
-            | Trees | 150 | Balance between accuracy and speed |
-            | Max Depth | 15 | Prevents overfitting |
-            | Min Samples Leaf | 3 | Ensures robust predictions |
-            | TF-IDF Features | 3000 | Captures vocabulary without noise |
-            | N-grams | 1-3 | Matches single words and phrases |
+                | Parameter | Value | Why |
+                |-----------|-------|-----|
+                | Trees | 150 | Balance between accuracy and speed |
+                | Max Depth | 15 | Prevents overfitting |
+                | Min Samples Leaf | 3 | Ensures robust predictions |
+                | TF-IDF Features | 3000 | Captures vocabulary without noise |
+                | N-grams | 1-3 | Matches single words and phrases |
             
-            **How it works:** Each "tree" votes on which skill a text belongs to. 
-            The final prediction is the majority vote across all 150 trees.
+                **How it works:** Each "tree" votes on which skill a text belongs to. 
+                The final prediction is the majority vote across all 150 trees.
             
-            **Model Performance (Cross-Validation):**
-            | Metric | Score | Interpretation |
-            |--------|-------|----------------|
-            | **Precision** | **0.88** | High accuracy in identifying relevant skills |
-            | **Recall** | **0.82** | Good at finding most skills present |
-            | **F1-Score** | **0.85** | Balanced performance |
-            """)
+                **Model Performance (Cross-Validation):**
+                | Metric | Score | Interpretation |
+                |--------|-------|----------------|
+                | **Precision** | **0.88** | High accuracy in identifying relevant skills |
+                | **Recall** | **0.82** | Good at finding most skills present |
+                | **F1-Score** | **0.85** | Balanced performance |
+                """)
         
-        # 2. Skill Extraction
-        with st.expander("2. Skill Extraction - N-gram + Fuzzy Matching", expanded=False):
-            st.markdown("""
-            **Purpose:** Finds skills mentioned in CV and Job Description text.
+            # 2. Skill Extraction
+            with st.expander("2. Skill Extraction - N-gram + Fuzzy Matching", expanded=False):
+                st.markdown("""
+                **Purpose:** Finds skills mentioned in CV and Job Description text.
             
-            **Algorithm:** Multi-pass extraction with fuzzy matching
+                **Algorithm:** Multi-pass extraction with fuzzy matching
             
-            **Steps:**
-            1. **Exact Match:** Searches for exact skill keywords
-            2. **N-gram Match:** Checks 2-3 word combinations (e.g., "machine learning")
-            3. **Fuzzy Match:** Uses FuzzyWuzzy at 85% threshold to catch typos
+                **Steps:**
+                1. **Exact Match:** Searches for exact skill keywords
+                2. **N-gram Match:** Checks 2-3 word combinations (e.g., "machine learning")
+                3. **Fuzzy Match:** Uses FuzzyWuzzy at 85% threshold to catch typos
             
-            **Example:** "mashine lerning" → matches "Machine Learning" at 87% similarity
+                **Example:** "mashine lerning" → matches "Machine Learning" at 87% similarity
             
-            **Database:** 620+ unique skills with 5000+ keyword variations
-            """)
+                **Database:** 620+ unique skills with 5000+ keyword variations
+                """)
         
-        # 3. Entity Extraction
-        with st.expander("3. Entity Extraction - NLTK Named Entity Recognition", expanded=False):
-            st.markdown("""
-            **Purpose:** Identifies organizations, locations, and people in CV text.
+            # 3. Entity Extraction
+            with st.expander("3. Entity Extraction - NLTK Named Entity Recognition", expanded=False):
+                st.markdown("""
+                **Purpose:** Identifies organizations, locations, and people in CV text.
             
-            **Algorithm:** NLTK NER with custom post-processing
+                **Algorithm:** NLTK NER with custom post-processing
             
-            **Categories:**
-            - **Organizations:** Companies, universities, institutions
-            - **Locations:** Cities, countries, regions  
-            - **Persons:** Names mentioned in the CV
+                **Categories:**
+                - **Organizations:** Companies, universities, institutions
+                - **Locations:** Cities, countries, regions  
+                - **Persons:** Names mentioned in the CV
             
-            **Post-processing:** Filters out common false positives like skill names 
-            and technical jargon that can be mistaken for entities.
-            """)
+                **Post-processing:** Filters out common false positives like skill names 
+                and technical jargon that can be mistaken for entities.
+                """)
         
-        # 4. Topic Discovery
-        with st.expander("4. Topic Discovery - LDA Topic Modeling", expanded=False):
-            st.markdown("""
-            **Purpose:** Identifies main themes in job descriptions.
+            # 4. Topic Discovery
+            with st.expander("4. Topic Discovery - LDA Topic Modeling", expanded=False):
+                st.markdown("""
+                **Purpose:** Identifies main themes in job descriptions.
             
-            **Algorithm:** Latent Dirichlet Allocation (LDA)
+                **Algorithm:** Latent Dirichlet Allocation (LDA)
             
-            | Parameter | Value | Why |
-            |-----------|-------|-----|
-            | Iterations | 50 | 5x standard for better convergence |
-            | Mode | Batch | More accurate than online |
-            | N-grams | 1-2 | Captures phrases like "data analysis" |
+                | Parameter | Value | Why |
+                |-----------|-------|-----|
+                | Iterations | 50 | 5x standard for better convergence |
+                | Mode | Batch | More accurate than online |
+                | N-grams | 1-2 | Captures phrases like "data analysis" |
             
-            **Multilingual:** Filters stop words in EN, IT, ES, FR, DE
+                **Multilingual:** Filters stop words in EN, IT, ES, FR, DE
             
-            **Output:** 3-5 key topics with associated keywords
-            """)
+                **Output:** 3-5 key topics with associated keywords
+                """)
         
-        # 5. Skill Grouping  
-        with st.expander("5. Skill Grouping - K-Means Clustering", expanded=False):
-            st.markdown("""
-            **Purpose:** Groups related skills to show strength/weakness areas.
+            # 5. Skill Grouping  
+            with st.expander("5. Skill Grouping - K-Means Clustering", expanded=False):
+                st.markdown("""
+                **Purpose:** Groups related skills to show strength/weakness areas.
             
-            **Algorithm:** K-Means with character n-gram TF-IDF
+                **Algorithm:** K-Means with character n-gram TF-IDF
             
-            **Process:**
-            1. Convert skills to vectors using character patterns
-            2. K-Means finds natural groupings (2-5 clusters)
-            3. PCA reduces to 2D for visualization
+                **Process:**
+                1. Convert skills to vectors using character patterns
+                2. K-Means finds natural groupings (2-5 clusters)
+                3. PCA reduces to 2D for visualization
             
-            **Why character n-grams?** "Python" and "PyTorch" share patterns, 
-            making them cluster together in "Data Science" tools.
+                **Why character n-grams?** "Python" and "PyTorch" share patterns, 
+                making them cluster together in "Data Science" tools.
             
-            **Visualization:** Scatter plot with matched (green), missing (red), bonus (blue)
-            """)
+                **Visualization:** Scatter plot with matched (green), missing (red), bonus (blue)
+                """)
         
-        # 6. Why These Parameters
-        with st.expander("6. Why These Parameters? - Overfitting Prevention", expanded=False):
-            st.markdown("""
-            **What is overfitting?**
+            # 6. Why These Parameters
+            with st.expander("6. Why These Parameters? - Overfitting Prevention", expanded=False):
+                st.markdown("""
+                **What is overfitting?**
             
-            When a model learns training data *too well*, including noise and outliers,
-            it performs poorly on new, unseen data.
+                When a model learns training data *too well*, including noise and outliers,
+                it performs poorly on new, unseen data.
             
-            **How we prevent it:**
+                **How we prevent it:**
             
-            | Technique | Setting | Effect |
-            |-----------|---------|--------|
-            | Tree Depth Limit | 15 (not 30) | Simpler decision paths |
-            | Min Samples per Leaf | 3 (not 1) | Predictions based on multiple examples |
-            | Feature Selection | sqrt(features) | Each tree sees different features |
-            | TF-IDF Filtering | min_df=2, max_df=0.95 | Removes rare/common noise words |
+                | Technique | Setting | Effect |
+                |-----------|---------|--------|
+                | Tree Depth Limit | 15 (not 30) | Simpler decision paths |
+                | Min Samples per Leaf | 3 (not 1) | Predictions based on multiple examples |
+                | Feature Selection | sqrt(features) | Each tree sees different features |
+                | TF-IDF Filtering | min_df=2, max_df=0.95 | Removes rare/common noise words |
             
-            **Result:** Model generalizes well to new CVs and job descriptions.
-            """)
+                **Result:** Model generalizes well to new CVs and job descriptions.
+                """)
         
-        st.divider()
+            st.divider()
         
-        st.subheader("System Status")
+            st.subheader("System Status")
         
-        # Direct counts (no conditional checks that might fail)
-        try:
-            hard_skills_count = len(knowledge_base.HARD_SKILLS)
-            soft_skills_count = len(knowledge_base.SOFT_SKILLS)
-            inference_count = len(knowledge_base.INFERENCE_RULES)
-            cluster_count = len(knowledge_base.SKILL_CLUSTERS)
-            total_variations = sum(len(v) for v in knowledge_base.HARD_SKILLS.values()) + sum(len(v) for v in knowledge_base.SOFT_SKILLS.values())
-        except:
-            hard_skills_count = soft_skills_count = inference_count = cluster_count = total_variations = 0
+            # Direct counts (no conditional checks that might fail)
+            try:
+                hard_skills_count = len(knowledge_base.HARD_SKILLS)
+                soft_skills_count = len(knowledge_base.SOFT_SKILLS)
+                inference_count = len(knowledge_base.INFERENCE_RULES)
+                cluster_count = len(knowledge_base.SKILL_CLUSTERS)
+                total_variations = sum(len(v) for v in knowledge_base.HARD_SKILLS.values()) + sum(len(v) for v in knowledge_base.SOFT_SKILLS.values())
+            except:
+                hard_skills_count = soft_skills_count = inference_count = cluster_count = total_variations = 0
         
-        total_skills = hard_skills_count + soft_skills_count
+            total_skills = hard_skills_count + soft_skills_count
         
-        # Metrics in styled cards
-        st.markdown(f"""
-        <div style='display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1rem 0;'>
-            <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
-                <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{total_skills}</div>
-                <div style='font-size: 0.9rem; color: #8b949e;'>Skills Recognized</div>
-                <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Unique skills the system can match</div>
+            # Metrics in styled cards
+            st.markdown(f"""
+            <div style='display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1rem 0;'>
+                <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
+                    <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{total_skills}</div>
+                    <div style='font-size: 0.9rem; color: #8b949e;'>Skills Recognized</div>
+                    <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Unique skills the system can match</div>
+                </div>
+                <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
+                    <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{inference_count}</div>
+                    <div style='font-size: 0.9rem; color: #8b949e;'>Inference Rules</div>
+                    <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Parent→Child skill mappings</div>
+                </div>
+                <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
+                    <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{cluster_count}</div>
+                    <div style='font-size: 0.9rem; color: #8b949e;'>Skill Clusters</div>
+                    <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Groups of equivalent tools</div>
+                </div>
+                <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
+                    <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{total_variations}</div>
+                    <div style='font-size: 0.9rem; color: #8b949e;'>Keywords</div>
+                    <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Total search variations</div>
+                </div>
             </div>
-            <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
-                <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{inference_count}</div>
-                <div style='font-size: 0.9rem; color: #8b949e;'>Inference Rules</div>
-                <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Parent→Child skill mappings</div>
-            </div>
-            <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
-                <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{cluster_count}</div>
-                <div style='font-size: 0.9rem; color: #8b949e;'>Skill Clusters</div>
-                <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Groups of equivalent tools</div>
-            </div>
-            <div style='background: rgba(0, 119, 181, 0.15); padding: 1rem; border-radius: 10px; text-align: center;'>
-                <div style='font-size: 2rem; font-weight: bold; color: #00A0DC;'>{total_variations}</div>
-                <div style='font-size: 0.9rem; color: #8b949e;'>Keywords</div>
-                <div style='font-size: 0.75rem; color: #6e7681; margin-top: 0.5rem;'>Total search variations</div>
-            </div>
-        </div>
         
-        <div style='background: rgba(0, 68, 113, 0.2); padding: 1rem; border-radius: 8px; margin-top: 1rem; margin-bottom: 2rem;'>
-            <strong style='color: #00A0DC;'>Database Breakdown</strong><br><br>
-            • <strong>Hard Skills</strong> (Technical): {hard_skills_count} — Programming, tools, certifications<br>
-            • <strong>Soft Skills</strong> (Interpersonal): {soft_skills_count} — Communication, leadership, teamwork<br>
-            • <strong>Inference Rules</strong>: When you have "BigQuery", we also infer "SQL" and "Cloud Computing"<br>
-            • <strong>Skill Clusters</strong>: Power BI ≈ Tableau ≈ Looker Studio (interchangeable BI tools)
-        </div>
-        """, unsafe_allow_html=True)
+            <div style='background: rgba(0, 68, 113, 0.2); padding: 1rem; border-radius: 8px; margin-top: 1rem; margin-bottom: 2rem;'>
+                <strong style='color: #00A0DC;'>Database Breakdown</strong><br><br>
+                • <strong>Hard Skills</strong> (Technical): {hard_skills_count} — Programming, tools, certifications<br>
+                • <strong>Soft Skills</strong> (Interpersonal): {soft_skills_count} — Communication, leadership, teamwork<br>
+                • <strong>Inference Rules</strong>: When you have "BigQuery", we also infer "SQL" and "Cloud Computing"<br>
+                • <strong>Skill Clusters</strong>: Power BI ≈ Tableau ≈ Looker Studio (interchangeable BI tools)
+            </div>
+            """, unsafe_allow_html=True)
         
-        # Session state info
-        with st.expander("Session State Contents", expanded=False):
-            session_keys = list(st.session_state.keys())
-            st.markdown(f"**Active Keys:** {len(session_keys)}")
-            for key in session_keys:
-                value = st.session_state[key]
-                if isinstance(value, str) and len(value) > 100:
-                    st.write(f"- `{key}`: *[text, {len(value)} chars]*")
-                elif isinstance(value, (set, list)):
-                    st.write(f"- `{key}`: *[collection, {len(value)} items]*")
-                elif isinstance(value, dict):
-                    st.write(f"- `{key}`: *[dict, {len(value)} keys]*")
-                else:
-                    st.write(f"- `{key}`: {value}")
+            # Session state info
+            with st.expander("Session State Contents", expanded=False):
+                session_keys = list(st.session_state.keys())
+                st.markdown(f"**Active Keys:** {len(session_keys)}")
+                for key in session_keys:
+                    value = st.session_state[key]
+                    if isinstance(value, str) and len(value) > 100:
+                        st.write(f"- `{key}`: *[text, {len(value)} chars]*")
+                    elif isinstance(value, (set, list)):
+                        st.write(f"- `{key}`: *[collection, {len(value)} items]*")
+                    elif isinstance(value, dict):
+                        st.write(f"- `{key}`: *[dict, {len(value)} keys]*")
+                    else:
+                        st.write(f"- `{key}`: {value}")
         
-        # Quick actions
-        st.markdown("### Quick Actions")
-        act1, act2, act3 = st.columns(3)
-        with act1:
-            if st.button("Clear All Cache", use_container_width=True):
-                st.cache_data.clear()
-                st.cache_resource.clear()
-                st.success("Cache cleared!")
-        with act2:
-            if st.button("Clear Analysis", use_container_width=True):
-                for key in ["last_results", "last_cv_text", "last_jd_text", "last_cl_analysis"]:
-                    if key in st.session_state:
-                        del st.session_state[key]
-                st.success("Analysis data cleared!")
-                st.rerun()
-        with act3:
-            if st.button("Force Refresh", use_container_width=True):
-                st.rerun()
+            # Quick actions
+            st.markdown("### Quick Actions")
+            act1, act2, act3 = st.columns(3)
+            with act1:
+                if st.button("Clear All Cache", use_container_width=True):
+                    st.cache_data.clear()
+                    st.cache_resource.clear()
+                    st.success("Cache cleared!")
+            with act2:
+                if st.button("Clear Analysis", use_container_width=True):
+                    for key in ["last_results", "last_cv_text", "last_jd_text", "last_cl_analysis"]:
+                        if key in st.session_state:
+                            del st.session_state[key]
+                    st.success("Analysis data cleared!")
+                    st.rerun()
+            with act3:
+                if st.button("Force Refresh", use_container_width=True):
+                    st.rerun()
         
 
     
-    # =========================================================================
-    # TAB 2: ANALYSIS DATA - Enhanced with Score Breakdown
-    # =========================================================================
+        # =========================================================================
+        # TAB 2: ANALYSIS DATA - Enhanced with Score Breakdown
+        # =========================================================================
         if selected_tab == "Analysis Data":
-        st.subheader("Analysis Results Breakdown")
-        st.markdown("""
-        **What is this?** The detailed breakdown of your CV vs Job Description match.
-        See exactly which skills contributed to your score and how to improve it.
-        """)
+            st.subheader("Analysis Results Breakdown")
+            st.markdown("""
+            **What is this?** The detailed breakdown of your CV vs Job Description match.
+            See exactly which skills contributed to your score and how to improve it.
+            """)
         
-        if res:
-            # Score Formula Explanation
+            if res:
+                # Score Formula Explanation
+                st.markdown("""
+                <div style='background: rgba(0, 119, 181, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid #00A0DC;'>
+                    <strong>How is your score calculated?</strong><br><br>
+                    <code style='background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;'>
+                    Score = (Matched + Transferable×0.5 + Project×0.3) / Required Skills × 100
+                    </code><br><br>
+                    • <strong>Matched Skills</strong> (100%): Skills found directly in your CV<br>
+                    • <strong>Transferable</strong> (50%): Equivalent skills (e.g., Power BI → Tableau)<br>
+                    • <strong>Project-Verified</strong> (30%): Skills proven through your portfolio
+                </div>
+                """, unsafe_allow_html=True)
+            
+                # Key Metrics with Context
+                st.markdown("### Score Components")
+            
+                matched_count = len(res["matching_hard"])
+                missing_count = len(res["missing_hard"])
+                extra_count = len(res["extra_hard"])
+                transfer_count = len(res.get("transferable", {}))
+                total_required = matched_count + missing_count
+            
+                m1, m2, m3, m4, m5 = st.columns(5)
+                with m1:
+                    st.metric("Match Score", f"{res['match_percentage']:.1f}%")
+                with m2:
+                    st.metric("Matched", matched_count, 
+                             help="Skills in your CV that match job requirements")
+                with m3:
+                    st.metric("Transferable", transfer_count,
+                             help="Equivalent skills that count as partial matches")
+                with m4:
+                    st.metric("Missing", missing_count,
+                             help="Required skills not found in your CV")
+                with m5:
+                    st.metric("Bonus", extra_count,
+                             help="Extra skills that give competitive advantage")
+            
+                # Interpretation
+                score = res['match_percentage']
+                if score >= 80:
+                    interpretation = "Excellent Match - Strong candidate for this role"
+                    color = "#00C853"
+                elif score >= 60:
+                    interpretation = "Good Match - Minor gaps to address"
+                    color = "#FFB300"
+                elif score >= 40:
+                    interpretation = "Moderate Match - Consider upskilling or alternative roles"
+                    color = "#FF8F00"
+                else:
+                    interpretation = "Low Match - Significant skill development needed"
+                    color = "#E53935"
+            
+                st.markdown(f"""
+                <div style='background: rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.15); 
+                            padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; border-left: 3px solid {color};'>
+                    <strong style='color: {color};'>{interpretation}</strong>
+                </div>
+                """, unsafe_allow_html=True)
+            
+                st.divider()
+            
+                # Skill Lists
+                st.markdown("### Skill Details")
+                col1, col2 = st.columns(2)
+            
+                with col1:
+                    with st.expander(f"Matched Skills ({matched_count})", expanded=True):
+                        if res["matching_hard"]:
+                            # NEW: Seniority Detection Display
+                            seniority = ml_utils.detect_seniority_level(st.session_state.get("cv_text", ""))
+                            st.caption(f"DETECTED LEVEL: **{seniority.upper()}**")
+                            st.caption("These skills directly match job requirements")
+                        
+                            for skill in sorted(res["matching_hard"]):
+                                st.write(f"- {skill}")
+                        else:
+                            st.caption("No direct matches found")
+                
+                    with st.expander(f"Missing Skills ({missing_count})", expanded=False):
+                        if res["missing_hard"]:
+                            st.caption("Priority skills to develop")
+                        
+                            # NEW: Market Intelligence for Missing Skills
+                            demand_matrix = getattr(knowledge_base, "SKILL_DEMAND_MATRIX", {})
+                            high_demand = dict(demand_matrix.get("high_demand", []))
+                        
+                            for skill in sorted(res["missing_hard"]):
+                                trend = high_demand.get(skill, "")
+                                if trend:
+                                    st.markdown(f"- **{skill}** <span style='color:green; font-size:0.8em'>{trend}</span>", unsafe_allow_html=True)
+                                else:
+                                    st.markdown(f"- {skill}")
+                                
+                            # NEW: Learning Paths Suggestion
+                            learning_paths = getattr(knowledge_base, "LEARNING_PATHS", {})
+                            # Simple check if there's a relevant path (demo logic: generic path if gaps exist)
+                            if missing_count > 3:
+                                st.info("**Career Tip**: High number of gaps detected. Consider a structured learning path.")
+                                with st.expander("View Recommended Learning Path"):
+                                    # Example Retrieval (In real logic this would be dynamic match)
+                                    path = learning_paths.get("Data Analytics_to_Data Science")
+                                    if path:
+                                        st.markdown(f"**Target: Data Science** ({path['total_time']})")
+                                        for step in path['gap_skills']:
+                                            st.markdown(f"- **{step['skill']}**: {step['resources'][0]} ({step['duration']})")
+                        else:
+                            st.caption("No missing skills - perfect match!")
+            
+                with col2:
+                    with st.expander(f"Bonus Skills ({extra_count})", expanded=False):
+                        if res["extra_hard"]:
+                            st.caption("These give you competitive advantage")
+                            st.write(sorted(res["extra_hard"]))
+                        else:
+                            st.caption("No extra skills detected")
+                
+                    if res.get("transferable"):
+                        with st.expander(f"Transferable Mappings ({transfer_count})", expanded=False):
+                            st.caption("Equivalent skills that count as partial matches")
+                            # Use HTML chips for better visualization
+                            html_content = '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">'
+                            for missing, present in res["transferable"].items():
+                                # missing = "Tableau"
+                                # present = ["Visualization"]
+                                # TO_DISPLAY: Just "Tableau"
+                            
+                                # Clean string format just in case
+                                skill_label = str(missing).split("<-")[0].strip() # Safety cleaner
+                            
+                                tooltip = f"Covered by: {', '.join(present) if isinstance(present, (list, set)) else present}"
+                                html_content += f'''
+                                <div title="{tooltip}" style="
+                                    background-color: rgba(255, 179, 0, 0.15); 
+                                    color: #FFB300; 
+                                    border: 1px solid rgba(255, 179, 0, 0.3);
+                                    padding: 2px 10px; 
+                                    border-radius: 12px; 
+                                    font-size: 0.9em;
+                                    cursor: help;">
+                                    {skill_label}
+                                </div>
+                                '''
+                            html_content += '</div>'
+                            st.markdown(html_content, unsafe_allow_html=True)
+            
+                # JSON Export
+                st.divider()
+                st.markdown("### Export Data")
+                import json
+                export_data = {
+                    "match_percentage": res["match_percentage"],
+                    "matching_hard": list(res["matching_hard"]),
+                    "missing_hard": list(res["missing_hard"]),
+                    "extra_hard": list(res["extra_hard"]),
+                    "transferable": res.get("transferable", {})
+                }
+                st.download_button(
+                    "Download JSON",
+                    json.dumps(export_data, indent=2),
+                    file_name="analysis_export.json",
+                    mime="application/json"
+                )
+            else:
+                st.info("No analysis data available. Run an analysis from the Home page first.")
+    
+        # =========================================================================
+        # TAB 3: SKILL INTELLIGENCE - Enhanced with ML Explanations
+        # =========================================================================
+        if selected_tab == "Skill Clusters":
+            st.subheader("Skill Clustering Analysis")
+            st.markdown("""
+            **What is this?** Machine learning groups your skills into semantic clusters,
+            revealing which areas you're strong in and where gaps exist.
+            """)
+        
+            # Technical explanation
             st.markdown("""
             <div style='background: rgba(0, 119, 181, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid #00A0DC;'>
-                <strong>How is your score calculated?</strong><br><br>
-                <code style='background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;'>
-                Score = (Matched + Transferable×0.5 + Project×0.3) / Required Skills × 100
-                </code><br><br>
-                • <strong>Matched Skills</strong> (100%): Skills found directly in your CV<br>
-                • <strong>Transferable</strong> (50%): Equivalent skills (e.g., Power BI → Tableau)<br>
-                • <strong>Project-Verified</strong> (30%): Skills proven through your portfolio
+                <strong>How does this work?</strong><br><br>
+                <strong>1. TF-IDF Vectorization:</strong> Each skill is converted to a numerical vector based on character patterns (n-grams).
+                Skills like "Python" and "Programming" share similar patterns.<br><br>
+                <strong>2. K-Means Clustering (Partitioning):</strong> Skills are grouped by similarity. The algorithm finds natural groupings 
+                (e.g., "Data Science", "Cloud Tools") without being told categories in advance.<br><br>
+                <strong>3. PCA Visualization:</strong> High-dimensional vectors are reduced to 2D for display. 
+                Distance on the chart = similarity between skills.
             </div>
             """, unsafe_allow_html=True)
+        
+            if res and len(res["matching_hard"] | res["missing_hard"] | res["extra_hard"]) > 3:
+                all_skills = list(res["matching_hard"] | res["missing_hard"] | res["extra_hard"])
             
-            # Key Metrics with Context
-            st.markdown("### Score Components")
+                # Run clustering
+                df_viz, dendro_path, clusters = ml_utils.perform_skill_clustering(all_skills)
             
-            matched_count = len(res["matching_hard"])
-            missing_count = len(res["missing_hard"])
-            extra_count = len(res["extra_hard"])
-            transfer_count = len(res.get("transferable", {}))
-            total_required = matched_count + missing_count
-            
-            m1, m2, m3, m4, m5 = st.columns(5)
-            with m1:
-                st.metric("Match Score", f"{res['match_percentage']:.1f}%")
-            with m2:
-                st.metric("Matched", matched_count, 
-                         help="Skills in your CV that match job requirements")
-            with m3:
-                st.metric("Transferable", transfer_count,
-                         help="Equivalent skills that count as partial matches")
-            with m4:
-                st.metric("Missing", missing_count,
-                         help="Required skills not found in your CV")
-            with m5:
-                st.metric("Bonus", extra_count,
-                         help="Extra skills that give competitive advantage")
-            
-            # Interpretation
-            score = res['match_percentage']
-            if score >= 80:
-                interpretation = "Excellent Match - Strong candidate for this role"
-                color = "#00C853"
-            elif score >= 60:
-                interpretation = "Good Match - Minor gaps to address"
-                color = "#FFB300"
-            elif score >= 40:
-                interpretation = "Moderate Match - Consider upskilling or alternative roles"
-                color = "#FF8F00"
+                if df_viz is not None:
+                    # Scatter plot with skill status
+                    def get_status(s):
+                        if s in res["matching_hard"]: return "Matched"
+                        if s in res["missing_hard"]: return "Missing"
+                        return "Bonus"
+                
+                    df_viz["Status"] = df_viz["skill"].apply(get_status)
+                
+                    st.markdown("### Skill Map")
+                    st.caption("Skills close together are semantically related. Colors show match status.")
+                
+                    fig = px.scatter(
+                        df_viz, x="x", y="y", 
+                        color="Status",
+                        symbol="cluster",
+                        hover_data=["skill"],
+                        color_discrete_map={"Matched": "#00cc96", "Missing": "#ef553b", "Bonus": "#636efa"},
+                        title="Skill Semantic Space (PCA Visualization)"
+                    )
+                    fig.update_layout(
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        font={'color': '#ffffff'}
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                
+                    # How to read explanation
+                    st.markdown("""
+                    <div style='background: rgba(100, 100, 100, 0.1); padding: 0.75rem; border-radius: 8px; margin: 0.5rem 0;'>
+                        <strong>How to interpret:</strong><br>
+                        • <span style='color: #00cc96;'>Green dots</span> = Skills you have that the job needs<br>
+                        • <span style='color: #ef553b;'>Red dots</span> = Skills the job needs that you're missing<br>
+                        • <span style='color: #636efa;'>Blue dots</span> = Extra skills you have (competitive advantage)<br>
+                        • <strong>Cluster of red dots</strong> = Skill area to focus learning on
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                    st.divider()
+                
+                    # Cluster breakdown with insights
+                    st.markdown("### Cluster Breakdown")
+                    st.caption("Skills grouped by semantic similarity")
+                
+                    if clusters and isinstance(clusters, dict):
+                        for cluster_name, skills in clusters.items():
+                            if skills and hasattr(skills, '__iter__'):
+                                skills_list = list(skills) if not isinstance(skills, list) else skills
+                                matched_in_cluster = [s for s in skills_list if s in res["matching_hard"]]
+                                missing_in_cluster = [s for s in skills_list if s in res["missing_hard"]]
+                            
+                                # Calculate cluster coverage
+                                coverage = len(matched_in_cluster) / len(skills_list) * 100 if skills_list else 0
+                            
+                                with st.expander(f"{cluster_name} ({len(skills_list)} skills) - {coverage:.0f}% coverage"):
+                                    if matched_in_cluster:
+                                        st.markdown(f"**Matched:** {', '.join(matched_in_cluster)}")
+                                    if missing_in_cluster:
+                                        st.markdown(f"**Missing:** {', '.join(missing_in_cluster)}")
+                                
+                                    if coverage < 50:
+                                        st.caption("Low coverage - prioritize learning skills in this area")
+                                    elif coverage >= 80:
+                                        st.caption("Strong coverage in this skill area")
+                
+                    # Dendrogram with explanation
+                    if dendro_path:
+                        with st.expander("Hierarchical Clustering (Dendrogram)"):
+                            st.caption("Tree structure showing how skills relate. Agglomerative (Bottom-Up) approach.")
+                            st.image(dendro_path, caption="Ward's Linkage Method")
             else:
-                interpretation = "Low Match - Significant skill development needed"
-                color = "#E53935"
-            
-            st.markdown(f"""
-            <div style='background: rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.15); 
-                        padding: 0.75rem 1rem; border-radius: 8px; margin: 1rem 0; border-left: 3px solid {color};'>
-                <strong style='color: {color};'>{interpretation}</strong>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.divider()
-            
-            # Skill Lists
-            st.markdown("### Skill Details")
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                with st.expander(f"Matched Skills ({matched_count})", expanded=True):
-                    if res["matching_hard"]:
-                        # NEW: Seniority Detection Display
-                        seniority = ml_utils.detect_seniority_level(st.session_state.get("cv_text", ""))
-                        st.caption(f"DETECTED LEVEL: **{seniority.upper()}**")
-                        st.caption("These skills directly match job requirements")
-                        
-                        for skill in sorted(res["matching_hard"]):
-                            st.write(f"- {skill}")
-                    else:
-                        st.caption("No direct matches found")
-                
-                with st.expander(f"Missing Skills ({missing_count})", expanded=False):
-                    if res["missing_hard"]:
-                        st.caption("Priority skills to develop")
-                        
-                        # NEW: Market Intelligence for Missing Skills
-                        demand_matrix = getattr(knowledge_base, "SKILL_DEMAND_MATRIX", {})
-                        high_demand = dict(demand_matrix.get("high_demand", []))
-                        
-                        for skill in sorted(res["missing_hard"]):
-                            trend = high_demand.get(skill, "")
-                            if trend:
-                                st.markdown(f"- **{skill}** <span style='color:green; font-size:0.8em'>{trend}</span>", unsafe_allow_html=True)
-                            else:
-                                st.markdown(f"- {skill}")
-                                
-                        # NEW: Learning Paths Suggestion
-                        learning_paths = getattr(knowledge_base, "LEARNING_PATHS", {})
-                        # Simple check if there's a relevant path (demo logic: generic path if gaps exist)
-                        if missing_count > 3:
-                            st.info("**Career Tip**: High number of gaps detected. Consider a structured learning path.")
-                            with st.expander("View Recommended Learning Path"):
-                                # Example Retrieval (In real logic this would be dynamic match)
-                                path = learning_paths.get("Data Analytics_to_Data Science")
-                                if path:
-                                    st.markdown(f"**Target: Data Science** ({path['total_time']})")
-                                    for step in path['gap_skills']:
-                                        st.markdown(f"- **{step['skill']}**: {step['resources'][0]} ({step['duration']})")
-                    else:
-                        st.caption("No missing skills - perfect match!")
-            
-            with col2:
-                with st.expander(f"Bonus Skills ({extra_count})", expanded=False):
-                    if res["extra_hard"]:
-                        st.caption("These give you competitive advantage")
-                        st.write(sorted(res["extra_hard"]))
-                    else:
-                        st.caption("No extra skills detected")
-                
-                if res.get("transferable"):
-                    with st.expander(f"Transferable Mappings ({transfer_count})", expanded=False):
-                        st.caption("Equivalent skills that count as partial matches")
-                        # Use HTML chips for better visualization
-                        html_content = '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">'
-                        for missing, present in res["transferable"].items():
-                            # missing = "Tableau"
-                            # present = ["Visualization"]
-                            # TO_DISPLAY: Just "Tableau"
-                            
-                            # Clean string format just in case
-                            skill_label = str(missing).split("<-")[0].strip() # Safety cleaner
-                            
-                            tooltip = f"Covered by: {', '.join(present) if isinstance(present, (list, set)) else present}"
-                            html_content += f'''
-                            <div title="{tooltip}" style="
-                                background-color: rgba(255, 179, 0, 0.15); 
-                                color: #FFB300; 
-                                border: 1px solid rgba(255, 179, 0, 0.3);
-                                padding: 2px 10px; 
-                                border-radius: 12px; 
-                                font-size: 0.9em;
-                                cursor: help;">
-                                {skill_label}
-                            </div>
-                            '''
-                        html_content += '</div>'
-                        st.markdown(html_content, unsafe_allow_html=True)
-            
-            # JSON Export
-            st.divider()
-            st.markdown("### Export Data")
-            import json
-            export_data = {
-                "match_percentage": res["match_percentage"],
-                "matching_hard": list(res["matching_hard"]),
-                "missing_hard": list(res["missing_hard"]),
-                "extra_hard": list(res["extra_hard"]),
-                "transferable": res.get("transferable", {})
-            }
-            st.download_button(
-                "Download JSON",
-                json.dumps(export_data, indent=2),
-                file_name="analysis_export.json",
-                mime="application/json"
-            )
-        else:
-            st.info("No analysis data available. Run an analysis from the Home page first.")
+                st.info("Run an analysis first to see skill clustering.")
     
-    # =========================================================================
-    # TAB 3: SKILL INTELLIGENCE - Enhanced with ML Explanations
-    # =========================================================================
-        if selected_tab == "Skill Clusters":
-        st.subheader("Skill Clustering Analysis")
-        st.markdown("""
-        **What is this?** Machine learning groups your skills into semantic clusters,
-        revealing which areas you're strong in and where gaps exist.
-        """)
-        
-        # Technical explanation
-        st.markdown("""
-        <div style='background: rgba(0, 119, 181, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 3px solid #00A0DC;'>
-            <strong>How does this work?</strong><br><br>
-            <strong>1. TF-IDF Vectorization:</strong> Each skill is converted to a numerical vector based on character patterns (n-grams).
-            Skills like "Python" and "Programming" share similar patterns.<br><br>
-            <strong>2. K-Means Clustering (Partitioning):</strong> Skills are grouped by similarity. The algorithm finds natural groupings 
-            (e.g., "Data Science", "Cloud Tools") without being told categories in advance.<br><br>
-            <strong>3. PCA Visualization:</strong> High-dimensional vectors are reduced to 2D for display. 
-            Distance on the chart = similarity between skills.
-        </div>
-        """, unsafe_allow_html=True)
-        
-        if res and len(res["matching_hard"] | res["missing_hard"] | res["extra_hard"]) > 3:
-            all_skills = list(res["matching_hard"] | res["missing_hard"] | res["extra_hard"])
-            
-            # Run clustering
-            df_viz, dendro_path, clusters = ml_utils.perform_skill_clustering(all_skills)
-            
-            if df_viz is not None:
-                # Scatter plot with skill status
-                def get_status(s):
-                    if s in res["matching_hard"]: return "Matched"
-                    if s in res["missing_hard"]: return "Missing"
-                    return "Bonus"
-                
-                df_viz["Status"] = df_viz["skill"].apply(get_status)
-                
-                st.markdown("### Skill Map")
-                st.caption("Skills close together are semantically related. Colors show match status.")
-                
-                fig = px.scatter(
-                    df_viz, x="x", y="y", 
-                    color="Status",
-                    symbol="cluster",
-                    hover_data=["skill"],
-                    color_discrete_map={"Matched": "#00cc96", "Missing": "#ef553b", "Bonus": "#636efa"},
-                    title="Skill Semantic Space (PCA Visualization)"
-                )
-                fig.update_layout(
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    font={'color': '#ffffff'}
-                )
-                st.plotly_chart(fig, use_container_width=True)
-                
-                # How to read explanation
-                st.markdown("""
-                <div style='background: rgba(100, 100, 100, 0.1); padding: 0.75rem; border-radius: 8px; margin: 0.5rem 0;'>
-                    <strong>How to interpret:</strong><br>
-                    • <span style='color: #00cc96;'>Green dots</span> = Skills you have that the job needs<br>
-                    • <span style='color: #ef553b;'>Red dots</span> = Skills the job needs that you're missing<br>
-                    • <span style='color: #636efa;'>Blue dots</span> = Extra skills you have (competitive advantage)<br>
-                    • <strong>Cluster of red dots</strong> = Skill area to focus learning on
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.divider()
-                
-                # Cluster breakdown with insights
-                st.markdown("### Cluster Breakdown")
-                st.caption("Skills grouped by semantic similarity")
-                
-                if clusters and isinstance(clusters, dict):
-                    for cluster_name, skills in clusters.items():
-                        if skills and hasattr(skills, '__iter__'):
-                            skills_list = list(skills) if not isinstance(skills, list) else skills
-                            matched_in_cluster = [s for s in skills_list if s in res["matching_hard"]]
-                            missing_in_cluster = [s for s in skills_list if s in res["missing_hard"]]
-                            
-                            # Calculate cluster coverage
-                            coverage = len(matched_in_cluster) / len(skills_list) * 100 if skills_list else 0
-                            
-                            with st.expander(f"{cluster_name} ({len(skills_list)} skills) - {coverage:.0f}% coverage"):
-                                if matched_in_cluster:
-                                    st.markdown(f"**Matched:** {', '.join(matched_in_cluster)}")
-                                if missing_in_cluster:
-                                    st.markdown(f"**Missing:** {', '.join(missing_in_cluster)}")
-                                
-                                if coverage < 50:
-                                    st.caption("Low coverage - prioritize learning skills in this area")
-                                elif coverage >= 80:
-                                    st.caption("Strong coverage in this skill area")
-                
-                # Dendrogram with explanation
-                if dendro_path:
-                    with st.expander("Hierarchical Clustering (Dendrogram)"):
-                        st.caption("Tree structure showing how skills relate. Agglomerative (Bottom-Up) approach.")
-                        st.image(dendro_path, caption="Ward's Linkage Method")
-        else:
-            st.info("Run an analysis first to see skill clustering.")
-    
-    # =========================================================================
-    # TAB 4: NLP INSIGHTS - Enhanced with Text Analytics
-    # =========================================================================
+        # =========================================================================
+        # TAB 4: NLP INSIGHTS - Enhanced with Text Analytics
+        # =========================================================================
         if selected_tab == "NLP Stats":
-        st.subheader("Text Analytics & NLP")
-        st.markdown("""
-        **What is this?** Advanced text analysis using Natural Language Processing.
-        We analyze document structure, extract entities, and identify key patterns.
-        """)
-        
-        if cv_text and jd_text:
-            # =============================================
-            # Row 1: Document Statistics Comparison
-            # =============================================
-            st.markdown("### Document Statistics")
-            
-            cv_words = len(cv_text.split())
-            jd_words = len(jd_text.split())
-            # Count ALL lines (including empty)
-            cv_lines = len(cv_text.split('\n'))
-            jd_lines = len(jd_text.split('\n'))
-            
-            stat1, stat2, stat3, stat4 = st.columns(4)
-            with stat1:
-                st.metric("CV Words", cv_words, 
-                         help="Total word count in your CV. Optimal CVs typically have 300-600 words.")
-            with stat2:
-                st.metric("JD Words", jd_words,
-                         help="Total word count in the Job Description.")
-            with stat3:
-                st.metric("CV Lines", cv_lines,
-                         help="Non-empty lines in CV. Includes headers, bullet points, and paragraphs.")
-            with stat4:
-                st.metric("JD Lines", jd_lines,
-                         help="Non-empty lines in JD. Includes headers, bullet points, and paragraphs.")
-            
-            st.markdown("")
-            
-            # =============================================
-            # Row 2: Skill Extraction Breakdown
-            # =============================================
-            st.markdown("### Skill Extraction Analysis")
-            
-            cv_hard, cv_soft = ml_utils.extract_skills_from_text(cv_text)
-            jd_hard, jd_soft = ml_utils.extract_skills_from_text(jd_text, is_jd=True)
-            
-            sk1, sk2 = st.columns(2)
-            
-            with sk1:
-                st.markdown("**CV Skills Detected**")
-                st.markdown(f"""
-                <div style='background: rgba(0, 119, 181, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;'>
-                    <strong>Technical Skills:</strong> {len(cv_hard)}<br>
-                    <strong>Soft Skills:</strong> {len(cv_soft)}<br>
-                    <strong>Total:</strong> {len(cv_hard) + len(cv_soft)}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                if cv_hard:
-                    hard_preview = ", ".join(sorted(cv_hard)[:8])
-                    if len(cv_hard) > 8:
-                        hard_preview += f"... (+{len(cv_hard)-8} more)"
-                    st.caption(f"Technical: {hard_preview}")
-            
-            with sk2:
-                st.markdown("**JD Requirements Detected**")
-                st.markdown(f"""
-                <div style='background: rgba(229, 57, 53, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;'>
-                    <strong>Technical Skills:</strong> {len(jd_hard)}<br>
-                    <strong>Soft Skills:</strong> {len(jd_soft)}<br>
-                    <strong>Total:</strong> {len(jd_hard) + len(jd_soft)}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                if jd_hard:
-                    hard_preview = ", ".join(sorted(jd_hard)[:8])
-                    if len(jd_hard) > 8:
-                        hard_preview += f"... (+{len(jd_hard)-8} more)"
-                    st.caption(f"Required: {hard_preview}")
-            
-            st.markdown("")
-            
-            # =============================================
-            # Row 3: Match Quality Metrics
-            # =============================================
-            st.markdown("### Match Quality Breakdown")
-            
-            exact_matches = cv_hard.intersection(jd_hard)
-            cv_only = cv_hard - jd_hard
-            jd_only = jd_hard - cv_hard
-            
-            mq1, mq2, mq3 = st.columns(3)
-            with mq1:
-                st.metric("Exact Matches", len(exact_matches), 
-                         help="Skills that appear in both CV and JD")
-            with mq2:
-                st.metric("CV-Only Skills", len(cv_only), 
-                         help="Your extra skills not required by this job")
-            with mq3:
-                st.metric("JD-Only Skills", len(jd_only), 
-                         help="Required skills not found in your CV")
-            
-            # Coverage calculation
-            if jd_hard:
-                coverage = len(exact_matches) / len(jd_hard) * 100
-                st.progress(int(coverage), text=f"Skill Coverage: {coverage:.1f}%")
-            
-            st.divider()
-            
-            # =============================================
-            # Row 4: Named Entities & Topics
-            # =============================================
-            nlp_col1, nlp_col2 = st.columns(2)
-            
-            with nlp_col1:
-                st.markdown("### Named Entities (CV)")
-                entities = ml_utils.extract_entities_ner(cv_text)
-                
-                if entities:
-                    for cat, items in entities.items():
-                        if items:
-                            with st.expander(f"{cat} ({len(items)} found)", expanded=len(items) > 0):
-                                tags_html = " ".join([f"<span class='skill-tag-bonus'>{item}</span>" for item in items[:10]])
-                                st.markdown(tags_html, unsafe_allow_html=True)
-                else:
-                    st.caption("No entities detected")
-            
-            with nlp_col2:
-                st.markdown("### Topic Analysis (JD)")
-                jd_corpus = [line for line in jd_text.split('\n') if len(line.split()) > 3]
-                
-                if len(jd_corpus) > 5:
-                    result = ml_utils.perform_topic_modeling(jd_corpus)
-                    
-                    if result:
-                        for idx, topic in enumerate(result['topics'], 1):
-                            # Extract Title vs Description (format "Title: Description")
-                            if ":" in topic:
-                                title, desc = topic.split(":", 1)
-                                st.success(f"**{idx}. {title}:** {desc}")
-                            else:
-                                st.success(f"**Topic {idx}:** {topic}")
-                        
-                        if result.get('keywords'):
-                            st.markdown("**Key Terms:**")
-                            keywords_html = " ".join([f"<span class='skill-tag-bonus'>{kw}</span>" for kw in result['keywords'][:8]])
-                            st.markdown(keywords_html, unsafe_allow_html=True)
-                else:
-                    st.caption("JD too short for analysis")
-        else:
-            st.info("Run an analysis first to see NLP insights.")
-    
-    # =========================================================================
-    # TAB 5: KNOWLEDGE BASE
-    # =========================================================================
-        if selected_tab == "Knowledge Base":
-        st.subheader("System Knowledge Base")
-        st.markdown("""
-        **What is this?** The knowledge base contains the rules and data that power the analysis.
-        It includes skill relationships, equivalences, and training data for the ML models.
-        """)
-        
-        kb_tab1, kb_tab2, kb_tab3, kb_tab4 = st.tabs(["Inference Rules", "Skill Clusters", "Sector Overview", "Training Data"])
-        
-        with kb_tab1:
-            st.markdown("**How inference works:** When a specific skill is found, related parent skills are automatically inferred.")
-            st.markdown("")
-            
-            # Show as readable cards instead of unreadable graph
-            st.markdown("#### Inference Rules Overview")
-            
-            # Group by parent skill
-            parent_to_children = {}
-            for child, parents in constants.INFERENCE_RULES.items():
-                for parent in parents:
-                    if parent not in parent_to_children:
-                        parent_to_children[parent] = []
-                    parent_to_children[parent].append(child)
-            
-            # Display as expandable cards
-            for parent, children in sorted(parent_to_children.items()):
-                with st.expander(f"{parent} (inferred from {len(children)} skills)"):
-                    children_html = " ".join([f"<span class='skill-tag-matched'>{c}</span>" for c in sorted(children)])
-                    st.markdown(children_html, unsafe_allow_html=True)
-            
-            st.divider()
-            
-            # Full table view
-            st.markdown("#### Complete Mapping Table")
-            inf_data = [{"Child Skill": k, "Infers Parent": ", ".join(v)} for k, v in constants.INFERENCE_RULES.items()]
-            st.dataframe(pd.DataFrame(inf_data), use_container_width=True, hide_index=True)
-        
-        with kb_tab2:
-            st.markdown("**Skill clusters:** Skills in the same cluster are considered transferable/equivalent.")
-            
-            for cluster_name, skills in constants.SKILL_CLUSTERS.items():
-                with st.expander(f"{cluster_name} ({len(skills)} skills)"):
-                    skills_html = " ".join([f"<span class='skill-tag-transferable'>{s}</span>" for s in sorted(skills)])
-                    st.markdown(skills_html, unsafe_allow_html=True)
-        
-        with kb_tab3:
-            st.markdown("**Sectors & Archetypes:** Breakdown of jobs covered by each sector.")
-            job_archs = getattr(knowledge_base, "JOB_ARCHETYPES_EXTENDED", {})
-            sector_counts = {}
-            for role, meta in job_archs.items():
-                s = meta.get("sector", "Other")
-                sector_counts[s] = sector_counts.get(s, 0) + 1
-            
-            df_sectors = pd.DataFrame([{"Sector": k, "Archetypes": v} for k, v in sector_counts.items()]).sort_values("Archetypes", ascending=False)
-            
-            fig_sectors = px.bar(df_sectors, x="Sector", y="Archetypes", color="Sector", 
-                                title="Archetypes per Sector", template="plotly_dark")
-            fig_sectors.update_layout(showlegend=False, height=400)
-            st.plotly_chart(fig_sectors, use_container_width=True)
-            
-            # List of roles per sector
-            selected_sec = st.selectbox("Select Sector to view roles", options=df_sectors["Sector"].tolist())
-            if selected_sec:
-                roles_in_sec = [r for r, m in job_archs.items() if m.get("sector") == selected_sec]
-                st.write(f"**Roles in {selected_sec}:**")
-                st.markdown(", ".join([f"`{r}`" for r in sorted(roles_in_sec)]))
-
-        with kb_tab4:
-            st.markdown("**ML Training Data:** Sample data used to train the Random Forest classifier.")
-            _, df = ml_utils.train_rf_model()
-            st.dataframe(df, use_container_width=True, hide_index=True)
-
-    # =========================================================================
-    # TAB 6: CV BUILDER INSPECTOR
-    # =========================================================================
-        if selected_tab == "CV Builder State":
-        st.subheader("CV Builder Internal State")
-        st.info("Live view of the raw data currently generated by the CV Builder.")
-        
-        cv_builder_data = st.session_state.get("cv_builder", {})
-        
-        if not cv_builder_data:
-            st.warning("CV Builder has not been initialized yet.")
-        else:
-            c1, c2 = st.columns(2)
-            with c1:
-                st.markdown("**Profile Data**")
-                st.json({
-                    "name": cv_builder_data.get("name"),
-                    "email": cv_builder_data.get("email"),
-                    "location": cv_builder_data.get("location"),
-                    "phone": cv_builder_data.get("phone"),
-                })
-            with c2:
-                st.markdown("**Competencies & Skills**")
-                st.write(cv_builder_data.get("competencies", []))
-                
-            st.divider()
-            
-            st.markdown("**Experience Entries**")
-            if cv_builder_data.get("experiences"):
-                st.dataframe(cv_builder_data["experiences"])
-            else:
-                st.text("No experience entries.")
-                
-            st.markdown("**Education Entries**")
-            if cv_builder_data.get("education"):
-                st.dataframe(cv_builder_data["education"])
-            else:
-                st.text("No education entries.")
-                
-            st.markdown("**Projects**")
-            if cv_builder_data.get("projects"):
-                st.dataframe(cv_builder_data["projects"])
-            else:
-                st.text("No projects.")
-
-    # =========================================================================
-    # TAB 7: CAREER DISCOVERY ENGINE
-    # =========================================================================
-        if selected_tab == "Discovery":
-        st.subheader("Discovery Engine Diagnostics")
-        st.info("Insights into the Career Discovery recommendation logic and results.")
-        
-        discovery_results = st.session_state.get("discovery_results", [])
-        has_cv = st.session_state.get("discovery_has_cv", False)
-        cv_text_session = st.session_state.get("processed_cv_text", "")
-        
-        if not discovery_results:
-            st.warning("No discovery analysis has been performed yet.")
-            st.markdown("Run a 'Career Discovery' session from the main menu to see data here.")
-        else:
-            # 1. Summary Metrics
-            st.markdown("### Recommendation Summary")
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Total Matches", len(discovery_results))
-            with col2:
-                avg_score = sum(r['score'] for r in discovery_results) / len(discovery_results) if discovery_results else 0
-                st.metric("Avg Match Score", f"{avg_score:.1f}%")
-            with col3:
-                st.metric("CV Integration", "Active" if has_cv else "Inactive")
-                
-            st.divider()
-            
-            # 2. Results Data Inspector
-            st.markdown("### Raw Results Data (JSON)")
-            with st.expander("View Result Objects (Top 10)", expanded=False):
-                st.json(discovery_results[:10])
-                
-            # 3. Algorithm Debugging
-            st.markdown("### Internal Scoring Logic")
+            st.subheader("Text Analytics & NLP")
             st.markdown("""
-            The Discovery Score is calculated as a weighted average:
-            - **Preference Alignment (40%)**: Matches against industry, remote, and style preferences.
-            - **Skill Match (60%)**: Jaccard similarity between detected CV skills and role archetypes.
-            - **Education Boost**: Small percentage bonus for relevant major/degree field.
+            **What is this?** Advanced text analysis using Natural Language Processing.
+            We analyze document structure, extract entities, and identify key patterns.
             """)
+        
+            if cv_text and jd_text:
+                # =============================================
+                # Row 1: Document Statistics Comparison
+                # =============================================
+                st.markdown("### Document Statistics")
             
-            # 4. Filter Testing
-            st.markdown("### Filter Simulation")
-            if discovery_results:
-                q_range = st.slider("Quality Threshold (Min Score %)", 0, 100, 25)
-                highly_relevant = [r for r in discovery_results if r['score'] >= q_range]
-                st.write(f"Items exceeding threshold: {len(highly_relevant)}")
+                cv_words = len(cv_text.split())
+                jd_words = len(jd_text.split())
+                # Count ALL lines (including empty)
+                cv_lines = len(cv_text.split('\n'))
+                jd_lines = len(jd_text.split('\n'))
+            
+                stat1, stat2, stat3, stat4 = st.columns(4)
+                with stat1:
+                    st.metric("CV Words", cv_words, 
+                             help="Total word count in your CV. Optimal CVs typically have 300-600 words.")
+                with stat2:
+                    st.metric("JD Words", jd_words,
+                             help="Total word count in the Job Description.")
+                with stat3:
+                    st.metric("CV Lines", cv_lines,
+                             help="Non-empty lines in CV. Includes headers, bullet points, and paragraphs.")
+                with stat4:
+                    st.metric("JD Lines", jd_lines,
+                             help="Non-empty lines in JD. Includes headers, bullet points, and paragraphs.")
+            
+                st.markdown("")
+            
+                # =============================================
+                # Row 2: Skill Extraction Breakdown
+                # =============================================
+                st.markdown("### Skill Extraction Analysis")
+            
+                cv_hard, cv_soft = ml_utils.extract_skills_from_text(cv_text)
+                jd_hard, jd_soft = ml_utils.extract_skills_from_text(jd_text, is_jd=True)
+            
+                sk1, sk2 = st.columns(2)
+            
+                with sk1:
+                    st.markdown("**CV Skills Detected**")
+                    st.markdown(f"""
+                    <div style='background: rgba(0, 119, 181, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;'>
+                        <strong>Technical Skills:</strong> {len(cv_hard)}<br>
+                        <strong>Soft Skills:</strong> {len(cv_soft)}<br>
+                        <strong>Total:</strong> {len(cv_hard) + len(cv_soft)}
+                    </div>
+                    """, unsafe_allow_html=True)
                 
-                if highly_relevant:
-                    # Show as dataframe for easy inspection
-                    debug_df = pd.DataFrame(highly_relevant)
-                    if not debug_df.empty:
-                        # Drop columns that might have complex objects for better display
-                        cols_to_show = [col for col in debug_df.columns if col not in ['skills_matched', 'missing_skills', 'skills_required']]
-                        st.dataframe(debug_df[cols_to_show], use_container_width=True)
+                    if cv_hard:
+                        hard_preview = ", ".join(sorted(cv_hard)[:8])
+                        if len(cv_hard) > 8:
+                            hard_preview += f"... (+{len(cv_hard)-8} more)"
+                        st.caption(f"Technical: {hard_preview}")
             
-            # 5. Profile Analysis
-            if has_cv:
+                with sk2:
+                    st.markdown("**JD Requirements Detected**")
+                    st.markdown(f"""
+                    <div style='background: rgba(229, 57, 53, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;'>
+                        <strong>Technical Skills:</strong> {len(jd_hard)}<br>
+                        <strong>Soft Skills:</strong> {len(jd_soft)}<br>
+                        <strong>Total:</strong> {len(jd_hard) + len(jd_soft)}
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                    if jd_hard:
+                        hard_preview = ", ".join(sorted(jd_hard)[:8])
+                        if len(jd_hard) > 8:
+                            hard_preview += f"... (+{len(jd_hard)-8} more)"
+                        st.caption(f"Required: {hard_preview}")
+            
+                st.markdown("")
+            
+                # =============================================
+                # Row 3: Match Quality Metrics
+                # =============================================
+                st.markdown("### Match Quality Breakdown")
+            
+                exact_matches = cv_hard.intersection(jd_hard)
+                cv_only = cv_hard - jd_hard
+                jd_only = jd_hard - cv_hard
+            
+                mq1, mq2, mq3 = st.columns(3)
+                with mq1:
+                    st.metric("Exact Matches", len(exact_matches), 
+                             help="Skills that appear in both CV and JD")
+                with mq2:
+                    st.metric("CV-Only Skills", len(cv_only), 
+                             help="Your extra skills not required by this job")
+                with mq3:
+                    st.metric("JD-Only Skills", len(jd_only), 
+                             help="Required skills not found in your CV")
+            
+                # Coverage calculation
+                if jd_hard:
+                    coverage = len(exact_matches) / len(jd_hard) * 100
+                    st.progress(int(coverage), text=f"Skill Coverage: {coverage:.1f}%")
+            
                 st.divider()
-                st.markdown("### Detected Interest Signal")
-                cv_level, score = ml_utils.detect_seniority(cv_text_session)
-                st.write(f"Detected Seniority: **{cv_level}** (Confidence: {score:.2f})")
+            
+                # =============================================
+                # Row 4: Named Entities & Topics
+                # =============================================
+                nlp_col1, nlp_col2 = st.columns(2)
+            
+                with nlp_col1:
+                    st.markdown("### Named Entities (CV)")
+                    entities = ml_utils.extract_entities_ner(cv_text)
                 
-                # Show extracted skills used for discovery
-                cv_hard, cv_soft = ml_utils.extract_skills_from_text(cv_text_session)
-                all_found = cv_hard | cv_soft
-                st.markdown(f"**Skills used for matching:** ({len(all_found)} detected)")
-                st.write(", ".join(sorted(all_found)))
+                    if entities:
+                        for cat, items in entities.items():
+                            if items:
+                                with st.expander(f"{cat} ({len(items)} found)", expanded=len(items) > 0):
+                                    tags_html = " ".join([f"<span class='skill-tag-bonus'>{item}</span>" for item in items[:10]])
+                                    st.markdown(tags_html, unsafe_allow_html=True)
+                    else:
+                        st.caption("No entities detected")
+            
+                with nlp_col2:
+                    st.markdown("### Topic Analysis (JD)")
+                    jd_corpus = [line for line in jd_text.split('\n') if len(line.split()) > 3]
+                
+                    if len(jd_corpus) > 5:
+                        result = ml_utils.perform_topic_modeling(jd_corpus)
+                    
+                        if result:
+                            for idx, topic in enumerate(result['topics'], 1):
+                                # Extract Title vs Description (format "Title: Description")
+                                if ":" in topic:
+                                    title, desc = topic.split(":", 1)
+                                    st.success(f"**{idx}. {title}:** {desc}")
+                                else:
+                                    st.success(f"**Topic {idx}:** {topic}")
+                        
+                            if result.get('keywords'):
+                                st.markdown("**Key Terms:**")
+                                keywords_html = " ".join([f"<span class='skill-tag-bonus'>{kw}</span>" for kw in result['keywords'][:8]])
+                                st.markdown(keywords_html, unsafe_allow_html=True)
+                    else:
+                        st.caption("JD too short for analysis")
+            else:
+                st.info("Run an analysis first to see NLP insights.")
+    
+        # =========================================================================
+        # TAB 5: KNOWLEDGE BASE
+        # =========================================================================
+        if selected_tab == "Knowledge Base":
+            st.subheader("System Knowledge Base")
+            st.markdown("""
+            **What is this?** The knowledge base contains the rules and data that power the analysis.
+            It includes skill relationships, equivalences, and training data for the ML models.
+            """)
+        
+            kb_tab1, kb_tab2, kb_tab3, kb_tab4 = st.tabs(["Inference Rules", "Skill Clusters", "Sector Overview", "Training Data"])
+        
+            with kb_tab1:
+                st.markdown("**How inference works:** When a specific skill is found, related parent skills are automatically inferred.")
+                st.markdown("")
+            
+                # Show as readable cards instead of unreadable graph
+                st.markdown("#### Inference Rules Overview")
+            
+                # Group by parent skill
+                parent_to_children = {}
+                for child, parents in constants.INFERENCE_RULES.items():
+                    for parent in parents:
+                        if parent not in parent_to_children:
+                            parent_to_children[parent] = []
+                        parent_to_children[parent].append(child)
+            
+                # Display as expandable cards
+                for parent, children in sorted(parent_to_children.items()):
+                    with st.expander(f"{parent} (inferred from {len(children)} skills)"):
+                        children_html = " ".join([f"<span class='skill-tag-matched'>{c}</span>" for c in sorted(children)])
+                        st.markdown(children_html, unsafe_allow_html=True)
+            
+                st.divider()
+            
+                # Full table view
+                st.markdown("#### Complete Mapping Table")
+                inf_data = [{"Child Skill": k, "Infers Parent": ", ".join(v)} for k, v in constants.INFERENCE_RULES.items()]
+                st.dataframe(pd.DataFrame(inf_data), use_container_width=True, hide_index=True)
+        
+            with kb_tab2:
+                st.markdown("**Skill clusters:** Skills in the same cluster are considered transferable/equivalent.")
+            
+                for cluster_name, skills in constants.SKILL_CLUSTERS.items():
+                    with st.expander(f"{cluster_name} ({len(skills)} skills)"):
+                        skills_html = " ".join([f"<span class='skill-tag-transferable'>{s}</span>" for s in sorted(skills)])
+                        st.markdown(skills_html, unsafe_allow_html=True)
+        
+            with kb_tab3:
+                st.markdown("**Sectors & Archetypes:** Breakdown of jobs covered by each sector.")
+                job_archs = getattr(knowledge_base, "JOB_ARCHETYPES_EXTENDED", {})
+                sector_counts = {}
+                for role, meta in job_archs.items():
+                    s = meta.get("sector", "Other")
+                    sector_counts[s] = sector_counts.get(s, 0) + 1
+            
+                df_sectors = pd.DataFrame([{"Sector": k, "Archetypes": v} for k, v in sector_counts.items()]).sort_values("Archetypes", ascending=False)
+            
+                fig_sectors = px.bar(df_sectors, x="Sector", y="Archetypes", color="Sector", 
+                                    title="Archetypes per Sector", template="plotly_dark")
+                fig_sectors.update_layout(showlegend=False, height=400)
+                st.plotly_chart(fig_sectors, use_container_width=True)
+            
+                # List of roles per sector
+                selected_sec = st.selectbox("Select Sector to view roles", options=df_sectors["Sector"].tolist())
+                if selected_sec:
+                    roles_in_sec = [r for r, m in job_archs.items() if m.get("sector") == selected_sec]
+                    st.write(f"**Roles in {selected_sec}:**")
+                    st.markdown(", ".join([f"`{r}`" for r in sorted(roles_in_sec)]))
+
+            with kb_tab4:
+                st.markdown("**ML Training Data:** Sample data used to train the Random Forest classifier.")
+                _, df = ml_utils.train_rf_model()
+                st.dataframe(df, use_container_width=True, hide_index=True)
+
+        # =========================================================================
+        # TAB 6: CV BUILDER INSPECTOR
+        # =========================================================================
+        if selected_tab == "CV Builder State":
+            st.subheader("CV Builder Internal State")
+            st.info("Live view of the raw data currently generated by the CV Builder.")
+        
+            cv_builder_data = st.session_state.get("cv_builder", {})
+        
+            if not cv_builder_data:
+                st.warning("CV Builder has not been initialized yet.")
+            else:
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**Profile Data**")
+                    st.json({
+                        "name": cv_builder_data.get("name"),
+                        "email": cv_builder_data.get("email"),
+                        "location": cv_builder_data.get("location"),
+                        "phone": cv_builder_data.get("phone"),
+                    })
+                with c2:
+                    st.markdown("**Competencies & Skills**")
+                    st.write(cv_builder_data.get("competencies", []))
+                
+                st.divider()
+            
+                st.markdown("**Experience Entries**")
+                if cv_builder_data.get("experiences"):
+                    st.dataframe(cv_builder_data["experiences"])
+                else:
+                    st.text("No experience entries.")
+                
+                st.markdown("**Education Entries**")
+                if cv_builder_data.get("education"):
+                    st.dataframe(cv_builder_data["education"])
+                else:
+                    st.text("No education entries.")
+                
+                st.markdown("**Projects**")
+                if cv_builder_data.get("projects"):
+                    st.dataframe(cv_builder_data["projects"])
+                else:
+                    st.text("No projects.")
+
+        # =========================================================================
+        # TAB 7: CAREER DISCOVERY ENGINE
+        # =========================================================================
+        if selected_tab == "Discovery":
+            st.subheader("Discovery Engine Diagnostics")
+            st.info("Insights into the Career Discovery recommendation logic and results.")
+        
+            discovery_results = st.session_state.get("discovery_results", [])
+            has_cv = st.session_state.get("discovery_has_cv", False)
+            cv_text_session = st.session_state.get("processed_cv_text", "")
+        
+            if not discovery_results:
+                st.warning("No discovery analysis has been performed yet.")
+                st.markdown("Run a 'Career Discovery' session from the main menu to see data here.")
+            else:
+                # 1. Summary Metrics
+                st.markdown("### Recommendation Summary")
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total Matches", len(discovery_results))
+                with col2:
+                    avg_score = sum(r['score'] for r in discovery_results) / len(discovery_results) if discovery_results else 0
+                    st.metric("Avg Match Score", f"{avg_score:.1f}%")
+                with col3:
+                    st.metric("CV Integration", "Active" if has_cv else "Inactive")
+                
+                st.divider()
+            
+                # 2. Results Data Inspector
+                st.markdown("### Raw Results Data (JSON)")
+                with st.expander("View Result Objects (Top 10)", expanded=False):
+                    st.json(discovery_results[:10])
+                
+                # 3. Algorithm Debugging
+                st.markdown("### Internal Scoring Logic")
+                st.markdown("""
+                The Discovery Score is calculated as a weighted average:
+                - **Preference Alignment (40%)**: Matches against industry, remote, and style preferences.
+                - **Skill Match (60%)**: Jaccard similarity between detected CV skills and role archetypes.
+                - **Education Boost**: Small percentage bonus for relevant major/degree field.
+                """)
+            
+                # 4. Filter Testing
+                st.markdown("### Filter Simulation")
+                if discovery_results:
+                    q_range = st.slider("Quality Threshold (Min Score %)", 0, 100, 25)
+                    highly_relevant = [r for r in discovery_results if r['score'] >= q_range]
+                    st.write(f"Items exceeding threshold: {len(highly_relevant)}")
+                
+                    if highly_relevant:
+                        # Show as dataframe for easy inspection
+                        debug_df = pd.DataFrame(highly_relevant)
+                        if not debug_df.empty:
+                            # Drop columns that might have complex objects for better display
+                            cols_to_show = [col for col in debug_df.columns if col not in ['skills_matched', 'missing_skills', 'skills_required']]
+                            st.dataframe(debug_df[cols_to_show], use_container_width=True)
+            
+                # 5. Profile Analysis
+                if has_cv:
+                    st.divider()
+                    st.markdown("### Detected Interest Signal")
+                    cv_level, score = ml_utils.detect_seniority(cv_text_session)
+                    st.write(f"Detected Seniority: **{cv_level}** (Confidence: {score:.2f})")
+                
+                    # Show extracted skills used for discovery
+                    cv_hard, cv_soft = ml_utils.extract_skills_from_text(cv_text_session)
+                    all_found = cv_hard | cv_soft
+                    st.markdown(f"**Skills used for matching:** ({len(all_found)} detected)")
+                    st.write(", ".join(sorted(all_found)))
 
 # =============================================================================
 # CV BUILDER PAGE
