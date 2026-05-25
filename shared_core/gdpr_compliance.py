@@ -428,89 +428,91 @@ def render_privacy_policy_page():
     </div>
     """, unsafe_allow_html=True)
 
-    st.divider()
 
-    # --- PRIVACY POLICY SECTIONS ---
-    st.markdown(f"## {_t('privacy_heading')}")
+    left_menu, right_content = st.columns([1, 3])
+    with left_menu:
+        st.markdown("<h4 style='color: #00A0DC; margin-bottom: 1rem;'>Legal Menu</h4>", unsafe_allow_html=True)
+        selected_section = st.radio("Legal Menu", [_t('privacy_heading'), _t('ai_heading'), _t('exercise_rights')], label_visibility="collapsed")
 
-    for section_key in ["controller", "data"]:
-        st.markdown(f"""
-        <div class="privacy-section">
-            <h4>{_t(f"{section_key}_title")}</h4>
-            <p>{_t(f"{section_key}_body")}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    with right_content:
+        if selected_section == _t('privacy_heading'):
+            # --- PRIVACY POLICY SECTIONS ---
+            st.markdown(f"## {_t('privacy_heading')}")
 
-    # Legal basis table
-    headers = _t("legal_headers")
-    rows = _t("legal_rows")
-    rows_html = ""
-    for i, (purpose, basis) in enumerate(rows):
-        border = ' style="border-bottom: 1px solid #21262d;"' if i < len(rows) - 1 else ""
-        rows_html += f'<tr{border}><td style="padding: 8px;">{purpose}</td><td style="padding: 8px;">{basis}</td></tr>'
+            for section_key in ["controller", "data"]:
+                st.markdown(f"""
+                <div class="privacy-section">
+                    <h4>{_t(f"{section_key}_title")}</h4>
+                    <p>{_t(f"{section_key}_body")}</p>
+                </div>
+                """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("legal_title")}</h4>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
-            <tr style="border-bottom: 1px solid #30363d;">
-                <th style="text-align: left; padding: 8px; color: #00A0DC;">{headers[0]}</th>
-                <th style="text-align: left; padding: 8px; color: #00A0DC;">{headers[1]}</th>
-            </tr>
-            {rows_html}
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
+            # Legal basis table
+            headers = _t("legal_headers")
+            rows = _t("legal_rows")
+            rows_html = ""
+            for i, (purpose, basis) in enumerate(rows):
+                border = ' style="border-bottom: 1px solid #21262d;"' if i < len(rows) - 1 else ""
+                rows_html += f'<tr{border}><td style="padding: 8px;">{purpose}</td><td style="padding: 8px;">{basis}</td></tr>'
 
-    # Retention
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("retention_title")}</h4>
-        <p>{_t("retention_body")}</p>
-    </div>
-    """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="privacy-section">
+                <h4>{_t("legal_title")}</h4>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+                    <tr style="border-bottom: 1px solid #30363d;">
+                        <th style="text-align: left; padding: 8px; color: #00A0DC;">{headers[0]}</th>
+                        <th style="text-align: left; padding: 8px; color: #00A0DC;">{headers[1]}</th>
+                    </tr>
+                    {rows_html}
+                </table>
+            </div>
+            """, unsafe_allow_html=True)
 
-    # Rights
-    rights_list = "".join(f"<li>{r}</li>" for r in _t("rights_items"))
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("rights_title")}</h4>
-        <ul>{rights_list}</ul>
-        <p style="margin-top: 0.5rem; color: #8b949e; font-size: 0.85rem;">{_t("rights_note")}</p>
-    </div>
-    """, unsafe_allow_html=True)
+            # Retention
+            st.markdown(f"""
+            <div class="privacy-section">
+                <h4>{_t("retention_title")}</h4>
+                <p>{_t("retention_body")}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-    # Transfer
-    st.markdown(f"""
-    <div class="privacy-section">
-        <h4>{_t("transfer_title")}</h4>
-        <p>{_t("transfer_body")}</p>
-    </div>
-    """, unsafe_allow_html=True)
+            # Rights
+            rights_list = "".join(f"<li>{r}</li>" for r in _t("rights_items"))
+            st.markdown(f"""
+            <div class="privacy-section">
+                <h4>{_t("rights_title")}</h4>
+                <ul>{rights_list}</ul>
+                <p style="margin-top: 0.5rem; color: #8b949e; font-size: 0.85rem;">{_t("rights_note")}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-    st.divider()
+            # Transfer
+            st.markdown(f"""
+            <div class="privacy-section">
+                <h4>{_t("transfer_title")}</h4>
+                <p>{_t("transfer_body")}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
-    # --- AI ACT TRANSPARENCY ---
-    render_ai_transparency()
 
-    st.divider()
+            # --- AI ACT TRANSPARENCY ---
+            render_ai_transparency()
 
-    # --- DATA DELETION ---
-    st.markdown(f"## {_t('exercise_rights')}")
-    render_delete_my_data_button()
 
-    st.divider()
+            # --- DATA DELETION ---
+            st.markdown(f"## {_t('exercise_rights')}")
+            render_delete_my_data_button()
 
-    # --- CONTACT FORM ---
-    render_contact_form()
 
-    st.divider()
+            # --- CONTACT FORM ---
+            render_contact_form()
 
-    st.markdown(f"""
-    <p style='color: #6e7681; font-size: 0.8rem; text-align: center;'>
-        {_t("footer").format(date=datetime.now().strftime('%d/%m/%Y'))}
-    </p>
-    """, unsafe_allow_html=True)
+
+            st.markdown(f"""
+            <p style='color: #6e7681; font-size: 0.8rem; text-align: center;'>
+                {_t("footer").format(date=datetime.now().strftime('%d/%m/%Y'))}
+            </p>
+            """, unsafe_allow_html=True)
 
 
 # =============================================================================
