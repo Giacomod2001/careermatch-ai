@@ -274,7 +274,7 @@ TRANSLATIONS = {
 
 def _t(key):
     """Get translated string based on current language setting."""
-    lang = st.session_state.get("gdpr_lang", "en")
+    lang = st.session_state.get("language", "en")
     return TRANSLATIONS.get(lang, TRANSLATIONS["en"]).get(key, key)
 
 
@@ -352,17 +352,7 @@ def get_compliance_css():
 # LANGUAGE TOGGLE
 # =============================================================================
 
-def render_language_toggle():
-    """Renders a compact language toggle."""
-    col1, col2 = st.columns([6, 1])
-    with col2:
-        lang = st.selectbox(
-            "Lang",
-            options=["en", "it"],
-            format_func=lambda x: "EN" if x == "en" else "IT",
-            key="gdpr_lang",
-            label_visibility="collapsed",
-        )
+
 
 
 # =============================================================================
@@ -378,8 +368,7 @@ def render_consent_banner():
 
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        render_language_toggle()
-
+        
         st.markdown(f"""
         <div class="gdpr-banner">
             <h3>{_t("consent_title")}</h3>
@@ -425,8 +414,7 @@ def render_consent_banner():
 def render_privacy_policy_page():
     st.markdown(get_compliance_css(), unsafe_allow_html=True)
 
-    render_language_toggle()
-
+    
     st.markdown(f"""
     <div style='display: flex; align-items: center; justify-content: space-between;'>
         <div>

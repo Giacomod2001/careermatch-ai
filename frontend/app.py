@@ -325,13 +325,15 @@ def render_debug_page():
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             st.markdown("""
-            <div style='text-align: center; margin-bottom: 2rem;'>
-                <h2 style='margin: 0;'>System Locked</h2>
-                <p style='color: #8b949e;'>Restricted Access Area</p>
-            </div>
+            <div style='background: rgba(13, 17, 23, 0.6); border: 1px solid rgba(0, 160, 220, 0.3); border-radius: 12px; padding: 2.5rem; text-align: center; margin-top: 3rem;'>
+                <div style='background: rgba(0, 160, 220, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;'>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00A0DC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <h2 style='margin: 0; color: #E53935;'>System Locked</h2>
+                <p style='color: #8b949e; margin-bottom: 2rem;'>Restricted Developer Access Area</p>
             """, unsafe_allow_html=True)
             
-            pwd = st.text_input("Enter Access Code", type="password", help="System Administrator Password")
+            pwd = st.text_input("Enter Access Code", type="password", help="System Administrator Password", label_visibility="collapsed", placeholder="Enter PIN (1234)")
             
             if st.button("Authenticate System", type="primary", use_container_width=True):
                 if pwd == "1234":
@@ -340,6 +342,8 @@ def render_debug_page():
                     st.rerun()
                 else:
                     st.error("Access Denied: Invalid Credentials")
+            
+            st.markdown("</div>", unsafe_allow_html=True)
         return
 
     # =========================================================================
