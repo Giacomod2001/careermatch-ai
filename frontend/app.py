@@ -429,6 +429,103 @@ def render_debug_page():
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.info("💡 **100% Local & Offline Execution:** The entire architecture runs entirely on the host without relying on external third-party APIs (no OpenAI, no external LLMs). This ensures maximum data privacy (GDPR & AI Act Compliant) and zero latency.")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.subheader("Ruben AI - Hybrid NLP Pipeline")
+            st.caption("How the chatbot combines Retrieval-Based and ML-Semantic approaches.")
+            
+            # Flow diagram
+            st.markdown("""
+            <div style='margin-top: 1.5rem;'>
+                <!-- Step 1 -->
+                <div style='display: flex; align-items: stretch; margin-bottom: 1.5rem;'>
+                    <div style='min-width: 56px; display: flex; flex-direction: column; align-items: center;'>
+                        <div style='background: #00A0DC; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;'>1</div>
+                        <div style='width: 2px; flex: 1; background: linear-gradient(#00A0DC, #E53935); margin-top: 8px;'></div>
+                    </div>
+                    <div style='background: rgba(0, 160, 220, 0.06); border: 1px solid rgba(0, 160, 220, 0.2); padding: 1.2rem 1.5rem; border-radius: 10px; flex: 1; margin-left: 1rem;'>
+                        <h4 style='margin: 0 0 0.4rem 0; color: #00A0DC;'>Language Detection <span style="font-size: 0.75rem; background: rgba(0,160,220,0.15); padding: 2px 10px; border-radius: 10px; margin-left: 8px;">RULE-BASED</span></h4>
+                        <p style='margin: 0; color: #c9d1d9; font-size: 0.9rem;'>The system scans the input for language-specific keywords (e.g. "ciao", "bonjour", "hallo") and returns a language code (it, en, fr, de, es, pt). This determines which response dictionary to use.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div style='display: flex; align-items: stretch; margin-bottom: 1.5rem;'>
+                    <div style='min-width: 56px; display: flex; flex-direction: column; align-items: center;'>
+                        <div style='background: #E53935; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;'>2</div>
+                        <div style='width: 2px; flex: 1; background: linear-gradient(#E53935, #FFAB00); margin-top: 8px;'></div>
+                    </div>
+                    <div style='background: rgba(229, 57, 53, 0.06); border: 1px solid rgba(229, 57, 53, 0.2); padding: 1.2rem 1.5rem; border-radius: 10px; flex: 1; margin-left: 1rem;'>
+                        <h4 style='margin: 0 0 0.4rem 0; color: #E53935;'>Semantic Intent Classification <span style="font-size: 0.75rem; background: rgba(229,57,53,0.15); padding: 2px 10px; border-radius: 10px; margin-left: 8px;">MACHINE LEARNING</span></h4>
+                        <p style='margin: 0; color: #c9d1d9; font-size: 0.9rem;'>The user's message is vectorized with <b>TF-IDF</b> (Term Frequency–Inverse Document Frequency) and compared against 17 trained intent categories (~100 phrases) using <b>Cosine Similarity</b>. If the best match exceeds the 0.20 threshold, the intent is classified (e.g. "salary", "interview_tips", "resume"). This is the ML "brain" that understands meaning, not exact keywords.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div style='display: flex; align-items: stretch; margin-bottom: 1.5rem;'>
+                    <div style='min-width: 56px; display: flex; flex-direction: column; align-items: center;'>
+                        <div style='background: #FFAB00; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;'>3</div>
+                        <div style='width: 2px; flex: 1; background: linear-gradient(#FFAB00, #00C853); margin-top: 8px;'></div>
+                    </div>
+                    <div style='background: rgba(255, 171, 0, 0.06); border: 1px solid rgba(255, 171, 0, 0.2); padding: 1.2rem 1.5rem; border-radius: 10px; flex: 1; margin-left: 1rem;'>
+                        <h4 style='margin: 0 0 0.4rem 0; color: #FFAB00;'>Context-Aware Routing <span style="font-size: 0.75rem; background: rgba(255,171,0,0.15); padding: 2px 10px; border-radius: 10px; margin-left: 8px;">RULE-BASED</span></h4>
+                        <p style='margin: 0; color: #c9d1d9; font-size: 0.9rem;'>Once the intent is known, the system checks the <b>current page</b> (CV Evaluation, Career Discovery, etc.), the <b>user's name</b> (from CV Builder), and the <b>last match score</b>. This allows the same intent to produce different responses depending on context.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div style='display: flex; align-items: stretch; margin-bottom: 1.5rem;'>
+                    <div style='min-width: 56px; display: flex; flex-direction: column; align-items: center;'>
+                        <div style='background: #00C853; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;'>4</div>
+                        <div style='width: 2px; flex: 1; background: linear-gradient(#00C853, #7C4DFF); margin-top: 8px;'></div>
+                    </div>
+                    <div style='background: rgba(0, 200, 83, 0.06); border: 1px solid rgba(0, 200, 83, 0.2); padding: 1.2rem 1.5rem; border-radius: 10px; flex: 1; margin-left: 1rem;'>
+                        <h4 style='margin: 0 0 0.4rem 0; color: #00C853;'>Knowledge Base Retrieval <span style="font-size: 0.75rem; background: rgba(0,200,83,0.15); padding: 2px 10px; border-radius: 10px; margin-left: 8px;">RETRIEVAL-BASED</span></h4>
+                        <p style='margin: 0; color: #c9d1d9; font-size: 0.9rem;'>The classified intent + detected language are used to look up the correct pre-written response from <b>_RUBEN_RESPONSES</b> (a multilingual dictionary with 6 languages × 17 intents). This guarantees accurate, curated, and controlled answers.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 5 -->
+                <div style='display: flex; align-items: stretch;'>
+                    <div style='min-width: 56px; display: flex; flex-direction: column; align-items: center;'>
+                        <div style='background: #7C4DFF; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;'>5</div>
+                    </div>
+                    <div style='background: rgba(124, 77, 255, 0.06); border: 1px solid rgba(124, 77, 255, 0.2); padding: 1.2rem 1.5rem; border-radius: 10px; flex: 1; margin-left: 1rem;'>
+                        <h4 style='margin: 0 0 0.4rem 0; color: #7C4DFF;'>Dynamic Personalization & Fallback <span style="font-size: 0.75rem; background: rgba(124,77,255,0.15); padding: 2px 10px; border-radius: 10px; margin-left: 8px;">HYBRID</span></h4>
+                        <p style='margin: 0; color: #c9d1d9; font-size: 0.9rem;'>A random conversational prefix is prepended (e.g. "Great question, Giacomo!") to make every reply feel natural. If no intent matched the threshold, an <b>Intelligent Fallback</b> gracefully redirects the conversation toward career-relevant topics.</p>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # Summary box
+            trad_col, ml_col = st.columns(2)
+            with trad_col:
+                st.markdown("""
+                <div style='background: rgba(0, 200, 83, 0.05); border: 1px solid rgba(0, 200, 83, 0.2); border-radius: 10px; padding: 1.2rem;'>
+                    <h4 style='margin: 0 0 0.5rem 0; color: #00C853;'>Traditional Components</h4>
+                    <ul style='margin: 0; font-size: 0.88rem; color: #c9d1d9;'>
+                        <li>Language Detection (keyword matching)</li>
+                        <li>Context-Aware Page Routing</li>
+                        <li>Knowledge Base Dictionary Lookup</li>
+                        <li>Personalization Prefixes</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+            with ml_col:
+                st.markdown("""
+                <div style='background: rgba(229, 57, 53, 0.05); border: 1px solid rgba(229, 57, 53, 0.2); border-radius: 10px; padding: 1.2rem;'>
+                    <h4 style='margin: 0 0 0.5rem 0; color: #E53935;'>Machine Learning Components</h4>
+                    <ul style='margin: 0; font-size: 0.88rem; color: #c9d1d9;'>
+                        <li>TF-IDF Vectorization (scikit-learn)</li>
+                        <li>Cosine Similarity Matching</li>
+                        <li>Semantic Intent Classification</li>
+                        <li>Threshold-based Confidence Scoring</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
 
         # =========================================================================
         # TAB 1: SYSTEM OVERVIEW - Collapsible Sections with Index
