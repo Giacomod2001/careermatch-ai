@@ -1853,36 +1853,7 @@ def render_landing_page():
         <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto;">{t('landing_subtitle')}</p>
     </div>
     """, unsafe_allow_html=True)
-
-    # Metrics Row
-    st.markdown(f"""
-    <div style="display: flex; justify-content: center; gap: 6rem; margin-bottom: 3rem; flex-wrap: wrap;">
-        <div style="text-align: center;">
-            <h2 style="color: var(--primary-blue); margin: 0; font-size: 2.5rem; font-weight: 800;">950+</h2>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Keywords</div>
-        </div>
-        <div style="text-align: center;">
-            <h2 style="color: var(--primary-blue); margin: 0; font-size: 2.5rem; font-weight: 800;">230+</h2>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Job Archetypes</div>
-        </div>
-        <div style="text-align: center;">
-            <h2 style="color: var(--primary-blue); margin: 0; font-size: 2.5rem; font-weight: 800;">25+</h2>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Sectors</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Description
-    st.markdown(f"""
-    <div style='text-align: center; margin-bottom: 3rem;'>
-        <p style='color: var(--text-secondary); font-size: 1.1rem; max-width: 800px; margin: 0 auto; line-height: 1.6;'>
-            <strong style='color: var(--text-primary);'>{t('landing_hero_text')}</strong> 
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
     # WHY CAREERMATCH AI — Data-Driven Disclaimer
-    st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("""
     <div style='text-align: center; margin-bottom: 2.5rem;'>
         <h2 style='font-size: 2rem; font-weight: 700; margin-bottom: 0.3rem;'>Why CareerMatch AI?</h2>
