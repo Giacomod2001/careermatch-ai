@@ -2620,10 +2620,6 @@ def render_results(res, jd_text=None, cv_text=None, cl_analysis=None):
             st.caption("All JD-requested soft skills are mentioned in your CV.")
 
     st.divider()
-
-
-    
-    st.divider()
     
     # --- AI CAREER COMPASS (Unified Logic) ---
     st.subheader("AI Career Compass")
