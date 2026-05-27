@@ -1923,6 +1923,75 @@ def render_landing_page():
             st.session_state["page"] = "Interview Prep"
             st.rerun()
 
+    # WHY CAREERMATCH AI — Data-Driven Disclaimer
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style='text-align: center; margin-bottom: 2.5rem;'>
+        <h2 style='font-size: 2rem; font-weight: 700; margin-bottom: 0.3rem;'>Why CareerMatch AI?</h2>
+        <p style='color: var(--text-secondary); font-size: 1rem;'>Real data from the labor market that inspired this project.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    d1, d2 = st.columns(2)
+    with d1:
+        st.markdown("""
+        <div style='background: rgba(0, 160, 220, 0.05); border: 1px solid rgba(0, 160, 220, 0.2); border-radius: 12px; padding: 1.8rem; margin-bottom: 1.5rem; min-height: 220px;'>
+            <div style='font-size: 2.8rem; font-weight: 800; color: #00A0DC; margin-bottom: 0.3rem;'>40%</div>
+            <div style='font-size: 0.95rem; color: #c9d1d9; line-height: 1.5; margin-bottom: 0.8rem;'>
+                of Italian workers have changed jobs in the last 6 months or plan to do so shortly — but most don't know where to start.
+            </div>
+            <div style='font-size: 0.75rem; color: #8b949e; border-top: 1px solid rgba(0,160,220,0.15); padding-top: 0.6rem;'>
+                Source: Randstad Employer Brand Research Italy 2025
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with d2:
+        st.markdown("""
+        <div style='background: rgba(0, 119, 181, 0.05); border: 1px solid rgba(0, 119, 181, 0.2); border-radius: 12px; padding: 1.8rem; margin-bottom: 1.5rem; min-height: 220px;'>
+            <div style='font-size: 2.8rem; font-weight: 800; color: #0077B5; margin-bottom: 0.3rem;'>1 in 4</div>
+            <div style='font-size: 0.95rem; color: #c9d1d9; line-height: 1.5; margin-bottom: 0.8rem;'>
+                professionals feel uncertain about how to showcase their skills, often unaware of which roles actually match their profile.
+            </div>
+            <div style='font-size: 0.75rem; color: #8b949e; border-top: 1px solid rgba(0,119,181,0.15); padding-top: 0.6rem;'>
+                Source: LinkedIn Workplace Learning Report 2025
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    d3, d4 = st.columns(2)
+    with d3:
+        st.markdown("""
+        <div style='background: rgba(229, 57, 53, 0.05); border: 1px solid rgba(229, 57, 53, 0.2); border-radius: 12px; padding: 1.8rem; margin-bottom: 1.5rem; min-height: 220px;'>
+            <div style='font-size: 2.8rem; font-weight: 800; color: #E53935; margin-bottom: 0.3rem;'>98%</div>
+            <div style='font-size: 0.95rem; color: #c9d1d9; line-height: 1.5; margin-bottom: 0.8rem;'>
+                of Fortune 500 companies use ATS that rank CVs by keyword match. A misaligned resume is effectively invisible to recruiters.
+            </div>
+            <div style='font-size: 0.75rem; color: #8b949e; border-top: 1px solid rgba(229,57,53,0.15); padding-top: 0.6rem;'>
+                Source: Forbes / Industry Hiring Research 2025
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with d4:
+        st.markdown("""
+        <div style='background: rgba(0, 200, 83, 0.05); border: 1px solid rgba(0, 200, 83, 0.2); border-radius: 12px; padding: 1.8rem; margin-bottom: 1.5rem; min-height: 220px;'>
+            <div style='font-size: 2.8rem; font-weight: 800; color: #00C853; margin-bottom: 0.3rem;'>76%</div>
+            <div style='font-size: 0.95rem; color: #c9d1d9; line-height: 1.5; margin-bottom: 0.8rem;'>
+                of companies plan to use AI-driven interviews by 2026. Structured preparation with frameworks like STAR is no longer optional.
+            </div>
+            <div style='font-size: 0.75rem; color: #8b949e; border-top: 1px solid rgba(0,200,83,0.15); padding-top: 0.6rem;'>
+                Source: Industry Hiring Trends Report 2025
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style='background: rgba(0, 68, 113, 0.1); border: 1px solid rgba(0, 119, 181, 0.25); border-radius: 10px; padding: 1.2rem 1.5rem; text-align: center; margin-bottom: 1rem;'>
+        <p style='margin: 0; font-size: 0.95rem; color: #c9d1d9;'>
+            <strong style='color: #00A0DC;'>CareerMatch AI was built to solve these exact problems</strong> — We map your skills against 39+ job archetypes, analyze your CV and prepare you for modern interviews. 100% free, 100% offline, 100% GDPR compliant.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
     # Footer Divider
     st.markdown("<hr>", unsafe_allow_html=True)
 
