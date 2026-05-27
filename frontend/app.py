@@ -1913,12 +1913,15 @@ def render_landing_page():
         </div>
         """, unsafe_allow_html=True)
     st.markdown("""
-    <div style='background: rgba(0, 68, 113, 0.1); border: 1px solid rgba(0, 119, 181, 0.25); border-radius: 10px; padding: 1.2rem 1.5rem; text-align: center; margin-bottom: 3.5rem;'>
+    <div style='background: rgba(0, 68, 113, 0.1); border: 1px solid rgba(0, 119, 181, 0.25); border-radius: 10px; padding: 1.2rem 1.5rem; text-align: center; margin-bottom: 1.5rem;'>
         <p style='margin: 0; font-size: 0.95rem; color: #c9d1d9;'>
             <strong style='color: #00A0DC;'>CareerMatch AI was built to solve these exact problems</strong> — We map your skills against 39+ job archetypes, analyze your CV and prepare you for modern interviews. 100% free, 100% offline, 100% GDPR compliant.
         </p>
     </div>
     """, unsafe_allow_html=True)
+
+    # Divider
+    st.markdown("<hr>", unsafe_allow_html=True)
 
     # 3-Column Layout
     col1, col2, col3 = st.columns(3)
