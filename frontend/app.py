@@ -63,7 +63,7 @@ import i18n
 import importlib
 importlib.reload(i18n)
 importlib.reload(ml_utils)
-from i18n import get_t
+from i18n import get_t, get_t_question, get_t_category
 
 
 # Puliamo la cache all'avvio solo se necessario
@@ -2868,6 +2868,9 @@ def render_interview_prep():
     """
     render_navigation()
     
+    t_q = get_t_question()
+    t_c = get_t_category()
+    
     # Hero Section
     st.markdown(f"""
     <div class="hero-gradient" style="text-align: center; padding: 2.5rem;">
@@ -2900,10 +2903,10 @@ def render_interview_prep():
         with st.container(border=True):
             st.markdown(f"""
                 <div style="margin-bottom: 1.5rem;">
-                    <span style="font-size: 0.75rem; font-weight: 800; background: var(--primary-blue); color: white; padding: 4px 10px; border-radius: 6px; letter-spacing: 1px;">SESSION SETUP</span>
-                    <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.5rem;">Configure Your Practice Environment</h2>
+                    <span style="font-size: 0.75rem; font-weight: 800; background: var(--primary-blue); color: white; padding: 4px 10px; border-radius: 6px; letter-spacing: 1px;">{t('int_setup_badge')}</span>
+                    <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.5rem;">{t('int_setup_title')}</h2>
                     <p style="color: var(--text-secondary); font-size: 0.95rem;">
-                        Select your target role and question types to begin.
+                        {t('int_setup_desc')}
                     </p>
                 </div>
                 <hr style="margin: 1.5rem 0; border: none; height: 1px; background: rgba(255,255,255,0.1);">
@@ -2913,22 +2916,38 @@ def render_interview_prep():
             col1, col2 = st.columns(2)
             with col1:
                 st.markdown(f'**{t("int_target_role")}**')
-                role = st.selectbox(
+                role_map = {
+                    t("role_software_engineer", "Software Engineer"): "Software Engineer",
+                    t("role_data_scientist", "Data Scientist"): "Data Scientist",
+                    t("role_data_analyst", "Data Analyst"): "Data Analyst",
+                    t("role_product_manager", "Product Manager"): "Product Manager",
+                    t("role_ux_designer", "UX Designer"): "UX Designer",
+                    t("role_general", "General"): "General"
+                }
+                role_display = st.selectbox(
                     "Role Selection",
-                    ["Software Engineer", "Data Scientist", "Data Analyst", "Product Manager", "UX Designer", "General"],
+                    options=list(role_map.keys()),
                     label_visibility="collapsed",
                     key="role_selector"
                 )
+                role = role_map[role_display]
             
             with col2:
                 st.markdown(f'**{t("int_q_type")}**')
-                q_type = st.radio(
+                q_type_map = {
+                    t("int_q_type_mixed"): "Mixed (All Types)",
+                    t("int_q_type_behavioral"): "Behavioral",
+                    t("int_q_type_technical"): "Technical",
+                    t("int_q_type_hr"): "HR"
+                }
+                q_type_display = st.radio(
                     "Type Selection",
-                    ["Mixed (All Types)", "Behavioral", "Technical", "HR"],
+                    options=list(q_type_map.keys()),
                     horizontal=True,
                     label_visibility="collapsed",
                     key="q_type_selector"
                 )
+                q_type = q_type_map[q_type_display]
             
             st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
             
@@ -2949,14 +2968,14 @@ def render_interview_prep():
             if st.button(t("btn_start_practice"), type="primary", use_container_width=True):
                 st.session_state["start_clicked"] = True
         
-        q_type_map = {"Mixed (All Types)": "mixed", "Behavioral": "behavioral", "Technical": "technical", "HR": "hr"}
+        q_type_backend_map = {"Mixed (All Types)": "mixed", "Behavioral": "behavioral", "Technical": "technical", "HR": "hr"}
         
         # Start Button Logic
         if st.session_state.get("start_clicked", False):
             st.session_state["start_clicked"] = False
             questions = ml_utils.get_interview_questions(
                 role=role if role != "General" else None,
-                question_type=q_type_map.get(q_type, "mixed"),
+                question_type=q_type_backend_map.get(q_type, "mixed"),
                 count=num_questions
             )
             st.session_state["interview_questions"] = questions
@@ -2969,8 +2988,8 @@ def render_interview_prep():
     elif st.session_state.get("show_interview_summary", False):
         st.markdown(f"""
         <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 style="margin-bottom: 0.5rem;">Session Complete! </h2>
-            <p style="color: var(--text-secondary);">Here is your performance overview across all questions.</p>
+            <h2 style="margin-bottom: 0.5rem;">{t('int_session_complete')} </h2>
+            <p style="color: var(--text-secondary);">{t('int_performance_overview')}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -2982,15 +3001,20 @@ def render_interview_prep():
         # Top Metrics
         c1, c2, c3 = st.columns(3)
         with c1:
-            st.metric("Questions Attempted", f"{len(evals)} / {len(questions)}")
+            st.metric(t("int_questions_attempted"), f"{len(evals)} / {len(questions)}")
         with c2:
-            st.metric("Average Score", f"{int(avg_score)}%")
+            st.metric(t("int_avg_score_label"), f"{int(avg_score)}%")
         with c3:
+            assessment_map = {
+                "Excellent": t("int_assessment_excellent"),
+                "Good": t("int_assessment_good"),
+                "Needs Practice": t("int_assessment_needs_practice")
+            }
             rating = "Excellent" if avg_score >= 80 else "Good" if avg_score >= 60 else "Needs Practice"
-            st.metric("Overall Assessment", rating)
+            st.metric(t("int_overall_assessment"), assessment_map[rating])
             
         st.markdown('<div class="section-spacer"></div>', unsafe_allow_html=True)
-        st.markdown("### Detailed Breakdown")
+        st.markdown(f"### {t('int_breakdown')}")
         
         for i, q in enumerate(questions):
             ev = evals.get(i)
@@ -3002,31 +3026,38 @@ def render_interview_prep():
                 color = "#00C853" if score >= 60 else "#FFB300" if score >= 40 else "#E53935"
                 score_badge = f"<span style='background: {color}20; color: {color}; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.85rem;'>{score}%</span>"
             else:
-                score_badge = "<span style='background: #8b949e20; color: #8b949e; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem;'>Not Evaluated</span>"
+                score_badge = f"<span style='background: #8b949e20; color: #8b949e; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem;'>{t('int_not_evaluated')}</span>"
             
-            with st.expander(f"Q{i+1}: {q.get('question', '')[:60]}...", expanded=(i==0)):
+            with st.expander(f"Q{i+1}: {t_q(q.get('question', ''))[:60]}...", expanded=(i==0)):
                 st.markdown(f"""
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                    <div style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary); margin-right: 1rem;">{q.get('question', '')}</div>
+                    <div style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary); margin-right: 1rem;">{t_q(q.get('question', ''))}</div>
                     {score_badge}
                 </div>
                 """, unsafe_allow_html=True)
                 
-                st.markdown("**Your Answer:**")
+                st.markdown(f"**{t('int_your_answer')}:**")
                 st.info(ans)
                 
                 if ev:
-                    st.markdown(f"**Feedback ({ev.get('rating', '')}):**")
+                    rating_map = {
+                        "Excellent": t("int_assessment_excellent"),
+                        "Good": t("int_assessment_good"),
+                        "Needs Improvement": t("int_assessment_needs_practice"),
+                        "Too Short": t("int_too_short")
+                    }
+                    display_rating = rating_map.get(ev.get('rating', ''), ev.get('rating', ''))
+                    st.markdown(f"**{t('int_feedback_label')} ({display_rating}):**")
                     st.markdown(f"<p style='color: var(--text-secondary);'>{ev.get('feedback')}</p>", unsafe_allow_html=True)
                     if ev.get('tips') and len(ev.get('tips')) > 0:
-                        st.markdown("**Areas for Improvement:**")
+                        st.markdown(f"**{t('int_weaknesses')}:**")
                         for tip in ev.get('tips'):
                             st.markdown(f"- {tip}")
                             
         st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
         c_btn1, c_btn2, c_btn3 = st.columns([1, 2, 1])
         with c_btn2:
-            if st.button("Start New Session", type="primary", use_container_width=True):
+            if st.button(t("btn_new_session"), type="primary", use_container_width=True):
                 st.session_state["interview_questions"] = []
                 st.session_state["current_q_index"] = 0
                 st.session_state["interview_answers"] = {}
@@ -3044,8 +3075,8 @@ def render_interview_prep():
         st.markdown(f"""
         <div style="max-width: 800px; margin: 0 auto 2rem auto;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
-                <span style="color: var(--text-secondary);">Question {q_idx + 1} of {len(questions)}</span>
-                <span style="color: var(--text-secondary);">{int(progress * 100)}% Complete</span>
+                <span style="color: var(--text-secondary);">{t('int_q_of').format(idx=q_idx+1, total=len(questions))}</span>
+                <span style="color: var(--text-secondary);">{int(progress * 100)}% {t('int_complete')}</span>
             </div>
             <div style="background: var(--bg-elevated); border-radius: 4px; height: 4px; width: 100%;">
                 <div style="background: var(--primary-blue); width: {progress * 100}%; height: 4px; border-radius: 4px; transition: width 0.3s ease;"></div>
@@ -3060,13 +3091,14 @@ def render_interview_prep():
             
             with center_col:
                 # 2. The Question
-                category = current_q.get('category', 'general').replace('_', ' ').title()
+                category = current_q.get('category', 'general')
                 est_time = "3-4 mins" if current_q.get('star_focus') else "1-2 mins"
+                time_display = t('int_time_3_4') if est_time == "3-4 mins" else t('int_time_1_2')
                 
                 st.markdown(f"""
                 <div style="text-align: center; margin-bottom: 2rem;">
-                    <span style="display: inline-block; background: rgba(0, 160, 220, 0.1); color: #00A0DC; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 1rem; font-weight: 600;">{category} • ⏱️ {est_time}</span>
-                    <h2 style="margin: 0; line-height: 1.5; color: var(--text-primary); font-weight: 600;">{current_q.get('question', 'No question')}</h2>
+                    <span style="display: inline-block; background: rgba(0, 160, 220, 0.1); color: #00A0DC; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 1rem; font-weight: 600;">{t_c(category)} • ⏱️ {time_display}</span>
+                    <h2 style="margin: 0; line-height: 1.5; color: var(--text-primary); font-weight: 600;">{t_q(current_q.get('question', 'No question'))}</h2>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -3076,17 +3108,17 @@ def render_interview_prep():
                 # Pre-fill demo data for all questions
                 if not saved_answer:
                     if current_q.get("star_focus"):
-                        saved_answer = "In my previous role as a Data Analyst, we faced a situation where our weekly reporting took 5 hours. My task was to automate the process. I wrote a Python script using Pandas and scheduled it with cron. As a result, we reduced reporting time by 90% and eliminated manual errors."
+                        saved_answer = t("int_demo_answer_star")
                     elif current_q.get("expected_keywords"):
-                        saved_answer = f"To approach this, I would focus on core principles like {', '.join(current_q.get('expected_keywords', [])[:3])}. This ensures the system is scalable, robust, and easy to maintain."
+                        saved_answer = t("int_demo_answer_tech").format(keywords=', '.join(current_q.get('expected_keywords', [])[:3]))
                     else:
-                        saved_answer = "I have extensive experience dealing with this type of situation and I always prioritize clear communication and data-driven problem solving."
+                        saved_answer = t("int_demo_answer_general")
                 
                 answer = st.text_area(
-                    "Your Answer",
+                    t("int_your_answer"),
                     value=saved_answer,
                     height=200,
-                    placeholder="Type your response here... (Be concise and specific)",
+                    placeholder=t("int_answer_placeholder"),
                     label_visibility="collapsed"
                 )
                 
@@ -3097,24 +3129,32 @@ def render_interview_prep():
                 
                 # Show Evaluate button ONLY if not evaluated yet
                 if not ev:
-                    if st.button("Evaluate My Answer ", type="primary", use_container_width=True):
+                    if st.button(t("btn_eval_answer"), type="primary", use_container_width=True):
                         if answer.strip():
                             st.session_state["interview_answers"][q_idx] = answer
                             result = ml_utils.evaluate_interview_answer(current_q, answer)
                             st.session_state["interview_evaluations"][q_idx] = result
                             st.rerun()
                         else:
-                            st.warning("Please write your answer before evaluating.")
+                            st.warning(t("int_write_first"))
                 else:
                     # 5. Evaluation Feedback (Inline)
                     score = ev['score']
                     color = "#00C853" if score >= 75 else "#FFB300" if score >= 50 else "#E53935"
                     
+                    rating_map = {
+                        "Excellent": t("int_assessment_excellent"),
+                        "Good": t("int_assessment_good"),
+                        "Needs Improvement": t("int_assessment_needs_practice"),
+                        "Too Short": t("int_too_short")
+                    }
+                    display_rating = rating_map.get(ev.get('rating', ''), ev.get('rating', ''))
+                    
                     st.markdown(f"""<div style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-top: 1rem; border-left: 6px solid {color};">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
     <div>
-        <span style="font-size: 1.2rem; font-weight: 700; color: {color}; display: block;">{ev['rating']}</span>
-        <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Evaluation Result</span>
+        <span style="font-size: 1.2rem; font-weight: 700; color: {color}; display: block;">{display_rating}</span>
+        <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">{t('int_evaluation_result')}</span>
     </div>
     <div style="text-align: right;">
         <span style="font-size: 2rem; font-weight: 800; color: {color};">{score}%</span>
@@ -3127,7 +3167,7 @@ def render_interview_prep():
                     # Coach's Sketch (The "Insight")
                     if ev.get('model_sketch'):
                         st.markdown(f"""<div style="background: rgba(0, 160, 220, 0.05); border-left: 4px solid #00A0DC; border-radius: 8px; padding: 1.2rem; margin-top: 1.5rem; margin-bottom: 2rem;">
-<div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.6rem;">RUBEN'S COACHING TIP</div>
+<div style="font-size: 0.85rem; color: #00A0DC; font-weight: 700; margin-bottom: 0.6rem;">{t('int_coaching_tip')}</div>
 <div style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">{ev['model_sketch']}</div>
 </div>""", unsafe_allow_html=True)
 
@@ -3135,28 +3175,28 @@ def render_interview_prep():
                     c_fb1, c_fb2 = st.columns(2)
                     with c_fb1:
                         if ev.get('strengths'):
-                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #00C853;'>Strengths</p>", unsafe_allow_html=True)
+                            st.markdown(f"<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #00C853;'>{t('int_strengths')}</p>", unsafe_allow_html=True)
                             for s in ev['strengths']:
                                 st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>- {s}</div>", unsafe_allow_html=True)
                     
                     with c_fb2:
                         if ev.get('weaknesses'):
-                            st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #FFB300;'>Areas for Improvement</p>", unsafe_allow_html=True)
+                            st.markdown(f"<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: #FFB300;'>{t('int_weaknesses')}</p>", unsafe_allow_html=True)
                             for w in ev['weaknesses']:
                                 st.markdown(f"<div style='font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;'>- {w}</div>", unsafe_allow_html=True)
                     
                     # Insights Row
                     if ev.get('insights'):
                         st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
-                        st.markdown("<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.8rem; color: var(--text-primary);'>Insights</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='font-weight: 600; font-size: 0.9rem; margin-bottom: 0.8rem; color: var(--text-primary);'>{t('int_insights')}</p>", unsafe_allow_html=True)
                         ins = ev['insights']
                         i_col1, i_col2, i_col3 = st.columns(3)
                         with i_col1:
-                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>Structure</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('structure', 'N/A')}</div></div>", unsafe_allow_html=True)
+                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>{t('int_structure')}</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('structure', 'N/A')}</div></div>", unsafe_allow_html=True)
                         with i_col2:
-                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>Tone</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('tone', 'N/A')}</div></div>", unsafe_allow_html=True)
+                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>{t('int_tone')}</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('tone', 'N/A')}</div></div>", unsafe_allow_html=True)
                         with i_col3:
-                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>Impact</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('impact_focus', 'N/A')}</div></div>", unsafe_allow_html=True)
+                            st.markdown(f"<div style='background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; text-align: center;'><div style='font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;'>{t('int_impact')}</div><div style='font-weight: 600; color: var(--text-primary);'>{ins.get('impact_focus', 'N/A')}</div></div>", unsafe_allow_html=True)
 
                     st.markdown("</div>", unsafe_allow_html=True)
                     
@@ -3165,22 +3205,22 @@ def render_interview_prep():
                     
                     col_nav1, col_nav2 = st.columns(2)
                     with col_nav1:
-                        if st.button("Try Again", use_container_width=True):
+                        if st.button(t("btn_try_again"), use_container_width=True):
                             del st.session_state["interview_evaluations"][q_idx]
                             st.rerun()
                     with col_nav2:
                         if q_idx < len(questions) - 1:
-                            if st.button("Next Question →", type="primary", use_container_width=True):
+                            if st.button(t("btn_next_question"), type="primary", use_container_width=True):
                                 st.session_state["current_q_index"] = q_idx + 1
                                 st.rerun()
                         else:
-                            if st.button("Finish Session", type="primary", use_container_width=True):
+                            if st.button(t("btn_finish_session"), type="primary", use_container_width=True):
                                 st.session_state["show_interview_summary"] = True
                                 st.rerun()
 
                 # Optional: Subtle reset link at the bottom
                 st.markdown("<div style='text-align: center; margin-top: 3rem;'>", unsafe_allow_html=True)
-                if st.button("Quit Session", key="quit_btn"):
+                if st.button(t("btn_quit_session"), key="quit_btn"):
                     st.session_state["interview_questions"] = []
                     st.session_state["current_q_index"] = 0
                     st.session_state["interview_answers"] = {}

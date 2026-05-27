@@ -122,6 +122,47 @@ TRANSLATIONS = {
         "int_write_first": "Please write your answer before evaluating.",
         "btn_next": "Next",
         "btn_finish": "Finish",
+        "btn_quit_session": "Quit Session",
+        "btn_try_again": "Try Again",
+        "btn_next_question": "Next Question →",
+        "btn_finish_session": "Finish Session",
+        "int_session_complete": "Session Complete!",
+        "int_performance_overview": "Here is your performance overview across all questions.",
+        "int_questions_attempted": "Questions Attempted",
+        "int_overall_assessment": "Overall Assessment",
+        "int_assessment_excellent": "Excellent",
+        "int_assessment_good": "Good",
+        "int_assessment_needs_practice": "Needs Practice",
+        "int_evaluation_result": "Evaluation Result",
+        "int_coaching_tip": "RUBEN'S COACHING TIP",
+        "int_strengths": "Strengths",
+        "int_weaknesses": "Areas for Improvement",
+        "int_insights": "Insights",
+        "int_structure": "Structure",
+        "int_tone": "Tone",
+        "int_impact": "Impact",
+        "int_time_1_2": "1-2 mins",
+        "int_time_3_4": "3-4 mins",
+        "int_setup_title": "Configure Your Practice Environment",
+        "int_setup_desc": "Select your target role and question types to begin.",
+        "int_setup_badge": "SESSION SETUP",
+        "int_q_type_mixed": "Mixed (All Types)",
+        "int_q_type_behavioral": "Behavioral",
+        "int_q_type_technical": "Technical",
+        "int_q_type_hr": "HR",
+        "int_demo_answer_star": "In my previous role as a Data Analyst, we faced a situation where our weekly reporting took 5 hours. My task was to automate the process. I wrote a Python script using Pandas and scheduled it with cron. As a result, we reduced reporting time by 90% and eliminated manual errors.",
+        "int_demo_answer_tech": "To approach this, I would focus on core principles like {keywords}. This ensures the system is scalable, robust, and easy to maintain.",
+        "int_demo_answer_general": "I have extensive experience dealing with this type of situation and I always prioritize clear communication and data-driven problem solving.",
+        "int_answer_placeholder": "Type your response here... (Be concise and specific)",
+        "int_avg_score_label": "Average Score",
+        "int_not_evaluated": "Not Evaluated",
+        "role_software_engineer": "Software Engineer",
+        "role_data_scientist": "Data Scientist",
+        "role_data_analyst": "Data Analyst",
+        "role_product_manager": "Product Manager",
+        "role_ux_designer": "UX Designer",
+        "role_general": "General",
+        "int_too_short": "Too short",
         
         # --- GDPR / PRIVACY (Imported from old gdpr_compliance.py) ---
         "consent_title": "Privacy Notice and Data Processing Consent",
@@ -309,6 +350,47 @@ TRANSLATIONS = {
         "int_write_first": "Per favore scrivi una risposta prima di valutare.",
         "btn_next": "Avanti",
         "btn_finish": "Termina",
+        "btn_quit_session": "Abbandona Sessione",
+        "btn_try_again": "Riprova",
+        "btn_next_question": "Prossima Domanda →",
+        "btn_finish_session": "Termina Sessione",
+        "int_session_complete": "Sessione Completata!",
+        "int_performance_overview": "Ecco una panoramica delle tue prestazioni su tutte le domande.",
+        "int_questions_attempted": "Domande Provate",
+        "int_overall_assessment": "Valutazione Complessiva",
+        "int_assessment_excellent": "Eccellente",
+        "int_assessment_good": "Buono",
+        "int_assessment_needs_practice": "Richiede Pratica",
+        "int_evaluation_result": "Risultato della Valutazione",
+        "int_coaching_tip": "CONSIGLIO DI ALLENAMENTO DI RUBEN",
+        "int_strengths": "Punti di Forza",
+        "int_weaknesses": "Aree di Miglioramento",
+        "int_insights": "Approfondimenti",
+        "int_structure": "Struttura",
+        "int_tone": "Tono",
+        "int_impact": "Impatto",
+        "int_time_1_2": "1-2 min",
+        "int_time_3_4": "3-4 min",
+        "int_setup_title": "Configura il tuo ambiente di pratica",
+        "int_setup_desc": "Seleziona il tuo ruolo target e i tipi di domande per iniziare.",
+        "int_setup_badge": "CONFIGURAZIONE SESSIONE",
+        "int_q_type_mixed": "Misto (Tutti i tipi)",
+        "int_q_type_behavioral": "Comportamentale",
+        "int_q_type_technical": "Tecnico",
+        "int_q_type_hr": "Risorse Umane",
+        "int_demo_answer_star": "Nel mio ruolo precedente come Data Analyst, ci siamo trovati in una situazione in cui la reportistica settimanale richiedeva 5 ore. Il mio compito era automatizzare il processo. Ho scritto uno script Python utilizzando Pandas e l'ho pianificato con cron. Di conseguenza, abbiamo ridotto il tempo di reportistica del 90% ed eliminato gli errori manuali.",
+        "int_demo_answer_tech": "Per affrontare questo aspetto, mi concentrerei su principi fondamentali come {keywords}. Ciò garantisce che il sistema sia scalabile, robusto e facile da mantenere.",
+        "int_demo_answer_general": "Ho una vasta esperienza nella gestione di questo tipo di situazioni e do sempre la priorità a una comunicazione chiara e alla risoluzione dei problemi basata sui dati.",
+        "int_answer_placeholder": "Scrivi la tua risposta qui... (Sii conciso e specifico)",
+        "int_avg_score_label": "Punteggio Medio",
+        "int_not_evaluated": "Non Valutato",
+        "role_software_engineer": "Software Engineer",
+        "role_data_scientist": "Data Scientist",
+        "role_data_analyst": "Data Analyst",
+        "role_product_manager": "Product Manager",
+        "role_ux_designer": "UX Designer",
+        "role_general": "Generale",
+        "int_too_short": "Troppo corta",
         
         # --- GDPR / PRIVACY (Imported from old gdpr_compliance.py) ---
         "consent_title": "Informativa sulla Privacy e Consenso al Trattamento",
@@ -379,15 +461,99 @@ TRANSLATIONS = {
     }
 }
 
-def get_t():
-    """Returns a translation function based on the current session language."""
-    lang = st.session_state.get("language", "en")
-    
-    def t(key, default=None):
-        if lang in TRANSLATIONS and key in TRANSLATIONS[lang]:
-            return TRANSLATIONS[lang][key]
-        if "en" in TRANSLATIONS and key in TRANSLATIONS["en"]:
-            return TRANSLATIONS["en"][key]
-        return default if default is not None else f"[{key}]"
-        
     return t
+
+# =============================================================================
+# QUESTION & CATEGORY TRANSLATIONS MAPS
+# =============================================================================
+
+QUESTION_TRANSLATIONS = {
+    # Behavioral
+    "Tell me about a time when you had to deal with a difficult colleague.": "Raccontami di una volta in cui hai dovuto gestire un collega difficile.",
+    "Describe a project where you had to meet a tight deadline.": "Descrivi un progetto in cui hai dovuto rispettare una scadenza ravvicinata.",
+    "Give an example of when you showed leadership.": "Fornisci un esempio di quando hai dimostrato leadership.",
+    "Tell me about a time you failed and what you learned.": "Raccontami di una volta in cui hai fallito e cosa hai imparato.",
+    "Describe a situation where you had to adapt to change.": "Descrivi una situazione in cui hai dovuto adattarti a un cambiamento.",
+    "How do you prioritize when you have multiple deadlines?": "Come stabilisci le priorità quando hai scadenze multiple?",
+    "Tell me about a time you solved a complex problem.": "Raccontami di una volta in cui hai risolto un problema complesso.",
+    "Describe a situation where you had to persuade someone.": "Descrivi una situazione in cui hai dovuto persuadere qualcuno.",
+    
+    # Software Engineer
+    "Explain the difference between REST and GraphQL APIs.": "Spiega la differenza tra le API REST e GraphQL.",
+    "How would you design a URL shortening service?": "Come progetteresti un servizio di abbreviazione degli URL (URL shortening)?",
+    "What is your approach to debugging a production issue?": "Qual è il tuo approccio per risolvere un bug in produzione?",
+    "Explain SOLID principles.": "Spiega i principi SOLID.",
+    
+    # Data Scientist
+    "Explain the bias-variance tradeoff.": "Spiega il bilanciamento tra bias (distorsione) e variance (varianza).",
+    "How do you handle missing data?": "Come gestisci i dati mancanti?",
+    "Walk me through a machine learning project you've worked on.": "Descrivimi un progetto di machine learning su cui hai lavorato.",
+    "What metrics would you use for a classification problem?": "Quali metriche useresti per un problema di classificazione?",
+    
+    # Data Analyst
+    "How would you explain a complex analysis to a non-technical stakeholder?": "Come spiegheresti un'analisi complessa a uno stakeholder non tecnico?",
+    "What's your process for investigating a data anomaly?": "Qual è il tuo processo per indagare su un'anomalia nei dati?",
+    "Describe a time when your analysis influenced a business decision.": "Descrivi una volta in cui la tua analisi ha influenzato una decisione aziendale.",
+    
+    # Product Manager
+    "How do you prioritize features?": "Come stabilisci le priorità delle funzionalità (features)?",
+    "Describe your ideal product development process.": "Descrivi il tuo processo ideale di sviluppo del prodotto.",
+    "How do you measure product success?": "Come misuri il successo di un prodotto?",
+    
+    # UX Designer
+    "Walk me through your design process.": "Descrivimi il tuo processo di progettazione (design process).",
+    "How do you handle feedback that conflicts with your design?": "Come gestisci i feedback che contrastano con le tue scelte di design?",
+    "Describe a challenging usability problem you solved.": "Descrivi un problema di usabilità complesso che hai risolto.",
+    
+    # HR
+    "Why are you interested in this role?": "Perché ti interessa questo ruolo?",
+    "Where do you see yourself in 5 years?": "Dove ti vedi tra 5 anni?",
+    "Why are you leaving your current job?": "Perché stai lasciando il tuo attuale lavoro?",
+    "What are your salary expectations?": "Quali sono le tue aspettative salariali?",
+    "What's your greatest strength?": "Qual è il tuo punto di forza principale?",
+    "What's your greatest weakness?": "Qual è la tua principale debolezza?"
+}
+
+CATEGORY_TRANSLATIONS = {
+    "teamwork": "Lavoro di gruppo",
+    "time_management": "Gestione del tempo",
+    "leadership": "Leadership",
+    "growth": "Crescita professionale",
+    "adaptability": "Adattabilità",
+    "organization": "Organizzazione",
+    "problem_solving": "Risoluzione problemi",
+    "communication": "Comunicazione",
+    "technical": "Tecnico",
+    "system_design": "Progettazione di sistemi",
+    "analytical": "Analisi dei dati",
+    "impact": "Impatto aziendale",
+    "strategy": "Strategia di prodotto",
+    "process": "Processo di sviluppo",
+    "metrics": "Metriche di successo",
+    "collaboration": "Collaborazione",
+    "motivation": "Motivazione",
+    "career": "Percorso di carriera",
+    "negotiation": "Negoziazione salariale",
+    "self_awareness": "Autoconsapevolezza",
+    "experience": "Esperienza professionale"
+}
+
+def get_t_question():
+    """Returns a translation function for questions based on the session language."""
+    lang = st.session_state.get("language", "en")
+    def t_q(q_text):
+        if lang == "it":
+            return QUESTION_TRANSLATIONS.get(q_text, q_text)
+        return q_text
+    return t_q
+
+def get_t_category():
+    """Returns a translation function for categories based on the session language."""
+    lang = st.session_state.get("language", "en")
+    def t_c(cat_text):
+        if lang == "it":
+            # Search lowercase / underscore key
+            key = cat_text.lower().replace(" ", "_")
+            return CATEGORY_TRANSLATIONS.get(key, cat_text)
+        return cat_text
+    return t_c
