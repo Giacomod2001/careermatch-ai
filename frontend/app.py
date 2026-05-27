@@ -1881,48 +1881,6 @@ def render_landing_page():
     </div>
     """, unsafe_allow_html=True)
 
-    # 3-Column Layout
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(f"""
-        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
-            <h3 style="margin-bottom: 1rem;">{t('card_explore_title')}</h3>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
-                {t('card_explore_desc')}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button(t('btn_start'), use_container_width=True, type="primary", key="land_explore"):
-            st.session_state["page"] = "Explore"
-            st.rerun()
-    
-    with col2:
-        st.markdown(f"""
-        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
-            <h3 style="margin-bottom: 1rem;">{t('card_cv_title')}</h3>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
-                {t('card_cv_desc')}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button(t('btn_start'), use_container_width=True, key="land_cveval"):
-            st.session_state["page"] = "CV Evaluation"
-            st.rerun()
-
-    with col3:
-        st.markdown(f"""
-        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
-            <h3 style="margin-bottom: 1rem;">{t('card_interview_title')}</h3>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
-                {t('card_interview_desc')}
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button(t('btn_start'), use_container_width=True, key="land_interview"):
-            st.session_state["page"] = "Interview Prep"
-            st.rerun()
-
     # WHY CAREERMATCH AI — Data-Driven Disclaimer
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("""
@@ -1991,6 +1949,48 @@ def render_landing_page():
         </p>
     </div>
     """, unsafe_allow_html=True)
+
+    # 3-Column Layout
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem;">{t('card_explore_title')}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
+                {t('card_explore_desc')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t('btn_start'), use_container_width=True, type="primary", key="land_explore"):
+            st.session_state["page"] = "Explore"
+            st.rerun()
+    
+    with col2:
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem;">{t('card_cv_title')}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
+                {t('card_cv_desc')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t('btn_start'), use_container_width=True, key="land_cveval"):
+            st.session_state["page"] = "CV Evaluation"
+            st.rerun()
+
+    with col3:
+        st.markdown(f"""
+        <div class="glass-card" style="text-align: center; padding: 2rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem;">{t('card_interview_title')}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; flex-grow: 1; margin-bottom: 1.5rem;">
+                {t('card_interview_desc')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(t('btn_start'), use_container_width=True, key="land_interview"):
+            st.session_state["page"] = "Interview Prep"
+            st.rerun()
 
     # Footer Divider
     st.markdown("<hr>", unsafe_allow_html=True)
