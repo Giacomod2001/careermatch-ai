@@ -460,7 +460,17 @@ TRANSLATIONS = {
         "footer": "Informativa aggiornata al {date} | Conforme al GDPR (Reg. UE 2016/679) e AI Act (Reg. UE 2024/1689)",
     }
 }
-
+def get_t():
+    """Returns a translation function based on the current session language."""
+    lang = st.session_state.get("language", "en")
+    
+    def t(key, default=None):
+        if lang in TRANSLATIONS and key in TRANSLATIONS[lang]:
+            return TRANSLATIONS[lang][key]
+        if "en" in TRANSLATIONS and key in TRANSLATIONS["en"]:
+            return TRANSLATIONS["en"][key]
+        return default if default is not None else f"[{key}]"
+        
     return t
 
 # =============================================================================
